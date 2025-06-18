@@ -120,7 +120,9 @@ If the query fails or returns nothing, attempt to fix the query and re-run. Opti
 
 Finally, turn the query results into a text- or graph-based answer. If the answer is text-based, return it in html instead of markdown e.g. <h3> tags instead of ###, <li> tags instead of -, <b> or <strong> instead of **. Do not use <h1> or <h2> tags. Remove the opening and closing backticks (```html and ```) from the response. If the answer is graph-based, rotate x-axis tick labels by 45 degrees, and use pyplot tight_layout.
 
-If you cannot answer the question using the dataset, say so. Do not provide false information.
+You are allowed to answer general questions about your role, the database and the tools you have. 
+
+Apart from that, direct remaining questions to the CoMMpass dataset for answers. If you cannot answer them, say so.
 """.format(
     db_description=db_description,
     dialect=db.dialect,
