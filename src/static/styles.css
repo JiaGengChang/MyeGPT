@@ -21,6 +21,7 @@ body {
 
   .chat-history {
     width: 90%;
+    max-width: 740px;
     height: calc(100vh - 100px); 
     overflow-y: auto;
     background-color: rgb(255, 255, 255);
@@ -55,7 +56,7 @@ body {
   }
   
   .chat-input-container {
-    width: 80%;
+    width: 85%;
     max-width: 740px;
     display: flex;
     align-items: center;
