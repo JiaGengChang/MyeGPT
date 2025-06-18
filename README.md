@@ -2,10 +2,11 @@
 
 A chatbot for researchers to interact with the MMRF-CoMMpass dataset
 
+<img width="875" alt="Desktop site demonstration screenshot" src="https://github.com/user-attachments/assets/92959775-72aa-4aca-a0a2-3ab5051424db" />
 
+Scan the code to access it on mobile browser:
 
-# Mobile version
-
+![qrchimpX512](https://github.com/user-attachments/assets/f45a344b-4813-4c57-9664-2e0e8bbb86fe)
 
 
 ## Project structure
