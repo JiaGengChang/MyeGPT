@@ -34,4 +34,4 @@ commpass-gpt/
 
 ## Acknowledgements
 - Multiple Myeloma Research Foundation (MMRF) CoMMpass (Relating Clinical Outcomes in MM to Personal Assessment of Genetic Profile) trial (NCT01454297)
-- Patient and family members who contributed to the study
+- Patients and family members who contributed to the study
