@@ -1,0 +1,8 @@
+column	name	label
+1	public_id	Patient_ID
+2	censos	OS_censor_flag_(from_stand_alone_survival_file)
+3	ttcos	Time_to_censored_OS_(from_stand_alone_survival_file)
+4	censt2line_curated	Curated_time_to_second_line_therapy_censor_flag
+5	ttct2line_curated	Curated_time_to_second_line_therapy_(days)
+6	maintenance_flag_curated	Curated_maintenance_flag_0=no_maint_(includes_continuous_therapy)_1=standard_len_2=nonstandard
+7	maintenance_therapy_curated	Curated_maintenance_therapy

@@ -1,0 +1,22 @@
+column	name	label
+1	PUBLIC_ID	Public ID
+2	MMTX_TYPE	MMTX_TYPE
+3	MMTX_THERAPY	Therapy
+4	MMTX_ENTERCLINICAL	Enter Clinical Trials Gov ID
+5	MMTX_REASONFORTREA	Reason for treatment discontinued
+6	MMTX_UNITS	Units
+7	MMTX_ROUTE	Route
+8	VJ_INTERVAL	
+9	MMTX_ISTHISLINEOFT	
+10	MMTX_SPECIFY6	Specify the Line of therapy
+11	MMTX_ONGOING	
+12	MMTX_DOSE	
+13	MMTX_FREQUENCY	
+14	MMTX_SPECIFY3	Specify Frequency
+15	MMTX_SPECIFY	Specify the Type of therapy
+16	MMTX_SPECIFY4	Specify reson for treatment discontinuation
+17	MMTX_SPECIFY2	Specify Dose
+18	MMTX_SPECIFY5	Specify Route
+19	startday	Start Date
+20	stopday	Stop Date
+21	enr	Enrolled Population

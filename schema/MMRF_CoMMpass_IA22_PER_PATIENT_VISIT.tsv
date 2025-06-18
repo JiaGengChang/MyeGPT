@@ -1,0 +1,426 @@
+column	name	label
+1	PUBLIC_ID	Public ID - the patient identifier column
+2	SPECTRUM_SEQ	A blank unused column
+3	VISIT	Visit number
+4	VJ_INTERVAL	Record Interval
+5	VISITDY Day of Visit
+6	AT_DEFINITEDEVEL	
+7	AT_WASANASSESSME	Was an assessment of treatment response performed since the last study visit?
+8	AT_RESPONSEASSES	
+9	AT_TREATMENTRESP	Treatment Response
+13	AT_INCREASEOF25F	
+14	AT_SERUMMCOMPONE	
+15	AT_URINEMCOMPONE	
+16	AT_ONLYINPATIENT	
+17	AT_ONLYINPATIENT2	
+18	AT_DEVELOPMENTOF	
+19	BA_WASABONEASSES	Was a bone assessment done since the last study visit?
+20	BA_DAYOFASSESSM	Date of assessment
+21	BA_TYPEOFBONEASS	Type of bone assessment
+22	BA_SPECIFY	Other bone assessment, specify
+23	BA_IMAGEINTERPRE	Image Interpretation
+24	BA_LYTICLESIONS	Lytic Lesions
+25	BA_OFLYTICLESION	# of Lytic Lesions
+26	BA_OSTEOPENIAOST	Osteopenia / Osteoporosis
+27	BA_PATHOLOGICFRA	Pathologic fracture
+28	BA_MULTIPLEDISSE	Multiple disseminated lesions
+29	BA_SKULL	Yes/No bone lesion assessment for Skull
+30	BA_SPINE	Yes/No bone lesion assessment for Spine
+31	BA_CERVICAL	Yes/No bone lesion assessment for Cervical
+32	BA_THORACIC	Yes/No bone lesion assessment for Thoracic
+33	BA_LUMBAR	Yes/No bone lesion assessment for Lumbar
+34	BA_SACRAL	Yes/No bone lesion assessment for Sacral
+35	BA_PELVIS	Yes/No bone lesion assessment for Pelvis
+36	BA_RIGHT	Yes/No bone lesion assessment for Right
+37	BA_LEFT	Yes/No bone lesion assessment for Left
+38	BA_FEMUR	Yes/No bone lesion assessment for Femur
+39	BA_RIGHT2	Yes/No bone lesion assessment for Right
+40	BA_LEFT2	Yes/No bone lesion assessment for Left
+41	BA_HUMERUS	Yes/No bone lesion assessment for Humerus
+42	BA_RIGHT3	Yes/No bone lesion assessment for Right
+43	BA_LEFT3	Yes/No bone lesion assessment for Left
+44	BA_RIBS	Yes/No bone lesion assessment for Ribs
+45	BA_RIGHT4	Yes/No bone lesion assessment for Right
+46	BA_NUMBERAFFECTE	Number of ribs affected (right side)
+47	BA_LEFT4	Yes/No bone lesion assessment for Left
+48	BA_NUMBERAFFECTE2	Number of ribs affected (leftt side)
+49	BA_OTHER	Yes/No bone lesion assessment for Other
+50	BB_SPECIFY	Specify for BA_OTHER
+51	BB_REASONFORPROC	Reason for procedure
+52	BB_CELLULARITY2	
+53	BB_PERCENTOFPLAS	Percent of plasma cells
+54	BB_WASABONEMARRO	Was a bone marrow biopsy performed since the last study visit?
+55	BB_DAYOFCOLLECT	Date of collection
+56	BB_WASBIOPSYSPEC	Was biopsy specimen adequate for cellularity?
+57	BB_IFNOPLEASESPE	If biopsy specimen not adequate for cellularity, specify
+58	BB_CELLULARITY	
+59	BONE_WASABONEMARRO	Was a bone marrow aspirate performed since the last study visit?
+60	BONE_DAYOFCOLLECT	BMA date of collection
+61	BONE_WASBONEMARROW	Was bone marrow sample sent to the Spectrum Health?
+62	BONE_VOLUMEOFBMASP	
+63	BONE_PLASMAUNK	Volume of BMA unknown
+64	BONE_BMAVOLUMESENT	
+65	BONE_BMAUNK	Volume of bma sent to CoMMpass Central Lab unknown
+66	BONE_WASPERIPHERAL	Was peripheral blood sent to the Spectrum Health?
+67	BONE_DAYOFCOLLECT2	
+68	BONE_PC6	BMA: (%PC positive for CD138 by IHC) - reported as %PC
+69	BONE_PERCENTOFPLAS	BMA: (%PC positive for CD138 by IHC) - %PC
+70	BONE_REASONFORPROC	
+71	BONE_SPECIFY2	Other reason for procedure, specify
+72	BONE_PERCENTOFPLAS3	
+74	BONE_REPORTEDASPER	BMA: Reported as %PC by cytomorphology (smear)
+75	BONE_RANGEOFPLASMA2	BMA: (%PC positive for CD138 by IHC) - reported as %PC range
+76	BONE_RANGELOW	BMA: (%PC positive for CD138 by IHC) -  %PC low end of range
+77	BONE_RANGEHIGH	BMA: (%PC positive for CD138 by IHC) - %PC high end of range
+78	BONE_RANGEUNK	BMA: (%PC positive for CD138 by IHC) - not done/unknown
+79	BONE_BCYTOMORPHOLO	
+80	BONE_PC7	BMA: (%PC by cytomorphology (smear)) - reported as %PC
+81	BONE_PC2	BMA: (%PC by cytomorphology (smear)) - %PC
+82	BONE_RANGEOFPLASMA3	BMA: (%PC by cytomorphology (smear)) - reported as %PC range
+83	BONE_RANGELOW2	BMA: (%PC by cytomorphology (smear)) -  %PC low end of range
+84	BONE_RANGEHIGH2	BMA: (%PC by cytomorphology (smear)) - %PC high end of range
+85	BONE_FCAUNK	BMA: (%PC by cytomorphology (smear)) - not done/unknown
+86	BONE_AFLOWCYTOMETR	BMA: Reported as %cells positive by flow cytometry(FLOW)
+87	BONE_PC8	BMA: (%cells positive by FLOW) - reported as %PC
+88	BONE_REPORTEDBYCYT	BMA: (%cells positive by FLOW) - %PC
+89	BONE_RANGEOFPLASMA4	BMA: (%cells positive by FLOW) - reported as %PC range
+90	BONE_RANGELOW3	BMA: (%cells positive by FLOW) -  %PC low end of range
+91	BONE_RANGEHIGH3	BMA: (%cells positive by FLOW) - %PC high end of range
+92	BONE_UNKNOWN	BMA: (%cells positive by FLOW) - not done/unknown
+93	BONE_PC	
+95	BONE_REPORTEDASPER2	PC in clot section or BM biopsy: Reported as %PC positive for CD138 by IHC
+96	BONE_PC9	PC in clot section or BM biopsy: (%PC positive for CD138 by IHC) - reported as %PC
+97	BONE_PC3	PC in clot section or BM biopsy: (%PC positive for CD138 by IHC) - %PC
+98	BONE_RANGEOFPLASMA5	PC in clot section or BM biopsy: (%PC positive for CD138 by IHC) - reported as %PC range
+99	BONE_RANGELOW4	PC in clot section or BM biopsy: (%PC positive for CD138 by IHC) -  %PC low end of range
+100	BONE_RANGEHIGH4	PC in clot section or BM biopsy: (%PC positive for CD138 by IHC) - %PC high end of range
+101	BONE_LOWVALUE	PC in clot section or BM biopsy: (%PC positive for CD138 by IHC) - not done/unknown
+102	BONE_REPORTEDASPER3	PC in clot section or BM biopsy: Reported as %PC by cytomorphology (smear)
+103	BONE_PC10	PC in clot section or BM biopsy: (%PC by cytomorphology (smear)) - reported as %PC
+104	BONE_PC4	PC in clot section or BM biopsy: (%PC by cytomorphology (smear)) - %PC
+105	BONE_RANGEOFPLASMA6	PC in clot section or BM biopsy: (%PC by cytomorphology (smear)) - reported as %PC range
+106	BONE_RANGELOW5	PC in clot section or BM biopsy: (%PC by cytomorphology (smear)) -  %PC low end of range
+107	BONE_RANGEHIGH5	PC in clot section or BM biopsy: (%PC by cytomorphology (smear)) - %PC high end of range
+108	BONE_HIGHVALUE	PC in clot section or BM biopsy: (%PC by cytomorphology (smear)) - not done/unknown
+109	BONE_RANGEOFPLASMA	PC in clot section or BM biopsy: Reported as %cells positive by flow cytometry(FLOW)
+110	BONE_PC11	PC in clot section or BM biopsy: (%cells positive by FLOW) - reported as %PC
+111	BONE_PC5	PC in clot section or BM biopsy: (%cells positive by FLOW) - %PC
+112	BONE_RANGEOFPLASMA7	PC in clot section or BM biopsy: (%cells positive by FLOW) - reported as %PC range
+113	BONE_RANGELOW6	PC in clot section or BM biopsy: (%cells positive by FLOW) -  %PC low end of range
+114	BONE_RANGEHIGH6	PC in clot section or BM biopsy: (%cells positive by FLOW) - %PC high end of range
+115	BONE_NOTDONEUNKNOW	PC in clot section or BM biopsy: (%cells positive by FLOW) - not done/unknown
+116	BONE_DOESTHEPCRESU	Does the %PC result reported above apply to BMA specimen taken at the same time as the specimen submitted to CoMMpass Central Lab
+117	BMT_WASABONEMARRO	Was a bone marrow transplant performed?
+118	BMT_DAYOFTRANSPL	Date of transplant
+119	BMT_AUTOLOGOUS	Autologous
+120	BMT_ALLOGENIC	Allogenic
+121	BMT_PLEASESPECIFY	Please specify type of Allogenic transplant
+122	BMT_SPECIFY	Other type of allogenic transplant, specify
+123	BMT_STEMCELLS	Stem cells
+124	BMT_BONEMARROW	Bone marrow
+125	BMT_NUMBER	Number
+126	ECOG_PERFORMANCEST	Performance Status
+127	ECOG_WASANECOGASSE	Was an ECOG assessment performed since the last study visit?
+128	ECOG_ASSESSMENTDAT	Assessment Date
+129	IC_DAYOFINFORME	Date of Informed Consent
+130	IC_DAYOFVISIT	Date of visit
+131	IC_DAYUNIVERSAL	Date Universal Consent signed
+132	IC_DIDTHEPATIENT	Did the patient meet all eligibility requirements for this study?
+133	IC_HASTHEPATIENT	The patient has signed the Universal Informed Consent
+134	IC_IFYESPLEASEPR	If yes, please provide Date of Informed Consent
+135	IC_INVOLVEDFREEL	Involved free light chain level &#8805; 10 mg/dl and an abnormal serum free light chain ratio (<0.26 or >1.65)
+136	IC_IPERMITMYSAMP	I permit my Samples and correlating health information to be stored at the MMRF Longitudinal Study Biobank and MMRF Databank, respectively, and used by the MMRF, other organizations and researchers fo
+137	IC_IPERMITMYSAMP2	I permit my Samples and correlating health information to be used by the MMRF, other organizations and researchers in the Study and future research to learn about, prevent, or treat any other disorder
+138	IC_IPERMITRESEAR	I permit researchers at the facility to contact me in the future for an update on my status, or to discuss potential studies which may be appropriate for me
+139	IC_NOMORETHAN30D	No more than 30 days from baseline bone marrow evaluation as per this protocol to initiation of first-line therapy.
+140	IC_OTHREASON	Other reason for ineligibility?
+141	IC_PARTICIPATEPSS	Has the patient agreed to participate in the Patient Support Services
+142	IC_PATIENTHADANO	Patient had another malignancy within the last 5 years (except for basal or squamous cell carcinoma, or in situ cancer of the cervix).
+143	IC_PATIENTHASREA	Patient has read, understood and signed informed consent.
+144	IC_PATIENTISALRE	Patient is already receiving systemic therapy for MM (a single dose of bisphosphonates and up to 100 mg total dose of dexamethasone or equivalent corticosteroids are permitted prior to registration on
+145	IC_PATIENTISATLE	Patient is at least 18 years old
+146	IC_PATIENTISENRO	Patient is enrolled in a blinded clinical trial for the first-line treatment of multiple myeloma. Patients may be enrolled in subsequent clinical trials as long as continued access to data and tissue,
+147	IC_SERUMMPROTEIN	Serum M protein &#8805; 1g/dl IC_THEPATIENTISA="The patient is a candidate for systemic therapy that includes anIMiD® (e.g., lenalidomide, pomalidomide, thalidomide) and/orproteasome inhibitor (e.g., bortezomib, carfilzomib) as part of theinitia"
+148	IC_THEPATIENTISA	The patient is a candidate for systemic therapy that includes an IMiDÂ® (e.g., lenalidomide, pomalidomide, thalidomide) and/or proteasome inhibitor (e.g., bortezomib, carfilzomib) as part of the initia
+149	IC_URINEMPROTEIN	Urine M protein &#8805; 200 mg/24 hrs
+150	IC_WASTHISPATIEN2	Was this patient previously consented for this study?
+151	MMSURG_SPECIFY	Other multiple myeloma surgery, specify
+152	MMSURG_NONE	No multiple myeloma surgery
+153	MMSURG_VERTEBROPLAST	Vertebroplasty
+154	MMSURG_KYPHOPLASTY	Kyphoplasty
+155	MMSURG_OTHER	Other multiple myeloma surgery
+156	PN_WASANEUROLOGI	Was a neurologic assessment performed since the last study visit?
+157	PN_ASSESSMENTDAT	Peripheral neuropathy assessment date
+158	PN_PERIPHERALSEN	Peripheral sensory neuropathy present?
+159	PN_IFYESINDICATE	If peripheral sensory neuropathy, indicate grade
+160	PN_PERIPHERALMOT	Peripheral motor neuropathy present?
+161	PN_IFYESINDICATE2	If peripheral motor neuropathy, indicate grade
+162	SE_CAUSEOFDEATH	Cause of Death
+163	SE_DAYOFDEATH	Date of Death
+164	SE_DAYPATIENTCO	
+165	SE_DIDPATIENTCOM	Did patient complete the study?
+166	SE_LASTKNOWNDAY	Last known date alive
+167	SE_PRIMARYREASON	Primary Reason for Discontinuation
+168	SE_SPECIFY	Specify
+169	SE_SPECIFY2	Specify
+170	SUPP_ANTICOAGULATI	Anticoagulation
+171	SUPP_NONE	None
+172	SUPP_TRANSFUSION	Transfusion
+173	SUPP_PACKEDREDBLOO	Packed red blood cells
+174	SUPP_PLATELETS	Platelets
+175	SUPP_OTHER	Other
+176	SUPP_SPECIFY	Other supportive therapy, specify
+177	SUPP_RADIOTHERAPY	Radiotherapy
+178	SUPP_SPECIFYSITE	Specify site of radiotherapy
+179	SUPP_DIALYSIS	Dialysis
+180	SUPP_BISPHOSPHONAT	Bisphosphonates or other bone-directed therapy
+181	SUPP_WBCGROWTHFACT	WBC growth factors
+182	SUPP_ERYTHROPOIESI	Erythropoiesis stimulating agent
+183	SUPP_ANTIEMETIC	Antiemetic
+184	SUPP_ANALGESICSFOR	Analgesics for bone pain
+185	SUPP_OPIOID	Opioid
+186	SUPP_OTHER2	Other
+187	SUPP_ANTIVIRAL	Antiviral
+188	SUPP_MEDICATIONSFO	Medications for neuropathic pain
+189	SUPP_MEDICATIONSFO2	Medications for tumor lysis syndrome
+190	SS_ISTHEPATIENTR	Is the patient returning for their regular scheduled follow-up?
+191	SS_DAYOFVISIT	Date of Visit
+192	SS_DOESTHEPATIEN	Does the patient have evidence of symptomatic myeloma related to organ damage, tissue impairments or other symptoms?
+193	SS_SPINALCORDCOM	Spinal cord compression
+194	SS_BONEPAIN	Bone pain
+195	SS_FATIGUE	Fatigue
+196	SS_HYPERCALCEMIA	Hypercalcemia (corrected calcium > 11.5 mg/dl)
+197	SS_RENALINSUFFIC	Renal insufficiency attributable to myeloma
+198	SS_ANEMIAHEMOGLO	Anemia (hemoglobin <10 g/dL)
+199	SS_BONELESIONSLY	Bone Lesions - Lytic Lesions
+200	SS_BONELESIONSOS	Bone Lesions - Osteoporosis with compression fractures
+201	SS_SOFTTISSUEPLA	Soft Tissue Plasmacytoma - Single
+202	SS_OFTTISSUEPLAS	Soft Tissue Plasmacytoma - Multiple
+203	SS_RECURRENTBACT	Recurrent bacterial infections
+204	SS_SYMPTOMATICHY	Symptomatic hyperviscosity
+205	SS_AMYLOIDOSIS	Amyloidosis
+206	SS_OTHER	Other
+207	SS_SPECIFY	Specify
+208	ST_PLASMACYTOMAN	Plasmacytoma number
+209	ST_INCREASEINNUM	Was there an increase in Number
+210	ST_PLASMACYTOMAN2	Plasmacytoma number
+211	ST_RESULTOFEXAMI2	Result of examination
+212	ST_WASANASSESSME	Was an assessment for soft tissue plasmacytomas performed since the last study visit?
+213	ST_ASSESSMENTDAT	Date of soft tissue plasmacytoma assessment
+214	ST_WEREANYSOFTTI	Were any soft tissue plasmacytomas present during this exam?
+215	ST_NUMBEROFPLASM	Number of plasmacytomas
+216	ST_WASTHEREACHAN	Was there a change in Plasmacytomas since last visit
+217	ST_INCREASEINSIZE	Was there an increase in Size
+218	ST_RESULTOFEXAMI	Result of Examination
+219	D_IM_DCL_PATIENT_ID	Public Patient ID
+220	D_IM_COLLECTION_DAY	Collection Date
+221	D_IM_PROCESSING_DAY	Processing Date
+222	D_IM_PATIENTS__MMRF_ELIGIBILITY	MMRF Eligibility Status
+223	D_IM_IGH_SITE	IGH Site
+224	D_IM_IGL_SITE	IGL Site
+225	D_IM_MORPHOLOGY_PERCENT_PC_IN_BM	Morphology %PC in bone marrow
+226	D_IM_FLOWCYT_PCT_PC_IN_BM_LOW	Flow cytometer %PC in bone marrow-Low
+227	D_IM_FLOWCYT_PCT_PC_IN_BM_HIGH	Flow cytometer %PC in bone marrow-High
+228	D_IM_MORPHOLOGY_PERCENT_PC_IN_PB	Morphology %PC in peripheral blood
+229	D_IM_FLOWCYT_PCT_PC_IN_PB_LOW	Flow cytometer %PC in peripheral blood-Low
+230	D_IM_FLOWCYT_PCT_PC_IN_PB_HIGH	Flow cytometer %PC in peripheral blood-High
+231	D_IM_CD38_DETECTED	CD38 Detected
+232	D_IM_CD38_PC_PERCENT	CD38 PC%
+233	D_IM_CD38_DESCRIPTION	CD38 Description
+234	D_IM_CD138_DETECTED	CD138 Detected
+235	D_IM_CD138_PC_PERCENT	CD138 PC%
+236	D_IM_CD138_DESCRIPTION	CD138 Description
+237	D_IM_CD45_PC_TYPICAL_DETECTED	CD45 PC Typical Detected
+238	D_IM_CD45_PC_PERCENT	CD45 PC%
+239	D_IM_CD45_DESCRIPTION	CD45 Description
+240	D_IM_CD56_DETECTED	CD56 Detected
+241	D_IM_CD56_PC_PERCENT	CD56 PC%
+242	D_IM_CD56_DESCRIPTION	CD56 Description
+243	D_IM_CD13_DETECTED	CD13 Detected
+244	D_IM_CD13_PC_PERCENT	CD13 PC%
+245	D_IM_CD19_DETECTED	CD19 Detected
+246	D_IM_CD19_PC_PERCENT	CD19 PC%
+247	D_IM_CD20_DETECTED	CD20 Detected
+248	D_IM_CD20_PC_PERCENT	CD20 PC%
+249	D_IM_CD27_DETECTED	CD27 Detected
+250	D_IM_CD27_PC_PERCENT	CD27 PC%
+251	D_IM_CD28_DETECTED	CD28 Detected
+252	D_IM_CD28_PC_PERCENT	CD28 PC%
+253	D_IM_CD33_DETECTED	CD33 Detected
+254	D_IM_CD33_PC_PERCENT	CD33 PC%
+255	D_IM_CD52_DETECTED	CD52 Detected
+256	D_IM_CD52_PC_PERCENT	CD52 PC%
+257	D_IM_CD81_DETECTED	CD81 Detected
+258	D_IM_CD81_PC_PERCENT	CD81 PC%
+259	D_IM_CD117_DETECTED	CD117 Detected
+260	D_IM_CD117_PC_PERCENT	CD117 PC%
+261	D_IM_CD319_DETECTED	CD319 Detected
+262	D_IM_CD319_PC_PERCENT	CD319 PC%
+263	D_IM_fgfr3_char	FGFR3 (character)
+264	D_IM_FGFR3_PC_PERCENT	FGFR3 PC%
+265	D_IM_LIGHT_CHAIN_BY_FLOW	Light Chain by Flow
+266	D_IM_FLOWCYT_PCT_ANEUPLOID_POPUL	Flow cytometer %aneuploidy population
+267	D_IM_DNA_INDEX	DNA Index
+268	D_IM_BRAF_STATUS	BRAF Status
+269	D_IM_BRAF_CDNA_VARIANT	BRAF CDNA Variant
+270	D_IM_BRAF_PROTEIN_VARIANT	BRAF Protein Variant
+271	D_IM_fgfr3_detected	FGFR3 Detected
+272	D_IM_visitseq	Sample sequence
+273	D_IM_cd38des	CD38 Description(coded)
+274	D_IM_cd56des	CD56 Description(coded)
+275	D_IM_cd138des	CD138 Description(coded)
+276	D_IM_cd45d	CD45 Description(coded)
+277	D_IM_igh	IGH Site(coded)
+278	D_IM_igl	IGl Site(coded)
+279	D_IM_lightc	Light Chain by Flow(coded)
+280	D_IM_aneupgp	Aneuploidy group code
+281	D_IM_mrgday	Collection or Processing Date
+282	D_IM_BONE_REASONFORPROC	Reason for procedure reported on CRF
+283	D_IM_BONE_SPECIFY2	Reason for procdure on CRF, specify
+284	D_IM_pddt	Correlated disease progression date
+285	D_IM_crdt	Correlated Cr/sCR date
+286	D_IM_enr	Enrollment population flag
+287	D_IM_reason	Derived reason for sample
+288	D_IM_crdiff	Days away from closest CR/sCR date
+289	D_IM_pddiff	Days away from closest PD date
+290	D_IM_det_plasma_cells	Flag for detectable plasma cells (%PC in BM High > 0)
+291	D_IM_detectable	Flag for at least one CD marker detected
+292	D_IM_kaplam	Light chain either kappa or lambda
+293	D_IM_crhit	Flag for an acceptable sample for CR
+294	D_IM_pdhit	Flag for an acceptable sample for PD
+295	D_IM_hit	Flag for an acceptable sample
+296	D_LAB_cbc_abs_neut	Absolute Neutrophil count x10^9/L
+297	D_LAB_chem_albumin	Albumin (g/L)
+298	D_LAB_chem_bun	Blood Urea Nitrogen (mmol/L)
+299	D_LAB_chem_calcium	Calcium (mmol/L)
+300	D_LAB_chem_creatinine	Serum Creatinine (umol/L)
+301	D_LAB_chem_glucose	Glucose (mmol/L)
+302	D_LAB_cbc_hemoglobin	Hemogobin (mmol/L
+303	D_LAB_serum_kappa	Serum Kappa (mg/dL)
+304	D_LAB_chem_ldh	LDH (ukat/L)
+305	D_LAB_serum_m_protein	Serum M Protein (g/dL)
+306	D_LAB_cbc_platelet	Platelet count x10^9/L
+307	D_LAB_chem_totprot	Total Protein (g/dL)
+308	D_LAB_cbc_wbc	White Blood Count  x10^9/L
+309	D_LAB_serum_iga	Serum IgA (g/L)
+310	D_LAB_serum_igg	Serum IgG (g/L)
+311	D_LAB_serum_igm	Serum IgM (g/L)
+312	D_LAB_serum_beta2_microglobulin	Beta 2 Microglobulin (mcg/mL)
+313	D_LAB_serum_lambda	Serum Lambda (mg/dL)
+314	D_LAB_urine_24hr_m_protein	24 hr Urine M Protein (g/24 hr)
+315	D_LAB_urine_24hr_total_protein	24 hr Urine Total Protein (g/24 hr)
+316	D_LAB_serum_c_reactive_protein	C-Reactive Protein (mg/dL)
+317	D_LAB_serum_igd	Serum IgD (mg/L)
+318	D_LAB_serum_ige	Serum IgE (mg/L)
+319	D_QOL_Q1	
+320	D_QOL_Q2	
+321	D_QOL_Q3	
+322	D_QOL_Q4	
+323	D_QOL_Q5	
+324	D_QOL_Q6	
+325	D_QOL_Q7	
+326	D_QOL_Q8	
+327	D_QOL_Q9	
+328	D_QOL_Q10	
+329	D_QOL_Q11	
+330	D_QOL_Q12	
+331	D_QOL_Q13	
+332	D_QOL_Q14	
+333	D_QOL_Q15	
+334	D_QOL_Q16	
+335	D_QOL_Q17	
+336	D_QOL_Q18	
+337	D_QOL_Q19	
+338	D_QOL_Q20	
+339	D_QOL_Q21	
+340	D_QOL_Q22	
+341	D_QOL_Q23	
+342	D_QOL_Q24	
+343	D_QOL_Q25	
+344	D_QOL_Q26	
+345	D_QOL_Q27	
+346	D_QOL_Q28	
+347	D_QOL_Q29	
+348	D_QOL_Q30	
+349	D_QOL_Q31	
+350	D_QOL_Q32	
+351	D_QOL_Q33	
+352	D_QOL_Q34	
+353	D_QOL_Q35	
+354	D_QOL_Q36	
+355	D_QOL_Q37	
+356	D_QOL_Q38	
+357	D_QOL_Q39	
+358	D_QOL_Q40	
+359	D_QOL_Q41	
+360	D_QOL_Q42	
+361	D_QOL_Q43	
+362	D_QOL_Q44	
+363	D_QOL_Q45	
+364	D_QOL_Q46	
+365	D_QOL_Q47	
+366	D_QOL_Q48	
+367	D_QOL_Q49	
+368	D_QOL_Q50	
+369	D_QOL_QLQ_MY20	Was EORTC QLQ-MY20 questionnaire completed at this visit?
+370	D_QOL_QOL_DY	
+371	D_QOL_QLQ_C30	Was EORTC QLQ-C30 questionnaire completed at this visit?
+372	D_QOL_mPF2	Mean of Physical functioning Questions
+373	D_QOL_PF2	Physical functioning
+374	D_QOL_mRF2	Mean of Role functioning Questions
+375	D_QOL_RF2	Role functioning
+376	D_QOL_mEF	Mean of Emotional functioning Questions
+377	D_QOL_EF	Emotional functioning
+378	D_QOL_mCF	Mean of Cognitive functioning Questions
+379	D_QOL_CF	Cognitive functioning
+380	D_QOL_mSF	Mean of Social functioning Questions
+381	D_QOL_SF	Social functioning
+382	D_QOL_mMYFP	Mean of Future perspective Questions
+383	D_QOL_MYFP	Future Perspective
+384	D_QOL_mMYBI	Mean of Body image Questions
+385	D_QOL_MYBI	Body Image
+386	D_QOL_mQL2	Mean of QL2 Questions
+387	D_QOL_QL2	Global Health Status - QOL
+388	D_QOL_mFA	Mean of Fatigue Questions
+389	D_QOL_FA	Fatigue
+390	D_QOL_mNV	Mean of Nausea and Vomiting Questions
+391	D_QOL_NV	Nausea and vomiting
+392	D_QOL_mPA	Mean of Pain Questions
+393	D_QOL_PA	Pain
+394	D_QOL_mDY	Mean of Dyspnoea Questions
+395	D_QOL_DY	Dyspnoea
+396	D_QOL_mSL	Mean of Insomnia Questions
+397	D_QOL_SL	Insomnia
+398	D_QOL_mAP	Mean of Appetite Loss Questions
+399	D_QOL_AP	Appetite Loss
+400	D_QOL_mCO	Mean of Constipation Questions
+401	D_QOL_CO	Constipation
+402	D_QOL_mDI	Mean of Diarrhoea Questions
+403	D_QOL_DI	Diarrhoea
+404	D_QOL_mFI	Mean of Financial difficulties Questions
+405	D_QOL_FI	Financial difficulties
+406	D_QOL_mMYDS	Mean of Disease symptoms Questions
+407	D_QOL_MYDS	Disease Symptoms
+408	D_QOL_mMYSE	Mean of Side Effects of Treatment Questions
+409	D_QOL_MYSE	Side effects of treatment
+410	D_QOL_enr	Enrolled Population
+411	SAMPLE_TYPE	
+412	SPECIMEN_ID	
+413	KEATSNFKB_INDEX	
+414	KEATSPROLIF_INDEX	
+415	PI_PBL_INDEX	
+416	UAMS70_INDEX	
+417	UAMS70_CALL	
+418	PI_PBL_CALL	
+419	LDH_level	LDH categorized (High/Normal/Low)
+421	CMMC_VISIT_NAME	CMMC Visit Name
+422	CMMC_COMMENTS	CMMC Comments
+423	CMMC	
+424	CMMC_REASONFORPROC	CMMC Matched Sample Reason from CRF
+425	CMMC_BONE_SPECIFY2	CMMC Sample Reason Specify from CRF
+426	CMMC_REASONCODE	CMMC Matched Coded Sample Reason from CRF
+427	CMMC_CRHIT	CMMC CR Hit
+428	CMMC_PDHIT	CMMC PD Hit
+429	CMMC_HIT	CMMC CR or PD Hit
+430	CMMC_RECDY	CMMC Received Day
+431	enr	Enrolled Population

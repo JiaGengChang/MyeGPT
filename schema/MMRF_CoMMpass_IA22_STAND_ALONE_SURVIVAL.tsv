@@ -1,0 +1,227 @@
+column	name	label
+1	PUBLIC_ID	Public ID
+2	deathdy	Date of Death
+3	lstalive	Last known alive
+4	lvisitdy	Last Visit Date from D_VISIT
+5	maxline	Lines of therapy
+6	linesdy1	Start date of line 1
+7	linesdy2	Start date of line 2
+8	linesdy3	Start date of line 3
+9	linesdy4	Start date of line 4
+10	linesdy5	Start date of line 5
+11	lineedy1	End date of line 1
+12	lineedy2	End date of line 2
+13	lineedy3	End date of line 3
+14	lineedy4	End date of line 4
+15	lineedy5	End date of line 5
+16	trtedy1	Last date of treatment line 1
+17	trtedy2	Last date of treatment line 2
+18	trtedy3	Last date of treatment line 3
+19	trtedy4	Last date of treatment line 4
+20	trtedy5	Last date of treatment line 5
+21	bestresp	Best overall response
+22	brespdy	Date of best overall response
+23	fresp	First response
+24	lineresp	Line of first response
+25	frespdy	Date of first response
+26	fstresp1	Line 1 first response
+27	fstresp2	Line 2 first response
+28	fstresp3	Line 3 first response
+29	fstresp4	
+30	fstresp5	
+31	fstresp9	
+32	frespdy1	Line 1 date of first response
+33	frespdy2	Line 2 date of first response
+34	frespdy3	Line 3 date of first response
+35	frespdy4	
+36	frespdy5	
+37	frespdy9	
+38	bstresp1	Line 1 best overall response date
+39	bstresp2	Line 2 best overall response date
+40	bstresp3	Line 3 best overall response date
+41	bstresp4	Line 4 best overall response date
+42	bstresp5	
+43	bstresp9	
+44	bstdy1	Line 1 Overall best response date
+45	bstdy2	Line 2 Overall best response date
+46	bstdy3	Line 3 Overall best response date
+47	bstdy4	Line 4 Overall best response date
+48	bstdy5	
+49	bstdy9	
+50	vis6mo	Has at least 6 mo of visit data
+51	vis12mo	Has at least 12 mo of visit data
+52	comp1	Completed at least one assessment
+53	pdflag1	Flag if patient had a PD line 1
+54	pdflag2	Flag if patient had a PD line 2
+55	pdflag3	Flag if patient had a PD line 3
+56	pdflag4	Flag if patient had a PD line 4
+57	pdflag5	
+58	pdflag9	
+59	lastdy1	last date on line 1
+60	lastdy2	last date on line 2
+61	lastdy3	last date on line 3
+62	lastdy4	last date on line 4
+63	lastdy5	
+64	lastdy9	
+65	pddy1	Date of disease progression line 1
+66	pddy2	Date of disease progression line 2
+67	pddy3	Date of disease progression line 3
+68	pddy4	Date of disease progression line 4
+69	pddy5	
+70	pddy9	
+71	lpddy1	Line 1 last PD date
+72	lpddy2	Line 2 last PD date
+73	lpddy3	Line 3 last PD date
+74	lpddy4	Line 4 last PD date
+75	lpddy5	
+76	lpddy9	
+77	pddy	Date of disease progression
+78	lpddy	Last PD date
+79	pdflag	Flag if patient had a PD
+80	lastdy	Last date on study
+81	trtsdy	First date of treatment
+82	trtedy	Last date of treatment
+83	ttfpd	Time to first PD
+84	ttfpdw	Time to first PD (wk)
+85	ttfpd1	Time to first PD line 1
+86	ttfpd1w	Time to first PD (wk) line 1
+87	ttfpd2	Time to first PD line 2
+88	ttfpd2w	Time to first PD (wk) line 2
+89	ttfpd3	Time to first PD line 3
+90	ttfpd3w	Time to first PD (wk) line 3
+91	pfsdy	PFS date
+92	ttpfs	Time to PFS
+93	censpfs	Censor flag: progression-free survival
+94	pfscdy	PFS censored date
+95	ttcpfs	Time to PFS event (censored)
+96	ttpfsw	Time to PFS (wk)
+97	ttcpfsw	Time to PFS event (censored) (wk)
+98	pfsdy1	PFS date line 1
+99	ttpfs1	Time to PFS line 1
+100	censpfs1	Censor flag: progression-free survival line 1
+101	pfs1cdy	PFS censored date line 1
+102	ttcpfs1	Time to PFS event (censored) line 1
+103	ttpfs1w	Time to PFS (wk) line 1
+104	ttcpfs1w	Time to PFS event (censored) (wk) line 1
+105	pfsdy2	PFS date line 2
+106	ttpfs2	Time to PFS line 2
+107	censpfs2	Censor flag: progression-free survival line 2
+108	pfs2cdy	PFS censored date line 2
+109	ttcpfs2	Time to PFS event (censored) line 2
+110	ttpfs2w	Time to PFS (wk) line 2
+111	ttcpfs2w	Time to PFS event (censored) (wk) line 2
+112	pfsdy3	PFS date line 3
+113	ttpfs3	Time to PFS line 3
+114	censpfs3	Censor flag: progression-free survival line 3
+115	pfs3cdy	PFS censored date line 3
+116	ttcpfs3	Time to PFS event (censored) line 3
+117	ttpfs3w	Time to PFS (wk) line 3
+118	ttcpfs3w	Time to PFS event (censored) (wk) line 3
+119	ttos	Time to OS
+120	censos	Censor flag: overall survival
+121	oscdy	Overall survival censored date
+122	ttcos	Time to OS event (censored)
+123	ttosw	Time to OS (wk)
+124	ttcosw	Time to OS event (censored) (wk)
+125	ttfrsp	Time to first response
+126	censfrsp	Censor flag: first response
+127	frspcdy	First response date (censored)
+128	ttcfrsp	Time to first response (censored)
+129	ttfrspw	Time to first response (wk)
+130	ttcfrspw	Time to first response (censored) (wk)
+131	ttfrsp1	Time to first response line 1
+132	censfrsp1	Line 1 censor flag: first response
+133	frsp1cdy	Line 1 first response date (censored)
+134	ttcfrsp1	Time to first response (censored) line 1
+135	ttfrsp1w	Time to first response (wk) line 1
+136	ttcfrsp1w	Time to first response (censored) (wk) line 1
+137	ttfrsp2	Time to first response line 2
+138	censfrsp2	Line 2 censor flag: first response
+139	frsp2cdy	Line 2 first response date (censored)
+140	ttcfrsp2	Time to first response (censored) line 2
+141	ttfrsp2w	Time to first response (wk) line 2
+142	ttcfrsp2w	Time to first response (censored) (wk) line 2
+143	ttfrsp3	Time to first response line 3
+144	censfrsp3	Line 3 censor flag: first response
+145	frsp3cdy	Line 3 first response date (censored)
+146	ttcfrsp3	Time to first response (censored) line 3
+147	ttfrsp3w	Time to first response (wk) line 3
+148	ttcfrsp3w	Time to first response (censored) (wk) line 3
+149	trtfdy1	Line 1 treatment failure date
+150	tttf1	Line 1 time to treatment failure
+151	censtf1	Line 1 censor flag: time to treatment failure
+152	tf1cdy	Line 1 treatment failure censored date
+153	ttctf1	Line 1 time to treatment failure (censored)
+154	tttf1w	Line 1 time to treatment failure (wk)
+155	ttctf1w	Line 1 time to treatment failure (censored) (wk)
+156	trtfdy2	Line 2 treatment failure date
+157	tttf2	Line 2 time to treatment failure
+158	censtf2	Line 2 censor flag: time to treatment failure
+159	tf2cdy	Line 2 treatment failure censored date
+160	ttctf2	Line 2 time to treatment failure (censored)
+161	tttf2w	Line 2 time to treatment failure (wk)
+162	ttctf2w	Line 2 time to treatment failure (censored) (wk)
+163	trtfdy3	Line 3 treatment failure date
+164	tttf3	Line 3 time to treatment failure
+165	censtf3	Line 3 censor flag: time to treatment failure
+166	tf3cdy	Line 3 treatment failure censored date
+167	ttctf3	Line 3 time to treatment failure (censored)
+168	tttf3w	Line 3 time to treatment failure (wk)
+169	ttctf3w	Line 3 time to treatment failure (censored) (wk)
+170	ttt2line	Time to 2nd line
+171	censt2line	Censor flag: time to line 2
+172	t2linecdy	Time to line 2 censored date
+173	ttct2line	Time to line 2 (censored)
+174	ttt2linew	Time to 2nd line (wk)
+175	ttct2linew	Time to line 2 (censored) (wk)
+176	ttt23line	Time from line 2 to line 3
+177	censt23line	Censor flag: time from line 2 to line 3
+178	t23linecdy	Time from line 2 to line 3 censored date
+179	ttct23line	Time from line 2 to line 3 (censored)
+180	ttt23linew	Time from line 2 to line 3 (wk)
+181	ttct23linew	Time from line 2 to line 3 (censored) (wk)
+182	ttrdur	Duration of response
+183	censrdur	Censor flag: response duration
+184	rdurcdy	Response duration censored date
+185	ttcrdur	Time to response duration (censored)
+186	ttrdurw	Duration of response (wk)
+187	ttcrdurw	Time to response duration (censored) (wk)
+188	ttrdur1	Duration of response line 1
+189	censrdur1	Censor flag: response duration line 1
+190	rdur1cdy	Response duration censored date line 1
+191	ttcrdur1	Time to response duration (censored) line 1
+192	ttrdur1w	Duration of response (wk) line 1
+193	ttcrdur1w	Time to response duration (censored) (wk) line 1
+194	ttrdur2	Duration of response line 2
+195	censrdur2	Censor flag: response duration line 2
+196	rdur2cdy	Response duration censored date line 2
+197	ttcrdur2	Time to response duration (censored) line 2
+198	ttrdur2w	Duration of response (wk) line 2
+199	ttcrdur2w	Time to response duration (censored) (wk) line 2
+200	ttrdur3	Duration of response line 3
+201	censrdur3	Censor flag: response duration line 3
+202	rdur3cdy	Response duration censored date line 3
+203	ttcrdur3	Time to response duration (censored) line 3
+204	ttrdur3w	Duration of response (wk) line 3
+205	ttcrdur3w	Time to response duration (censored) (wk) line 3
+206	ttbrsp	Time to best overall response (day)
+207	ttbrspw	Time to best overall response (wk)
+208	ttbrsp1	Time to best overall response (day) line 1
+209	ttbrsp1w	Time to best overall response (wk) line 1
+210	ttbrsp2	Time to best overall response (day) line 2
+211	ttbrsp2w	Time to best overall response (wk) line 2
+212	ttbrsp3	Time to best overall response (day) line 3
+213	ttbrsp3w	Time to best overall response (wk) line 3
+214	mmstatus	MM status (derived)
+215	mmstatus1	Line 1 MM status (derived)
+216	mmstatus2	Line 2 MM status (derived)
+217	mmstatus3	Line 3 MM status (derived)
+218	trtstdy	First trt start date
+219	fltendy	First Line of Therapy End date
+220	pfsendy	PFS Event or Censor Date
+221	osendy	OS Event or Censor Date
+222	frendy	First Response Event or Censor Date
+223	ttfendy	Time to treatment fail Event or Censor Date
+224	t2lendy	Time to second line therapy Event or Censor date
+225	t3lendy	Time to third line therapy Event or Censor date
+226	enr	Enrolled Population
