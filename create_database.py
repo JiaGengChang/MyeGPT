@@ -135,12 +135,12 @@ def upload_table_exome_NS_variants():
     df = pd.read_csv(f'{PROJECTDIR}/omicdata/IGV Downloads-MMRF_CoMMpass_IA22_exome_vcfmerger2_IGV_All_Canonical_NS_Variants.mut', sep='\t', na_values='.')
     df['PUBLIC_ID'] = df['sample'].str.extract(r'(MMRF_\d+)')  # Extract the numeric part of the sample name
     df['VISIT'] = df['sample'].str.extract(r'MMRF_\d+_(\d+)_.*$')  # Extract the visit number
-    df = df.set_index(['GENEID','GENE'])
+    df = df.set_index(['GENEID','PUBLIC_ID'])
     print(df.head())
 
     # Upload to the database
     with engine.connect() as conn:
-        df.to_sql('exome_ns_variants', con=conn, if_exists='replace', index=True, index_label=['GENEID','GENE'])
+        df.to_sql('exome_ns_variants', con=conn, if_exists='replace', index=True, index_label=['GENEID','PUBLIC_ID'])
         print("Data uploaded successfully.")
 
 def upload_table_stand_alone_trtresp():
