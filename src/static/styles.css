@@ -1,5 +1,5 @@
 :root {
-  --max-width: 960px;
+  --max-width: 860px;
 }
 
 body {
@@ -24,7 +24,7 @@ body {
   }
 
   .chat-history {
-    width: 90%;
+    width: 80dvw;
     max-width: var(--max-width);
     height: calc(100vh - 100px); 
     overflow-y: auto;
@@ -53,15 +53,17 @@ body {
   .chat-message.user {
     background-color: rgb(240, 240, 240);
     margin-left: auto;
+    max-width: 60%;
   }
   
   .chat-message.assistant {
     background-color: rgb(255, 255, 255);
+    max-width: 90%;
   }
   
   .chat-input-container {
-    width: 85%;
-    max-width: var(--max-width);
+    width: 77dvw;
+    max-width: calc(var(--max-width) - 2dvw);
     display: flex;
     align-items: center;
     flex-direction: column;
