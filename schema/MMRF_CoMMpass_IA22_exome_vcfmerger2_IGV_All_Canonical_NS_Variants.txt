@@ -1,0 +1,54 @@
+column  name            description
+1       chr             Chromosome where the mutation is located (chr2, chrX, chrY, chr10)
+2       start           Start position of the mutation (1-based)
+3       end             End position of the mutation
+4       sample          Sample identifier (e.g., MMRF_1030_3_BM_CD138pos, MMRF_1030_3_BM_CD138pos, MMRF_2605_2_PB_Plasma)
+5       EFFECT          Predicted effect of the mutation (e.g., missense_variant, stop_gained, stop_loss, splice_acceptor_variant, intron_variant)
+6       GENE            Gene symbol affected by the mutation (e.g. TP53, IGHD6-6, CLU, WIZ).
+7       ID              Variant identifier (e.g., rs782300741, rs202020672, NULL)
+8       REF             Reference allele (e.g. C, TCAG)
+9       ALT             Alternate allele (e.g. T, TCCATCATACAA)
+10      COSMIC_C        Presence in COSMIC coding mutation database (t/f)
+11      COSMIC_NC       Presence in COSMIC non-coding mutation database (t/f)
+12      DB              Presence in DrugBank database (t/f)
+13      GNOMAD_EXOME    Presence in gnomAD exome database (t/f)
+14      GNOMAD_GENOME   Presence in gnomAD genome database (t/f)
+15      CLINVAR         Presence in ClinVar database (t/f)
+16      CALLER_COUNT    Number of variant callers that detected this mutation (3, 4, or 5)
+17      MUTECT2         Presence from Mutect2 caller (t/f)
+18      STRELKA2        Presence from Strelka2 caller (t/f)
+19      VARDICT         Presence from VarDict caller (t/f)
+20      OCTOPUS         Presence from Octopus caller (t/f)
+21      LANCET          Presence from Lancet caller (t/f)
+22      RNA_REF_COUNT   RNA-seq reference allele read count
+23      RNA_ALT_COUNT   RNA-seq alternate allele read count
+24      RNA_ALT_FREQ    RNA-seq alternate allele frequency
+25      NORMAL_REF_AD   Reference allele depth in normal sample
+26      NORMAL_ALT_AD   Alternate allele depth in normal sample
+27      NORMAL_ALT_FREQ Alternate allele frequency in normal sample
+28      NORMAL_DP       Total read depth in normal sample
+29      TUMOR_REF_AD    Reference allele depth in tumor sample
+30      TUMOR_ALT_AD    Alternate allele depth in tumor sample
+31      TUMOR_ALT_FREQ  Alternate allele frequency in tumor sample
+32      TUMOR_DP        Total read depth in tumor sample
+33      ALLELE          Allele annotation (e.g., A, T, ACGGCGGCAG, GAGCGCGTCATGGCCGAGGAGCA)
+34      IMPACT          Predicted impact (either MODERATE or HIGH)
+35      GENEID          Gene identifier, an Ensembl Gene stable ID (e.g., ENSG00000141510)
+36      FEATURE         Feature type. Constant value of "transcript".
+37      FEATUREID       Feature identifier. In this case all transcript IDs (e.g., ENST00000593612.1).
+38      BIOTYPE         Gene biotype (e.g., IG_V_gene, IG_J_gene, retained_intron, protein_coding, pseudogene).
+39      RANK            The rank of the exon where the variant lies (ranges from 1 to 360).
+40      HGVS_C          HGVS cDNA notation (e.g., c.374delA)
+41      HGVS_P          HGVS protein notation (e.g., p.Thr827Ala)
+42      CDNA_POS        Position in cDNA
+43      CDNA_LEN        Length of cDNA
+44      CDS_POS         Position in coding sequence (CDS)
+45      CDS_LEN         Length of coding sequence (CDS)
+46      AA_POS          Amino acid position
+47      AA_LEN          Amino acid length
+48      DISTANCE        Distance to nearest feature (e.g., exon, splice site)
+49      ERRORS          Error or warning messages from the variant caller algorithm
+50      LOF_GENE        Gene symbol predicted to have loss-of-function (e.g., HACE1, IDH3B, TET3)
+51      LOF_GENEID      Gene ID for loss-of-function prediction (e.g., ENSG00000242366, ENSG00000153208, ENSG00000145495)
+52      LOF_NUMTR       Number of transcripts with loss-of-function. Unreliable column as either NULL or 1.
+53      LOF_PERC        Percentage of transcripts with loss-of-function Unreliable column as either NULL or 1.

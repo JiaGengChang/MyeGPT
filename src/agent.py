@@ -62,6 +62,8 @@ with open(f"{SCHEMADIR}/MMRF_CoMMpass_IA22_STAND_ALONE_TREATMENT_REGIMEN.tsv", "
     stand_alone_treatment_regiment_schema = f.read()
 with open(f"{SCHEMADIR}/MMRF_CoMMpass_IA22_STAND_ALONE_TRTRESP.tsv", "r") as f:
     stand_alone_trtresp_schema = f.read()
+with open(f"{SCHEMADIR}/MMRF_CoMMpass_IA22_exome_vcfmerger2_IGV_All_Canonical_NS_Variants.txt", "r") as f:
+    exome_ns_variants_schema = f.read()
 
 # Create a description for the tables in the database
 db_description = """
@@ -72,8 +74,8 @@ The 'commpass' PostgreSQL 13.5 database contains data of 1143 newly diagnosed mu
 - **wgs_fish**: WGS-reconstruction of FISH probe values, indexed by PUBLIC_ID. Contains FISH probe values for various genes and chromosome arms, such as 1q21, 17p13, RB1, and TP53. Each row represents a FISH probe value for a patient in integer copy number statuses (-2, -1, 0, +1, or +2). Two exceptions: 1. the column SeqWGS_Cp_Hyperdiploid_Chr_Count indicates the number of hyperdiploid chromosomes detected in that sample. 2. The SeqWGS_Cp_Hyperdiploid_Call column indicates whether the sample is hyperdiploid (1) or not (0). The remaining columns are ordinary copy number statuses.
 - **salmon_gene_unstranded_counts**: Gene expression read counts from Salmon, indexed by PUBLIC_ID and Gene. Each row details the integer read count (`Count`) for a particular ensembl gene ID (`Gene`), patient (`PUBLIC_ID`), and sample (`Sample`). This is a gene expression matrix that has been melted to long format.
 - **salmon_gene_unstranded_tpm**: Gene expression transcripts per million (tpm) from Salmon, indexed by PUBLIC_ID and Gene. Each row details the floating-point tpm value (`tpm`) for a particular ensembl gene ID (`Gene`), patient (`PUBLIC_ID`), and sample (`Sample`). This is a gene expression matrix that has been melted to long format. It is derived from counts by normalizing the read counts to transcripts per million (TPM), and is preferred over raw read counts for cross-sample comparisons. Log10-transformation is commonly applied to these values.
-- **genome_gatk_cna**: Copy number alteration segments from GATK, indexed by SAMPLE. Contains segment means and derived integer copy number status (-2, -1, 0, +1, or +2) for each segment per sample.
-- **exome_ns_variants**: Non-synonymous exome variants, indexed by sample and GENE. Each row represents a variant with details like effect, reference/alternate alleles, and loss-of-function gene name (if any).
+- **genome_gatk_cna**: Copy number alteration segments from GATK, indexed by SAMPLE. The Segment_Mean column indicates raw mean log ratios of each probe, and Segment_Copy_Number column indicates the derived integer copy number status (-2, -1, 0, +1, or +2) for the probe.
+- **exome_ns_variants**: Non-synonymous exome variants, indexed by "GENE" which is the Ensembl Stable ID. The column number, name, and description are as follow:\n{exome_ns_variants_schema}
 - **per_visit**: Clinical data per patient visit, indexed by PUBLIC_ID. Each row represents a visit for a patient, with visit-specific clinical details. The column number, name, and description are as follow:\n{per_visit_schema}
 - **stand_alone_trtresp**: Treatment response data per patient, indexed by PUBLIC_ID. Contains information about patient responses to treatments. The column number, name, and description are as follow:\n{stand_alone_trtresp_schema}
 - **stand_alone_treatment_regimen**: Treatment regimen data per patient, indexed by PUBLIC_ID. Each row details the treatment regiment administered to a patient in that step of treatment. The column number, name, and description are as follow:\n{stand_alone_treatment_regiment_schema}
@@ -85,6 +87,7 @@ All tables are based on CoMMpass Interim Analysis 22 (IA22), except for `canonic
     stand_alone_survival_schema=stand_alone_survival_schema,
     stand_alone_treatment_regiment_schema=stand_alone_treatment_regiment_schema,
     stand_alone_trtresp_schema=stand_alone_trtresp_schema,
+    exome_ns_variants_schema=exome_ns_variants_schema,
 )
 
 # Create a system message for the agent
@@ -110,6 +113,8 @@ When selecting the "tpm" column from the `salmon_gene_unstranded_tpm` table, use
 
 The patient public identifier is the first 9 characters of the sample identifer. For example, if the sample is MMRF_2317_1_BM_CD138pos, the PUBLIC_ID is MMRF_2317. This is useful for joining tables indexed by PUBLIC_ID with those indexed by Sample, SAMPLE, or SAMPLE_ID.
 
+When the query involves mutations, consider adding WHERE "BIOTYPE" = 'protein_coding' to the query. This is because pseudogenes, IG_V, and other RNA genes are not so relevant for non-synonymous mutations.
+
 When the question asks to describe a subpopulation, characteristics you should report include median age, number of male/female, and number of ISS stage I/II/III, average PROLIF_INDEX, breakdown for ecog 1/2/3/4/5 (from table `per_patient`), average serum levels for albumin, LDH, creatinine, haemoglobin, M protein (from table `per_visit`), breakdown by translocation type (from table `canonical_ig`), number of  hyperdiploid/non-hyperdiploid patients (from table `wgs_fish`), median PFS and median OS (from table `stand_alone_survival`). Aggregate the results across patient PUBLIC_IDs. Ignore missing values when calculating the summary statistics.
 
 Avoid selecting the metadata columns unless it is explicitly requested or needed for JOIN operations. Prioritize payload variables (e.g., "D_PT_iss", "tpm", "Count", "Segment_Copy_Number_Status", and "SeqWGS_SOMEGENE_CALL") over identifiers e.g. ("PUBLIC_ID", "Gene", "Sample", or "SAMPLE_ID").
@@ -118,11 +123,13 @@ You are prohibited from modifying the database or using any of the `CREATE`, `IN
 
 If the query fails or returns nothing, attempt to fix the query and re-run. Options include adding a LIMIT 100 clause, changing the variable names, or selecting from another table.
 
-Finally, turn the query results into a text- or graph-based answer. If the answer is text-based, return it in html instead of markdown e.g. <h3> tags instead of ###, <li> tags instead of -, <b> or <strong> instead of **. Do not use <h1> or <h2> tags. Remove the opening and closing backticks (```html and ```) from the response. If the answer is graph-based, rotate x-axis tick labels by 45 degrees, and use pyplot tight_layout.
+Finally, turn the query results into a text- or graph-based answer. If the answer is text-based, return it in html instead of markdown e.g. <h3> tags instead of ###, <li> tags instead of -, <b> or <strong> instead of **. Do not use <h1> or <h2> tags. Remove the opening and closing backticks (```html and ```) from the response. If the answer is graph-based, rotate x-axis tick labels by 45 degrees, and use pyplot tight_layout, figure size of 8 by 6 inches.
 
 You are allowed to answer general questions about your role, the database and the tools you have. 
 
 Apart from that, direct remaining questions to the CoMMpass dataset for answers. If you cannot answer them, say so.
+
+Where appropriate, suggest any follow-up questions that the user might find useful.
 """.format(
     db_description=db_description,
     dialect=db.dialect,
