@@ -133,12 +133,14 @@ def upload_table_genome_gatk_cna():
 def upload_table_exome_NS_variants():
     # Load the data
     df = pd.read_csv(f'{PROJECTDIR}/omicdata/IGV Downloads-MMRF_CoMMpass_IA22_exome_vcfmerger2_IGV_All_Canonical_NS_Variants.mut', sep='\t', na_values='.')
-    df = df.set_index(['GENEID'])
+    df['PUBLIC_ID'] = df['sample'].str.extract(r'(MMRF_\d+)')  # Extract the numeric part of the sample name
+    df['VISIT'] = df['sample'].str.extract(r'MMRF_\d+_(\d+)_.*$')  # Extract the visit number
+    df = df.set_index(['GENEID','GENE'])
     print(df.head())
 
     # Upload to the database
     with engine.connect() as conn:
-        df.to_sql('exome_ns_variants', con=conn, if_exists='replace', index=True, index_label='GENEID')
+        df.to_sql('exome_ns_variants', con=conn, if_exists='replace', index=True, index_label=['GENEID','GENE'])
         print("Data uploaded successfully.")
 
 def upload_table_stand_alone_trtresp():
@@ -218,17 +220,17 @@ if __name__ == "__main__":
         print(result.fetchone())
         # conn.rollback()
         # upload tables
-        upload_table_per_patient()
-        upload_table_per_patient_visit()
-        upload_table_stand_alone_survival()
-        upload_table_stand_alone_treatment_regimen()
-        upload_table_stand_alone_trtresp()
-        upload_table_salmon_gene_unstranded_counts()
-        upload_table_salmon_gene_unstranded_tpm()
-        upload_table_genome_gatk_cna()
-        upload_table_gene_annotation()
+        # upload_table_per_patient()
+        # upload_table_per_patient_visit()
+        # upload_table_stand_alone_survival()
+        # upload_table_stand_alone_treatment_regimen()
+        # upload_table_stand_alone_trtresp()
+        # upload_table_salmon_gene_unstranded_counts()
+        # upload_table_salmon_gene_unstranded_tpm()
+        # upload_table_genome_gatk_cna()
+        # upload_table_gene_annotation()
         upload_table_exome_NS_variants()
-        upload_table_canonical_ig()
-        upload_table_wgs_fish()
+        # upload_table_canonical_ig()
+        # upload_table_wgs_fish()
         exit()
 

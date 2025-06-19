@@ -52,3 +52,5 @@ column  name            description
 51      LOF_GENEID      Gene ID for loss-of-function prediction (e.g., ENSG00000242366, ENSG00000153208, ENSG00000145495)
 52      LOF_NUMTR       Number of transcripts with loss-of-function. Unreliable column as either NULL or 1.
 53      LOF_PERC        Percentage of transcripts with loss-of-function Unreliable column as either NULL or 1.
+54      PUBLIC_ID       Public identifier of the patient (e.g., MMRF_2847, MMRF_1013)
+55      VISIT           Visit number at which this mutation was recorded (e.g., 1, 2, 3, ..., 15)
