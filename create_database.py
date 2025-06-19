@@ -99,6 +99,12 @@ def upload_table_salmon_gene_unstranded_tpm():
         print("TPM values updated successfully.")
 
 # based on Soekojo et al 2022 Genomic Classification of Functional High Risk patients in Multiple myeloma
+# add integer-level segment copy number status, defined for segment_mean x as:
+# if x <= -1.5 then segment_copy_number_status = -2
+# if -1.5 < x <= -0.5 then segment_copy_number_status = -1
+# if -0.5 < x <= 0.38 then segment_copy_number_status = 0
+# if +0.38 < x <= 0.66 then segment_copy_number_status = +1
+# if x > 0.66 then segment_copy_number = +2
 def segment_copy_number(x):
     if x <= -1.5:
         return -2
@@ -116,13 +122,6 @@ def upload_table_genome_gatk_cna():
     df = pd.read_csv(f'{PROJECTDIR}/omicdata/Copy Number Estimates-MMRF_CoMMpass_IA22_genome_gatk_cna.seg', sep='\t')
     df = df.set_index('SAMPLE')
     
-    # add integer-level segment copy number status, defined for segment_mean x as:
-    # if x <= -1.5 then segment_copy_number_status = -2
-    # if -1.5 < x <= -0.5 then segment_copy_number_status = -1
-    # if -0.5 < x <= 0.38 then segment_copy_number_status = 0
-    # if +0.38 < x <= 0.66 then segment_copy_number_status = +1
-    # if x > 0.66 then segment_copy_number = +2
-
     df['Segment_Copy_Number_Status'] = df['Segment_Mean'].apply(segment_copy_number)
 
     print(df.head())
@@ -133,13 +132,13 @@ def upload_table_genome_gatk_cna():
 
 def upload_table_exome_NS_variants():
     # Load the data
-    df = pd.read_csv(f'{PROJECTDIR}/omicdata/IGV Downloads-MMRF_CoMMpass_IA22_exome_vcfmerger2_IGV_All_Canonical_NS_Variants.mut', sep='\t')
-    df1 = df[['sample','GENE','LOF_GENE','EFFECT','ID','REF','ALT']].set_index(['sample', 'GENE'])
-    print(df1.head())
+    df = pd.read_csv(f'{PROJECTDIR}/omicdata/IGV Downloads-MMRF_CoMMpass_IA22_exome_vcfmerger2_IGV_All_Canonical_NS_Variants.mut', sep='\t', na_values='.')
+    df = df.set_index(['GENEID'])
+    print(df.head())
 
     # Upload to the database
     with engine.connect() as conn:
-        df1.to_sql('exome_ns_variants', con=conn, if_exists='replace', index=True, index_label=['sample', 'GENE'])
+        df.to_sql('exome_ns_variants', con=conn, if_exists='replace', index=True, index_label='GENEID')
         print("Data uploaded successfully.")
 
 def upload_table_stand_alone_trtresp():
