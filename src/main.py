@@ -41,7 +41,7 @@ async def ask(query: Query):
     user_input = query.user_input
     filename = f"graph_{uuid.uuid4().hex[:8]}.png"
     full_prompt = f"""
-    PRE-AMBLE: If a graph is generated, save the graph as '{filename}' in the folder '{graph_folder}' and do not mention anything about the graph being saved or generated.
+    PRE-AMBLE: If a graph is generated, call plt.savefig() to save the graph as '{filename}' in the folder '{graph_folder}' and do not mention anything about the graph being saved or generated. Do not plt.show() as the canvas is non-interactive.
     USER INPUT: {user_input}
     """
 
