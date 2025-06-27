@@ -3,16 +3,17 @@ import pandas as pd
 
 from langchain.chat_models import init_chat_model
 from langchain.tools import StructuredTool
-from langchain_experimental.utilities import PythonREPL
+from langchain_experimental.tools import PythonAstREPLTool
 from langchain_community.utilities import SQLDatabase
 from langchain_community.tools import QuerySQLDatabaseTool
 from langgraph.checkpoint.memory import MemorySaver
 from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
 from langgraph.prebuilt import create_react_agent
 import matplotlib
+import json
 matplotlib.use('Agg') # non-interactive backend
 
-llm = init_chat_model(os.getenv("MODEL","openai:gpt-4o-mini"), temperature=0)
+llm = init_chat_model(os.getenv("MODEL"))
 
 DB_USER = os.getenv("DB_USER", "postgres")
 DB_PW = os.getenv("DB_PASSWORD",'password')
@@ -38,17 +39,36 @@ convert_gene_tool = StructuredTool.from_function(
     description="Convert a gene name to its corresponding Ensembl Gene stable ID (e.g. NSD2 to ENSG00000109685). Returns an error message if the gene name is not found or if it is not a gene name."
 )
 
-# python tool to do basic tasks like string manipulation and arithmetic
-repl_tool = StructuredTool.from_function(
-    name="python_repl",
-    description="A Python shell. Use this to execute python commands. Input should be a valid python command. If you want to see the output of a value, you should print it out with print(...).",
-    func=PythonREPL().run,
+def save_query_results_to_json(results, file_path: str):
+    """
+    Save SQL query results (list of dicts or DataFrame) to a JSON file.
+    """
+    if isinstance(results, pd.DataFrame):
+        data = results.to_dict(orient="records")
+    else:
+        data = results
+    with open(file_path, "w") as f:
+        json.dump(data, f, indent=2)
+    return f"Query results saved to {file_path}"
+
+save_query_results_tool = StructuredTool.from_function(
+    func=save_query_results_to_json,
+    name="save_query_results_to_json",
+    description="Save SQL query results from `query_sql_tool` to a JSON file at the specified file path."
 )
 
-# create a QUERY SQL tool
-query_sql_tool = QuerySQLDatabaseTool(db=db)
+# python tool to do basic tasks like string manipulation and arithmetic
+repl_tool = PythonAstREPLTool()
 
-agent_executor = create_react_agent(llm, [convert_gene_tool, query_sql_tool, repl_tool], checkpointer=MemorySaver())
+# create a QUERY SQL tool
+query_sql_tool = QuerySQLDatabaseTool(
+    db=db,
+    callback=lambda query, results: save_query_results_tool.run(
+        {"results": results, "file_path": os.path.join(globals()['json_folder'], globals()['json_results'])}
+    )
+)
+
+agent_executor = create_react_agent(llm, [convert_gene_tool, query_sql_tool, save_query_results_tool, repl_tool], checkpointer=MemorySaver())
 
 # Read the schema files of the clinical tables
 SCHEMADIR = os.environ.get("SCHEMADIR")
@@ -117,13 +137,15 @@ When the query involves mutations, consider subsetting to protein coding genes f
 
 When the question asks to describe a subpopulation, characteristics you should report include median age, number of male/female, and number of ISS stage I/II/III, average PROLIF_INDEX, breakdown for ecog 1/2/3/4/5 (from table `per_patient`), average serum levels for albumin, LDH, creatinine, haemoglobin, M protein (from table `per_visit`), breakdown by translocation type (from table `canonical_ig`), number of  hyperdiploid/non-hyperdiploid patients (from table `wgs_fish`), median PFS and median OS (from table `stand_alone_survival`). Aggregate the results across patient PUBLIC_IDs. Ignore missing values when calculating the summary statistics.
 
-Avoid selecting the metadata columns unless it is explicitly requested or needed for JOIN operations. Prioritize payload variables (e.g., "D_PT_iss", "tpm", "Count", "Segment_Copy_Number_Status", and "SeqWGS_WHSC1_CALL") over identifiers e.g. ("PUBLIC_ID", "Gene", "Sample", or "SAMPLE_ID").
+Avoid selecting the metadata columns unless it is explicitly requested or needed for JOIN operations. Prioritize SELECT on payload variables (e.g., "D_PT_iss", "tpm", "Count", "Segment_Copy_Number_Status", and "SeqWGS_WHSC1_CALL") over SELECT of id variables e.g. ("PUBLIC_ID", "Gene", "Sample", or "SAMPLE_ID").
 
 You are prohibited from modifying the database or using any of the `CREATE`, `INSERT`, `ALTER`, `UPDATE`, or `DELETE` commands.
 
 If the query fails or returns nothing, attempt to fix the query and re-run. Options include adding a LIMIT 100 clause, changing the variable names, or selecting from another table.
 
-Finally, turn the query results into a text- or graph-based answer. If the answer is text-based, return it in html instead of markdown e.g. <h3> tags instead of ###, <li> tags instead of -, <b> or <strong> instead of **. Do not use <h1> or <h2> tags. Remove the opening and closing backticks (```html and ```) from the response. If the answer is graph-based, rotate x-axis tick labels by 45 degrees, and use pyplot tight_layout, figure size of 8 by 6 inches.
+Save the ENTIRE query result to a JSON file using the `save_query_results_tool` for subsequent use in graph generation.
+
+Finally, turn the query results into a text- or graph-based answer. Load the query results from the JSON file. Then, if the answer is text-based, return it in html instead of markdown e.g. <h3> tags instead of ###, <li> tags instead of -, <b> or <strong> instead of **. Do not use <h1> or <h2> tags. Remove the opening and closing backticks (```html and ```) from the response. If the answer is graph-based, use pyplot tight_layout, figure size of 6 by 4 inches, rotate x-axis tick labels by 45 degrees, and place the legend in the best location.
 
 You are allowed to answer general questions about your role, the database and the tools you have. 
 
@@ -138,7 +160,7 @@ Where appropriate, suggest any follow-up questions that the user might find usef
 def query_agent(user_input: str):
     user_message = HumanMessage(content=user_input)
     config = {"configurable": {"thread_id": "thread-001"}, 
-              "recursion_limit": 10
+              "recursion_limit": 25
               }
     full_response = ""
 
