@@ -1,6 +1,6 @@
 # CoMMpass-GPT
 
-A chatbot for researchers to interact with the MMRF-CoMMpass dataset
+A agentic conversation application for researchers to mine the MMRF-CoMMpass dataset, built with LangChain.
 
 <img width="875" alt="Desktop site demonstration screenshot" src="https://github.com/user-attachments/assets/92959775-72aa-4aca-a0a2-3ab5051424db" />
 
