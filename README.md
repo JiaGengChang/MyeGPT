@@ -8,6 +8,13 @@ Scan the code to access it on mobile browser:
 
 ![qrchimpX512](https://github.com/user-attachments/assets/f45a344b-4813-4c57-9664-2e0e8bbb86fe)
 
+## Demo
+
+1. Create a desired figure
+
+https://github.com/user-attachments/assets/7a5aca54-c233-4831-8ace-6de29e6df061
+
+
 
 ## Project structure
 
