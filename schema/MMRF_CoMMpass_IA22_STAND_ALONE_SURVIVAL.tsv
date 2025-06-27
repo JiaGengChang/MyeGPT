@@ -90,12 +90,12 @@ column	name	label
 89	ttfpd3	Time to first PD line 3
 90	ttfpd3w	Time to first PD (wk) line 3
 91	pfsdy	PFS date
-92	ttpfs	Time to PFS
+92	ttpfs	Time to PFS. Not suitable for survival analysis as it is null for censored events. Avoid selecting this column.
 93	censpfs	Censor flag: progression-free survival
-94	pfscdy	PFS censored date
-95	ttcpfs	Time to PFS event (censored)
-96	ttpfsw	Time to PFS (wk)
-97	ttcpfsw	Time to PFS event (censored) (wk)
+94	pfscdy	PFS censored date. Suitable for survival analysis.
+95	ttcpfs	Time to PFS event (censored). Suitable for survival analysis.
+96	ttpfsw	Time to PFS (wk). Not suitable for survival analysis as it is null for censored events. Avoid selecting this column.
+97	ttcpfsw	Time to PFS event (censored) (wk). Suitable for survival analysis.
 98	pfsdy1	PFS date line 1
 99	ttpfs1	Time to PFS line 1
 100	censpfs1	Censor flag: progression-free survival line 1
@@ -117,12 +117,12 @@ column	name	label
 116	ttcpfs3	Time to PFS event (censored) line 3
 117	ttpfs3w	Time to PFS (wk) line 3
 118	ttcpfs3w	Time to PFS event (censored) (wk) line 3
-119	ttos	Time to OS
+119	ttos	Time to OS. Not suitable for survival analysis as it is null for censored events. Avoid selecting this column.
 120	censos	Censor flag: overall survival
-121	oscdy	Overall survival censored date
-122	ttcos	Time to OS event (censored)
-123	ttosw	Time to OS (wk)
-124	ttcosw	Time to OS event (censored) (wk)
+121	oscdy	Overall survival censored date. Suitable for survival analysis.
+122	ttcos	Time to OS event (censored). Suitable for survival analysis.
+123	ttosw	Time to OS (wk). Not suitable for survival analysis as it is null for censored events. Avoid selecting this column.
+124	ttcosw	Time to OS event (censored) (wk). Suitable for survival analysis.
 125	ttfrsp	Time to first response
 126	censfrsp	Censor flag: first response
 127	frspcdy	First response date (censored)

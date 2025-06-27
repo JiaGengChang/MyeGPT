@@ -1,16 +1,16 @@
 column	name	label
 1	PUBLIC_ID	Public ID
 2	line	Line of therapy
-3	trtname	Treatment name
-4	trtshnm	Treatment (short name)
-5	catname	
+3	trtname	Treatment name (e.g. Dexamethasone, Bortezomib/Carfilzomib/Lenalidomide/Cyclophosphamide/Dexamethasone)
+4	trtshnm	Treatment (short name e.g., Dex, Bor-Ixa-Len-Cyc-Mel-Dex)
+5	catname Treatment category (e.g., IMID, Proteasome/Proteasome/IMID/Chemotherapy/Steroid/Steroid)
 6	trtstdy	Treatment start date
 7	trtendy	Treatment end date
 8	trtgroup	Treatment group
 9	thername	Therapy name
 10	thershnm	Therapy classification (short name)
 11	therstdy	Therapy start date
-12	thercat	
+12	thercat Therapy category (e.g., IMID/Steroid/Proteasome/Chemotherapy, Proteasome/IMID/Steroid/SLAMF7/Chemotherapy)
 13	therendy	Therapy end date
 14	therclass	Therapy classification
 15	trtclass	Treatment class
