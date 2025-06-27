@@ -45,7 +45,7 @@ async def ask(query: Query):
     json_filename = f"query_results_{uuid.uuid4().hex[:8]}.json"
     figure_filename = f"graph_{uuid.uuid4().hex[:8]}.png"
     full_prompt = f"""
-    PRE-AMBLE: Write any SQL query results to '{json_filename}' in the folder '{json_folder}'. If a graph is generated, call plt.savefig() to save the graph as '{figure_filename}' in the folder '{graph_folder}' and do not mention anything about the graph being saved or generated. Do not plt.show() as the canvas is non-interactive.
+    PRE-AMBLE: If a graph is generated, call plt.savefig() to save the graph as '{figure_filename}' in the folder '{graph_folder}' and do not mention anything about the graph being saved or generated. Do not plt.show() as the canvas is non-interactive.
     USER INPUT: {user_input}
     """
 
