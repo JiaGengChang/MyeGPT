@@ -26,7 +26,6 @@ os.makedirs(json_folder, exist_ok=True)
 static_dir = os.path.join(app_dir, 'static')
 
 app.mount("/graph", StaticFiles(directory=graph_folder), name="graph") # serve plotted graphs
-app.mount("/json", StaticFiles(directory=json_folder), name="json") # serve json query results
 app.mount("/static", StaticFiles(directory=static_dir), name="static") # serve static files
 
 # Serve landing page
@@ -40,37 +39,9 @@ class Query(BaseModel):
 # handle chat requests
 @app.post("/api/ask")
 async def ask(query: Query):
-
-    user_input = query.user_input
-    json_filename = f"query_results_{uuid.uuid4().hex[:8]}.json"
-    figure_filename = f"graph_{uuid.uuid4().hex[:8]}.png"
-    full_prompt = f"""
-    PRE-AMBLE: If a graph is generated, call plt.savefig() to save the graph as '{figure_filename}' in the folder '{graph_folder}' and do not mention anything about the graph being saved or generated. Do not plt.show() as the canvas is non-interactive.
-    USER INPUT: {user_input}
-    """
-
-    response = query_agent(full_prompt)
-
-    graph_path = os.path.join(graph_folder, figure_filename)
-    graph_url = None
-
-    json_path = os.path.join(json_folder, json_filename)
-    json_url = None
-
-    if os.path.exists(graph_path):
-        graph_url = f"graph/{figure_filename}"
-
-    if os.path.exists(json_path):
-        json_url = f"json/{json_filename}"
-
-    print(f"\nJSON URL : {json_url}")
-    print(f"\nGRAPH URL : {graph_url}")
-    return {
-        "response": response,
-        "json_url": json_url,
-        "graph_url": graph_url,
-    }
-
+    graph_url=os.path.join(graph_folder, f"graph_{uuid.uuid4().hex[:8]}.png")
+    response = query_agent(query.user_input, graph_url)
+    return {"response": response}
 
 if __name__ == "__main__":
     import uvicorn
