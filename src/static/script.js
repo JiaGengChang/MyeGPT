@@ -55,7 +55,6 @@ async function sendMessage() {
         // Parse JSON response from backend
         const data = await response.json();
         const botResponse = data.response;
-        const graphUrl = data.graph_url;
         // Add bot's response to chat history
         const botMessageElement = document.createElement('div');
         botMessageElement.classList.add('chat-message', 'assistant');
@@ -64,18 +63,7 @@ async function sendMessage() {
         botMessageContainer.classList.add('chat-message-container');
         botMessageContainer.appendChild(botMessageElement);
         chatHistory.appendChild(botMessageContainer);
-        // If a graph URL exists, display the graph image
-        if (graphUrl) {
-            const graphElement = document.createElement('img');
-            graphElement.src = graphUrl;
-            graphElement.alt = "Generated Graph";
-            graphElement.classList.add('generated-graph');
-            const graphContainer = document.createElement('div');
-            graphContainer.classList.add('chat-message-container');
-            graphContainer.appendChild(graphElement);
-            chatHistory.appendChild(graphContainer);
-        }
-
+        
         chatHistory.scrollTop = chatHistory.scrollHeight;
 
     } catch (error) {
