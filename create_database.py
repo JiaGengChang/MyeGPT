@@ -203,6 +203,40 @@ def upload_table_wgs_fish():
         df.to_sql('wgs_fish', con=conn, if_exists='replace', index=True, index_label='PUBLIC_ID')
         print("Data uploaded successfully.")
 
+def upload_table_sbs():
+    # Load the data
+    df = pd.read_csv(f'{PROJECTDIR}/omicdata/SBS86_IA21.tsv', sep='\t')
+    df['PUBLIC_ID'] = df.SAMPLE_ID.str.extract(r'(MMRF_\d+)')    
+    df.columns = df.columns.str.replace('Feature_','')
+    df = df.set_index('PUBLIC_ID')
+    print(df.head())
+
+    # Upload to the database
+    with engine.connect() as conn:
+        df.to_sql('mutsig_sbs', con=conn, if_exists='replace', index=True, index_label='PUBLIC_ID')
+        print("Data uploaded successfully.")
+
+def upload_table_chromothripsis():
+    df = pd.read_csv(f'{PROJECTDIR}/omicdata/chromoth_categorical_df_pval0.05.tsv',sep='\t')
+    df = df.set_index('PUBLIC_ID')
+    print(df.head())
+
+    # Upload to the database
+    with engine.connect() as conn:
+        df.to_sql('chromothripsis', con=conn, if_exists='replace', index=True, index_label='PUBLIC_ID')
+        print("Data uploaded successfully.")
+
+def upload_table_gep_scores():
+    df = pd.read_csv(f'{PROJECTDIR}/omicdata/commpass_gep_risk_scores.csv',sep=',')
+    df.columns = df.columns.str.replace('Feature_','')
+    df = df.set_index('PUBLIC_ID')
+    print(df.head())
+
+    # Upload to the database
+    with engine.connect() as conn:
+        df.to_sql('gep_scores', con=conn, if_exists='replace', index=True, index_label='PUBLIC_ID')
+        print("Data uploaded successfully.")
+
 if __name__ == "__main__":
     import os
     from dotenv import load_dotenv
@@ -229,8 +263,11 @@ if __name__ == "__main__":
         # upload_table_salmon_gene_unstranded_tpm()
         # upload_table_genome_gatk_cna()
         # upload_table_gene_annotation()
-        upload_table_exome_NS_variants()
+        # upload_table_exome_NS_variants()
         # upload_table_canonical_ig()
         # upload_table_wgs_fish()
+        # upload_table_sbs()
+        # upload_table_chromothripsis()
+        upload_table_gep_scores()
         exit()
 
