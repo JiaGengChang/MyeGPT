@@ -14,6 +14,12 @@ with open(f"{SCHEMADIR}/MMRF_CoMMpass_IA22_STAND_ALONE_TRTRESP.tsv", "r") as f:
     stand_alone_trtresp_schema = f.read()
 with open(f"{SCHEMADIR}/MMRF_CoMMpass_IA22_exome_vcfmerger2_IGV_All_Canonical_NS_Variants.txt", "r") as f:
     exome_ns_variants_schema = f.read()
+with open(f"{SCHEMADIR}/chromoth_categorical_df_pval0.05.tsv","r") as f:
+    chromothripsis_schema = f.read()
+with open(f"{SCHEMADIR}/commpass_gep_risk_scores.csv","r") as f:
+    gep_scores_schema = f.read()
+with open(f"{SCHEMADIR}/mutsig_sbs_schema.tsv","r") as f:
+    mutsig_sbs_schema = f.read()    
 
 # Create a description for the tables in the database
 db_description = """
@@ -26,6 +32,9 @@ The 'commpass' PostgreSQL 13.5 database contains data of 1143 newly diagnosed mu
 - **salmon_gene_unstranded_tpm**: Gene expression transcripts per million (tpm) from Salmon, indexed by PUBLIC_ID and Gene. Each row details the floating-point tpm value (`tpm`) for a particular ensembl gene ID (`Gene`), patient (`PUBLIC_ID`), and sample (`Sample`). This is a gene expression matrix that has been melted to long format. It is derived from counts by normalizing the read counts to transcripts per million (TPM), and is preferred over raw read counts for cross-sample comparisons. Log10-transformation is commonly applied to these values.
 - **genome_gatk_cna**: Copy number alteration segments from GATK, indexed by SAMPLE. The Segment_Mean column indicates raw mean log ratios of each probe, and Segment_Copy_Number column indicates the derived integer copy number status (-2, -1, 0, +1, or +2) for the probe.
 - **exome_ns_variants**: Non-synonymous exome variants, indexed by Ensemble stable ID "GENEID" and patient identifier "PUBLIC_ID". The column number, name, and description are as follow:\n{exome_ns_variants_schema}
+- **chromothripsis**: Occurrence of chromothripsis events indexed by PUBLIC_ID. Events were detected using ShatterSeek algorithm run on copy number and structural variation data. The column number, name, and description are as follow:\n{chromothripsis_schema}
+- **gep_scores**: Gene expression profiling risk scores, also known as GEP risk indices or GEP signatures, indexed by PUBLIC_ID. The column number, name, and description are as follow:\n {gep_scores_schema}
+- **mutsig_sbs**: Mutational signatures for Single Base Substitutions (SBS), indexed by PUBLIC_ID. Signatures were extracted using SigProfiler. The column number, name, and description are as follow:\n{mutsig_sbs_schema}
 - **per_visit**: Clinical data per patient visit, indexed by PUBLIC_ID. Each row represents a visit for a patient, with visit-specific clinical details. The column number, name, and description are as follow:\n{per_visit_schema}
 - **stand_alone_trtresp**: Treatment response data per patient, indexed by PUBLIC_ID. Contains information about patient responses to treatments. The column number, name, and description are as follow:\n{stand_alone_trtresp_schema}
 - **stand_alone_treatment_regimen**: Treatment regimen data per patient, indexed by PUBLIC_ID. Each row details the treatment regiment administered to a patient in that step of treatment. The column number, name, and description are as follow:\n{stand_alone_treatment_regiment_schema}
@@ -38,4 +47,7 @@ All tables are based on CoMMpass Interim Analysis 22 (IA22), except for `canonic
     stand_alone_treatment_regiment_schema=stand_alone_treatment_regiment_schema,
     stand_alone_trtresp_schema=stand_alone_trtresp_schema,
     exome_ns_variants_schema=exome_ns_variants_schema,
+    chromothripsis_schema=chromothripsis_schema,
+    gep_scores_schema=gep_scores_schema,
+    mutsig_sbs_schema=mutsig_sbs_schema
 )
