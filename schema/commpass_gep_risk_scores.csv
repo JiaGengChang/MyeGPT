@@ -1,0 +1,6 @@
+column	name	label
+1	PUBLIC_ID	The public ID or patient identifier
+2   UAMS70  The UAMS 70-gene signature, from UAMS study
+3   EMC92   The EMC92 or SKY92 gene signature, from Skyline Diagnostics
+3   IFM15   The IFM-15 gene signature
+4   MRC_IX_6    THE MRC IX-6 gene signature
