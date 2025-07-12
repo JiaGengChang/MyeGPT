@@ -1,0 +1,89 @@
+column	label	description or the COSMIC proposed aetiology of the SBS
+1	PUBLIC_ID	Patient identifier
+2	SAMPLE_ID	Patient sample identifier. One patient can have one sample per visit
+3	SBS1    Spontaneous deamination of 5-methylcytosine (clock-like signature)
+4	SBS2    Activity of APOBEC family of cytidine deaminases
+5	SBS3    Defective homologous recombination DNA damage repair
+6	SBS4    Tobacco smoking
+7	SBS5    Unknown (clock-like signature)
+8	SBS6    Defective DNA mismatch repair
+9	SBS7a   Ultraviolet light exposure
+10	SBS7b   Ultraviolet light exposure
+11	SBS7c   Ultraviolet light exposure
+12	SBS7d   Ultraviolet light exposure
+13	SBS8    Unknown
+14	SBS9    Polimerase eta somatic hypermutation activity
+15	SBS10a  Polymerase epsilon exonuclease domain mutations
+16	SBS10b  Polymerase epsilon exonuclease domain mutations
+17	SBS10c  Defective POLD1 proofreading
+18	SBS10d  Defective POLD1 proofreading
+19	SBS11   Temozolomide treatment
+20	SBS12   Unknown
+21	SBS13   Activity of APOBEC family of cytidine deaminases
+22	SBS14   Concurrent polymerase epsilon mutation and defective DNA mismatch repair
+23	SBS15   Defective DNA mismatch repair
+24	SBS16   Unknown
+25	SBS17a  Unknown
+26	SBS17b  Unknown
+27	SBS18   Damage by reactive oxygen species
+28	SBS19   Unknown
+29	SBS20   Concurrent POLD1 mutations and defective DNA mismatch repair
+30	SBS21   Defective DNA mismatch repair
+31	SBS22a  Aristolochic acid exposure
+32	SBS22b  Aristolochic acid exposure
+33	SBS23   Unknown
+34	SBS24   Aflatoxin exposure
+35	SBS25   Chemotherapy treatment
+36	SBS26   Defective DNA mismatch repair
+37	SBS27   Ignore this column
+38	SBS28   Unknown
+39	SBS29   Tobacco chewing
+40	SBS30   Defective DNA base excision repair due to NTHL1 mutations
+41	SBS31   Platinum chemotherapy treatment
+42	SBS32   Azathioprine treatment
+43	SBS33   Unknown
+44	SBS34   Unknown
+45	SBS35   Platinum chemotherapy treatment
+46	SBS36   Defective DNA base excision repair due to MUTYH mutations
+47	SBS37   Unknown
+48	SBS38   Indirect effect of ultraviolet light
+49	SBS39   Unknown
+50	SBS40a  Unknown
+51	SBS40b  Unknown
+52	SBS40c  Unknown
+53	SBS41   Unknown
+54	SBS42   Haloalkane exposure
+55	SBS43   Ignore this column
+56	SBS44   Defective DNA mismatch repair
+57	SBS45   Ignore this column
+58	SBS46   Ignore this column
+59	SBS47   Ignore this column
+60	SBS48   Ignore this column
+61	SBS49   Ignore this column
+62	SBS50   Ignore this column
+63	SBS51   Ignore this column
+64	SBS52   Ignore this column
+65	SBS53   Ignore this column
+66	SBS54   Ignore this column
+67	SBS55   Ignore this column
+68	SBS56   Ignore this column
+69	SBS57   Ignore this column
+70	SBS58   Ignore this column
+71	SBS59   Ignore this column
+72	SBS60   Ignore this column
+73	SBS84   Activity of activation-induced cytidine deaminase (AID)
+74	SBS85   Indirect effects of activation-induced cytidine deaminase (AID)
+75	SBS86   Unknown chemotherapy treatment
+76	SBS87   Thiopurine chemotherapy treatment
+77	SBS88   Colibactin exposure (E.coli bacteria carrying pks pathogenicity island)
+78	SBS89   Unknown
+79	SBS90   Duocarmycin exposure
+80	SBS91   Unknown
+81	SBS92   Tobacco smoking
+82	SBS93   Unknown
+83	SBS94   Unknown
+84	SBS95   Ignore this column
+85	SBS96   Unknown
+86	SBS97   Unknown
+87	SBS98   Unknown
+88	SBS99   Melphalan exposure
