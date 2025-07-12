@@ -1,7 +1,7 @@
 column	name	label
 1	PUBLIC_ID	Public ID - the patient identifier column
-2	SPECTRUM_SEQ	A blank unused column
-3	VISIT	Visit number
+2	SPECTRUM_SEQ	An unused column.
+3	VISIT	A unique visit ID. It does not indicate the number of times a patient has visited.
 4	VJ_INTERVAL	Record Interval
 5	VISITDY Day of Visit
 6	AT_DEFINITEDEVEL	
@@ -31,18 +31,18 @@ column	name	label
 33	BA_LUMBAR	Yes/No bone lesion assessment for Lumbar
 34	BA_SACRAL	Yes/No bone lesion assessment for Sacral
 35	BA_PELVIS	Yes/No bone lesion assessment for Pelvis
-36	BA_RIGHT	Yes/No bone lesion assessment for Right
-37	BA_LEFT	Yes/No bone lesion assessment for Left
+36	BA_RIGHT	Yes/No bone lesion assessment for Right region 1
+37	BA_LEFT	Yes/No bone lesion assessment for Left region 2
 38	BA_FEMUR	Yes/No bone lesion assessment for Femur
-39	BA_RIGHT2	Yes/No bone lesion assessment for Right
-40	BA_LEFT2	Yes/No bone lesion assessment for Left
+39	BA_RIGHT2	Yes/No bone lesion assessment for Right region 2
+40	BA_LEFT2	Yes/No bone lesion assessment for Left region 2
 41	BA_HUMERUS	Yes/No bone lesion assessment for Humerus
-42	BA_RIGHT3	Yes/No bone lesion assessment for Right
-43	BA_LEFT3	Yes/No bone lesion assessment for Left
+42	BA_RIGHT3	Yes/No bone lesion assessment for Right region 3
+43	BA_LEFT3	Yes/No bone lesion assessment for Left region 3
 44	BA_RIBS	Yes/No bone lesion assessment for Ribs
-45	BA_RIGHT4	Yes/No bone lesion assessment for Right
+45	BA_RIGHT4	Yes/No bone lesion assessment for Right region 4
 46	BA_NUMBERAFFECTE	Number of ribs affected (right side)
-47	BA_LEFT4	Yes/No bone lesion assessment for Left
+47	BA_LEFT4	Yes/No bone lesion assessment for Left region 4
 48	BA_NUMBERAFFECTE2	Number of ribs affected (leftt side)
 49	BA_OTHER	Yes/No bone lesion assessment for Other
 50	BB_SPECIFY	Specify for BA_OTHER
