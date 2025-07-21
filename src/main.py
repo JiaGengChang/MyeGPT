@@ -5,13 +5,9 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
-import ssl 
 
 # src modules
 from agent import query_agent
-
-# ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
-# ssl_context.load_cert_chain(os.environ.get('CERT_FILE'), keyfile=os.environ.get('KEY_FILE'))
 
 app = FastAPI()
 app.add_middleware(
@@ -53,7 +49,4 @@ if __name__ == "__main__":
         app, 
         host="0.0.0.0", 
         port=8080,
-        # ssl_keyfile=os.environ.get('KEY_FILE'),
-        # ssl_certfile=os.environ.get('CERT_FILE'),
-        # ssl_version=ssl.PROTOCOL_TLS_SERVER
     )
