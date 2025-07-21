@@ -1,7 +1,7 @@
 column	name	label
 1	PUBLIC_ID	Public ID - the patient identifier column
-2	SPECTRUM_SEQ	An unused column.
-3	VISIT	A unique visit ID. It does not indicate the number of times a patient has visited.
+2	SPECTRUM_SEQ	Ignore this column
+3	VISIT	A unique double precision number assigned to the visit
 4	VJ_INTERVAL	Record Interval
 5	VISITDY Day of Visit
 6	AT_DEFINITEDEVEL	
