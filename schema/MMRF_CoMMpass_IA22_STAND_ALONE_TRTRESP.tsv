@@ -32,7 +32,7 @@ column	name	label
 31	bestrespsh	Best overall reponse (short name)
 32	fresp	First response
 33	frespsh	First response (short name)
-34	response	Response assessment
+34	response	Response assessment (0 or 1). Deprecated in favour of bestrespsh/bestresp.
 35	therbresp	Best response for this therapy
 36	therfresp	Therapy first response
 37	trtbresp	Treatment best response
