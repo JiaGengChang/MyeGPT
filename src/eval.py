@@ -23,13 +23,13 @@ def target(inputs: dict) -> dict:
     return {"answer": clean_answer}
 
 
-# Define an LLM as a judge evaluator to evaluate correctness of the output
-# Import a prebuilt evaluator prompt from openevals (https://github.com/langchain-ai/openevals) and create an evaluator.
-def correctness_evaluator(inputs: dict, outputs: dict, reference_outputs: dict):
+# a correctness score from 0 to 1, where 1 is the best
+def scorer(inputs: dict, outputs: dict, reference_outputs: dict):
     evaluator = create_llm_as_judge(
         prompt=CORRECTNESS_PROMPT,
         model="openai:o4-mini",
-        feedback_key="correctness",
+        feedback_key="score",
+        continuous=True,
     )
     eval_result = evaluator(
         inputs=inputs,
@@ -42,6 +42,10 @@ if __name__ == "__main__":
     experiment_results = client.evaluate(
         target,
         data=os.environ.get("DATASET_NAME"),
-        evaluators=[correctness_evaluator,],
-        max_concurrency=4,
+        evaluators=[scorer],
+        max_concurrency=2,
+        experiment_prefix=os.environ.get("MODEL"),
+        metadata={
+            'model': os.environ.get("MODEL"),
+        }
 )
