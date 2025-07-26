@@ -1,4 +1,4 @@
-import pandas as pd 
+import pandas as pd
 from sqlalchemy import create_engine, text
 from tqdm import tqdm
 
@@ -244,6 +244,19 @@ def upload_table_gep_scores():
         df.to_sql('gep_scores', con=conn, if_exists='replace', index=True, index_label='PUBLIC_ID')
         print("Data uploaded successfully.")
 
+def upload_table_baf():
+    # B-allele frequencies
+    # using exome BAF instead of genome BAF as that is too sparse
+    df = pd.read_csv(f'{PROJECTDIR}/omicdata/Loss of Heterozygosity Files_MMRF_CoMMpass_IA22_exome_gatk_baf.seg', sep='\t')
+    df['PUBLIC_ID'] = df['SAMPLE'].str.extract(r'(MMRF_\d+)')  # Extract the numeric part of the sample name
+    df = df.set_index('SAMPLE')
+    print(df.head())
+
+    # Upload to the database
+    with engine.connect() as conn:
+        df.to_sql('gatk_baf', con=conn, if_exists='replace', index=True, index_label='SAMPLE')
+        print("Data uploaded successfully.")
+
 if __name__ == "__main__":
     import os
     from dotenv import load_dotenv
@@ -255,7 +268,6 @@ if __name__ == "__main__":
         # test connection
         result = conn.execute(text("SELECT version();"))
         print(result.fetchone())
-        # conn.rollback()
         # upload tables
         # upload_table_per_patient()
         # upload_table_per_patient_visit()
@@ -268,10 +280,11 @@ if __name__ == "__main__":
         # upload_table_gene_annotation()
         # upload_table_exome_NS_variants()
         # upload_table_canonical_ig()
-        upload_table_wgs_fish()
+        # upload_table_wgs_fish()
         # upload_table_sbs()
         # upload_table_chromothripsis()
         # upload_table_gep_scores()
+        upload_table_baf()
         # grant permissions to user 'client'
         conn.execute(text("GRANT SELECT ON ALL TABLES IN SCHEMA public TO client;"))
         exit()
