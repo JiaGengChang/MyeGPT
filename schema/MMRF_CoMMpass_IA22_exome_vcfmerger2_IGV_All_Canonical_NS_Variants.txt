@@ -36,7 +36,7 @@ column  name            description
 35      GENEID          Gene identifier, an Ensembl Gene stable ID (e.g., ENSG00000141510)
 36      FEATURE         Feature type. Constant value of "transcript".
 37      FEATUREID       Feature identifier. In this case all transcript IDs (e.g., ENST00000593612.1).
-38      BIOTYPE         Gene biotype (e.g., IG_V_gene, IG_J_gene, retained_intron, protein_coding, pseudogene).
+38      BIOTYPE         The functional category of the variant e.g. nonsense-mediated decay, protein-coding, or retained intron
 39      RANK            The rank of the exon where the variant lies (ranges from 1 to 360).
 40      HGVS_C          HGVS cDNA notation (e.g., c.374delA)
 41      HGVS_P          HGVS protein notation (e.g., p.Thr827Ala)
