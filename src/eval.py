@@ -44,7 +44,7 @@ if __name__ == "__main__":
         data=os.environ.get("DATASET_NAME"),
         evaluators=[scorer],
         max_concurrency=2,
-        experiment_prefix=os.environ.get("MODEL"),
+        experiment_prefix=os.environ.get("APPLICATION_API_URL").replace("https://", "").replace("/", "_"),
         metadata={
             'model': os.environ.get("MODEL"),
         }
