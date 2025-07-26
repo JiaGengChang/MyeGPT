@@ -6,7 +6,7 @@ from tqdm import tqdm
 # cloud-sql-proxy --credentials-file ~/Documents/commpass-gpt-8aa313d01ce0.json --port 5432 commpass-gpt:asia-southeast1:commpass-pgsql15
 # or add public ip to whitelist in GCP console and connect to database directly
 
-PROJECTDIR="~/Projects/commpass-gpt"
+PROJECTDIR="./"
 
 def upload_table_per_patient():
     # Load the data
@@ -195,8 +195,15 @@ def upload_table_wgs_fish():
     df = df.filter(regex='^(?!.*percent$)', axis=1)
 
     # convert probe values to integer statuses
+    _df = df.filter(regex='SeqWGS_Cp_(?!Hyperdiploid)').copy()
     for col in df.filter(regex='SeqWGS_Cp_(?!Hyperdiploid)').columns:
         df[col] = df[col].apply(segment_copy_number)
+        _df.rename(columns={col: col.replace('SeqWGS_Cp_', 'SeqWGS_SegmentMean_')}, inplace=True)
+    
+    # add back probe values
+    df = pd.concat([df, _df], axis=1)
+
+    print(df.head())
 
     # upload to the database
     with engine.connect() as conn:
@@ -240,12 +247,8 @@ def upload_table_gep_scores():
 if __name__ == "__main__":
     import os
     from dotenv import load_dotenv
-    assert load_dotenv('.env') or load_dotenv('../.env')
-    DB_USER = os.getenv("DB_USER", "postgres")
-    DB_PW = os.getenv("DB_PASSWORD",'password')
-    DB_HOST = os.getenv("DB_HOST",'localhost')
-    db_uri = f'postgresql+psycopg2://{DB_USER}:{DB_PW}@{DB_HOST}:5432/commpass'
-
+    assert load_dotenv('.env')
+    db_uri = os.environ.get("COMMPASS_DB_URI")
     engine = create_engine(db_uri)
 
     with engine.connect() as conn:
@@ -265,9 +268,11 @@ if __name__ == "__main__":
         # upload_table_gene_annotation()
         # upload_table_exome_NS_variants()
         # upload_table_canonical_ig()
-        # upload_table_wgs_fish()
+        upload_table_wgs_fish()
         # upload_table_sbs()
         # upload_table_chromothripsis()
-        upload_table_gep_scores()
+        # upload_table_gep_scores()
+        # grant permissions to user 'client'
+        conn.execute(text("GRANT SELECT ON ALL TABLES IN SCHEMA public TO client;"))
         exit()
 
