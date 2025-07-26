@@ -177,7 +177,7 @@ def upload_table_gene_annotation():
         print("Data uploaded successfully.")
 
 def upload_table_canonical_ig():
-    df = pd.read_csv(f'{PROJECTDIR}/omicdata/SeqFISH Files-MMRF_CoMMpass_IA16a_LongInsert_Canonical_Ig_Translocations.txt', sep='\t')
+    df = pd.read_csv(f'{PROJECTDIR}/omicdata/SeqFISH Files_MMRF_CoMMpass_IA16a_LongInsert_Canonical_Ig_Translocations.txt', sep='\t')
     df['PUBLIC_ID'] = df['Study_Visit_iD'].str.extract(r'(MMRF_\d+)')  # Extract the numeric part of the sample name
     df = df.sort_values('Study_Visit_iD').groupby('PUBLIC_ID').head(n=1)
     df = df.filter(regex='(_CALL$|^PUBLIC_ID$)')
@@ -189,7 +189,7 @@ def upload_table_canonical_ig():
         print("Data uploaded successfully.")
 
 def upload_table_wgs_fish():
-    df = pd.read_csv(f'{PROJECTDIR}/omicdata/SeqWGS-FISH.tsv', sep='\t')
+    df = pd.read_csv(f'{PROJECTDIR}/omicdata/SeqFISH Files_MMRF_CoMMpass_IA22_genome_gatk_cna_seqFISH.tsv', sep='\t')
     df['PUBLIC_ID'] = df['SAMPLE'].str.extract(r'(MMRF_\d+)')  # Extract the numeric part of the sample name
     df = df.set_index('PUBLIC_ID')
     df = df.filter(regex='^(?!.*percent$)', axis=1)
