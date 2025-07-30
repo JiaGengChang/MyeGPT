@@ -6,11 +6,8 @@ langchain-core
 langchain-experimental
 langchain-aws
 langgraph
-langsmith
 lifelines
 matplotlib
-openai
-openevals
 pandas
 psycopg2-binary
 pydantic
