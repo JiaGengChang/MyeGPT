@@ -63,9 +63,7 @@ query_sql_tool = QuerySQLDatabaseTool(db=db)
 
 # initialize the chat model
 llm = ChatBedrockConverse(
-    credentials_profile_name="bedrock-personal",
     model_id=os.environ.get("MODEL_ID"),
-    provider=os.environ.get("MODEL_PROVIDER"),
     temperature=0.,
 )
 
@@ -108,8 +106,8 @@ def query_agent(user_input: str):
     user_message = HumanMessage(content=user_input)
     full_response = ""
     for step in graph.stream({"messages": [preamble, user_message]}, config, stream_mode="values"):
-        if step["messages"]:
-            step["messages"][-1].pretty_print()
+        # if step["messages"]:
+        #     step["messages"][-1].pretty_print()
         if step["messages"] and isinstance(step["messages"][-1], AIMessage):
             chunk = step["messages"][-1].content
             try:
