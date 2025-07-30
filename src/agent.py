@@ -1,6 +1,6 @@
 import os
 import pandas as pd
-from langchain.chat_models import init_chat_model
+from langchain_aws import ChatBedrockConverse
 from langchain.tools import StructuredTool
 from langchain_experimental.tools import PythonAstREPLTool
 from langchain_community.utilities import SQLDatabase
@@ -61,9 +61,17 @@ repl_tool = PythonAstREPLTool()
 # create a QUERY SQL tool
 query_sql_tool = QuerySQLDatabaseTool(db=db)
 
+# initialize the chat model
+llm = ChatBedrockConverse(
+    credentials_profile_name="bedrock-personal",
+    model_id=os.environ.get("MODEL_ID"),
+    provider=os.environ.get("MODEL_PROVIDER"),
+    temperature=0.,
+)
+
 # Create runnable graph
 graph = create_react_agent(
-    model=init_chat_model(os.environ.get("MODEL")),
+    model=llm,
     tools=[convert_gene_tool, query_sql_tool, repl_tool],
     checkpointer=InMemorySaver()
 )
@@ -72,14 +80,15 @@ graph = create_react_agent(
 # dynamic variables will be filled in at the start of each session
 
 def create_system_message():
-    return SystemMessage(content=latent_system_message.format(
+    system_message = latent_system_message.format(
         db_description=db_description,
         dialect=db.dialect,
         commpass_db_uri=db_uri
-    ))
+    )
+    return system_message
 
 system_message = None
-config = {"configurable": {"thread_id": "thread-001"}, "recursion_limit": 25}
+config = {"configurable": {"thread_id": "thread-001"}, "recursion_limit": 50}
 
 def start_session():
     global system_message
@@ -103,5 +112,11 @@ def query_agent(user_input: str):
             step["messages"][-1].pretty_print()
         if step["messages"] and isinstance(step["messages"][-1], AIMessage):
             chunk = step["messages"][-1].content
-            full_response += chunk
+            try:
+                # final response
+                full_response += chunk
+            except TypeError:
+                # intermediate response is a list of chunks rather than a string
+                print(chunk[0])
+                full_response += str(chunk[0]['text']) + ' '
     return full_response
