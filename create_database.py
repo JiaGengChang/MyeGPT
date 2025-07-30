@@ -54,10 +54,11 @@ def upload_table_salmon_gene_unstranded_counts():
     df = df.astype(int)
     # Transpose to have samples as rows and genes as columns
     df = df.transpose()
-    df.index.name = 'Sample'
+    df.index.name = 'SAMPLE'
     df = df.reset_index()
-    df['PUBLIC_ID'] = df['Sample'].str.extract(r'(MMRF_\d+)')  # Extract the numeric part of the sample name
-    df = df.melt(id_vars=['PUBLIC_ID', 'Sample'], var_name='Gene', value_name='Count')
+    df['PUBLIC_ID'] = df['SAMPLE'].str.extract(r'(MMRF_\d+)')  # Extract the numeric part of the sample name
+    df['Visit'] = df['SAMPLE'].str.extract(r'MMRF_\d+_(\d+)_.*$')  # Extract the visit number
+    df = df.melt(id_vars=['PUBLIC_ID', 'SAMPLE'], var_name='Gene', value_name='Count')
     # set index
     df.set_index(['PUBLIC_ID','Gene'], inplace=True)
 
@@ -78,10 +79,11 @@ def upload_table_salmon_gene_unstranded_tpm():
     df = df.set_index('Gene')
     # Transpose to have samples as rows and genes as columns
     df = df.transpose()
-    df.index.name = 'Sample'
+    df.index.name = 'SAMPLE'
     df = df.reset_index()
-    df['PUBLIC_ID'] = df['Sample'].str.extract(r'(MMRF_\d+)')  # Extract the numeric part of the sample name
-    df = df.melt(id_vars=['PUBLIC_ID', 'Sample'], var_name='Gene', value_name='tpm')
+    df['PUBLIC_ID'] = df['SAMPLE'].str.extract(r'(MMRF_\d+)')  # Extract the numeric part of the sample name
+    df['VISIT'] = df['SAMPLE'].str.extract(r'MMRF_\d+_(\d+)_.*$')  # Extract the visit number
+    df = df.melt(id_vars=['PUBLIC_ID', 'SAMPLE'], var_name='Gene', value_name='tpm')
     # set index
     df.set_index(['PUBLIC_ID','Gene'], inplace=True)
     print(df.head())
@@ -120,8 +122,9 @@ def segment_copy_number(x):
 def upload_table_genome_gatk_cna():
     # Load the data
     df = pd.read_csv(f'{PROJECTDIR}/omicdata/Copy Number Estimates-MMRF_CoMMpass_IA22_genome_gatk_cna.seg', sep='\t')
+    df['VISIT'] = df['SAMPLE'].str.extract(r'MMRF_\d+_(\d+)_.*$')  # Extract the visit number
     df = df.set_index('SAMPLE')
-    
+
     df['Segment_Copy_Number_Status'] = df['Segment_Mean'].apply(segment_copy_number)
 
     print(df.head())
@@ -191,6 +194,7 @@ def upload_table_canonical_ig():
 def upload_table_wgs_fish():
     df = pd.read_csv(f'{PROJECTDIR}/omicdata/SeqFISH Files_MMRF_CoMMpass_IA22_genome_gatk_cna_seqFISH.tsv', sep='\t')
     df['PUBLIC_ID'] = df['SAMPLE'].str.extract(r'(MMRF_\d+)')  # Extract the numeric part of the sample name
+    df['VISIT'] = df['SAMPLE'].str.extract(r'MMRF_\d+_(\d+)_.*$')  # Extract the visit number
     df = df.set_index('PUBLIC_ID')
     df = df.filter(regex='^(?!.*percent$)', axis=1)
 
@@ -213,7 +217,9 @@ def upload_table_wgs_fish():
 def upload_table_sbs():
     # Load the data
     df = pd.read_csv(f'{PROJECTDIR}/omicdata/SBS86_IA21.tsv', sep='\t')
-    df['PUBLIC_ID'] = df.SAMPLE_ID.str.extract(r'(MMRF_\d+)')    
+    df = df.rename(columns={'SAMPLE_ID': 'SAMPLE'})
+    df['PUBLIC_ID'] = df['SAMPLE'].str.extract(r'(MMRF_\d+)')
+    df['VISIT'] = df['SAMPLE'].str.extract(r'MMRF_\d+_(\d+)_.*$')
     df.columns = df.columns.str.replace('Feature_','')
     df = df.set_index('PUBLIC_ID')
     print(df.head())
@@ -249,6 +255,7 @@ def upload_table_baf():
     # using exome BAF instead of genome BAF as that is too sparse
     df = pd.read_csv(f'{PROJECTDIR}/omicdata/Loss of Heterozygosity Files_MMRF_CoMMpass_IA22_exome_gatk_baf.seg', sep='\t')
     df['PUBLIC_ID'] = df['SAMPLE'].str.extract(r'(MMRF_\d+)')  # Extract the numeric part of the sample name
+    df['VISIT'] = df['SAMPLE'].str.extract(r'MMRF_\d+_(\d+)_.*$')  # Extract the visit number
     df = df.set_index('SAMPLE')
     print(df.head())
 
@@ -269,23 +276,21 @@ if __name__ == "__main__":
         result = conn.execute(text("SELECT version();"))
         print(result.fetchone())
         # upload tables
-        # upload_table_per_patient()
-        # upload_table_per_patient_visit()
-        # upload_table_stand_alone_survival()
-        # upload_table_stand_alone_treatment_regimen()
-        # upload_table_stand_alone_trtresp()
-        # upload_table_salmon_gene_unstranded_counts()
-        # upload_table_salmon_gene_unstranded_tpm()
-        # upload_table_genome_gatk_cna()
-        # upload_table_gene_annotation()
-        # upload_table_exome_NS_variants()
-        # upload_table_canonical_ig()
-        # upload_table_wgs_fish()
-        # upload_table_sbs()
-        # upload_table_chromothripsis()
-        # upload_table_gep_scores()
+        upload_table_per_patient()
+        upload_table_per_patient_visit()
+        upload_table_stand_alone_survival()
+        upload_table_stand_alone_treatment_regimen()
+        upload_table_stand_alone_trtresp()
+        upload_table_salmon_gene_unstranded_counts()
+        upload_table_salmon_gene_unstranded_tpm()
+        upload_table_genome_gatk_cna()
+        upload_table_gene_annotation()
+        upload_table_exome_NS_variants()
+        upload_table_canonical_ig()
+        upload_table_wgs_fish()
+        upload_table_sbs()
+        upload_table_chromothripsis()
+        upload_table_gep_scores()
         upload_table_baf()
-        # grant permissions to user 'client'
-        conn.execute(text("GRANT SELECT ON ALL TABLES IN SCHEMA public TO client;"))
         exit()
 
