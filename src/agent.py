@@ -110,11 +110,11 @@ def query_agent(user_input: str):
         #     step["messages"][-1].pretty_print()
         if step["messages"] and isinstance(step["messages"][-1], AIMessage):
             chunk = step["messages"][-1].content
-            try:
-                # final response
+            if isinstance(chunk, str):
                 full_response += chunk
-            except TypeError:
-                # intermediate response is a list of chunks rather than a string
-                print(chunk[0])
-                full_response += str(chunk[0]['text']) + ' '
+            elif isinstance(chunk, dict) and "text" in chunk:
+                full_response += chunk["text"]
+            elif isinstance(chunk, list) and "text" in chunk[0]:
+                full_response += chunk[0]["text"]
+        
     return full_response
