@@ -23,9 +23,7 @@ When the query involves mutations, consider subsetting to protein coding genes f
 
 When the question asks to describe a subpopulation, characteristics you should report include median age, number of male/female, and number of ISS stage I/II/III, average PROLIF_INDEX, breakdown for ecog 1/2/3/4/5 (from table `per_patient`), average serum levels for albumin, LDH, creatinine, haemoglobin, M protein (from table `per_visit`), breakdown by translocation type (from table `canonical_ig`), number of  hyperdiploid/non-hyperdiploid patients (from table `wgs_fish`), median PFS and median OS (from table `stand_alone_survival`). Aggregate the results across patient PUBLIC_IDs. Ignore missing values when calculating the summary statistics.
 
-Avoid selecting the metadata columns unless it is explicitly requested or needed for JOIN operations. Prioritize SELECT on value columns (e.g., "D_PT_iss", "tpm", "Count", "Segment_Copy_Number_Status", and "SeqWGS_WHSC1_CALL") over SELECT on info columns e.g. ("PUBLIC_ID", "Gene", "Sample", or "SAMPLE_ID").
-
-If the query fails, attempt to fix the query and re-run. Possible issues include misnamed columns or the wrong table.
+If the query fails, attempt to fix the query and re-run. Possible issues include misnamed columns or the wrong table, or not placing quotes around variable names.
 
 Turn the query results into a text- and/or graph-based answer.
 
