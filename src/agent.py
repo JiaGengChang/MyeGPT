@@ -35,12 +35,34 @@ convert_gene_tool = StructuredTool.from_function(
     name="convert_gene",
     description="Convert a gene name to its corresponding Ensembl Gene stable ID (e.g. NSD2 to ENSG00000109685). Returns an error message if the gene name is not found or if it is not a gene name."
 )
+def execute_query_python(query: str):
+    import os
+    import psycopg2
+    import pandas as pd
+    conn = psycopg2.connect(dsn=os.environ.get("COMMPASS_DSN"))
+    with conn.cursor() as curs:
+        curs.execute(query)
+        result = curs.fetchall()
+        df = pd.DataFrame(result, columns=[desc[0] for desc in curs.description])
+        conn.close()
+    if not df.empty:
+        result_csv_filename = f"result/result_{uuid.uuid4().hex[:8]}.csv"
+        df.to_csv(result_csv_filename, index=False)
+        return f"Query results saved to output file {result_csv_filename}."
+    else:
+        return "Query returned no results. No output file created."
+
+python_query_sql_tool = StructuredTool.from_function(
+    func=execute_query_python,
+    name="execute_query_with_python",
+    description="Executes the full query without the LIMIT 100 clause and saves the results to disk. Useful for downstream analysis for visualization etc."
+)
 
 # python tool to do basic tasks like string manipulation and arithmetic
-repl_tool = PythonAstREPLTool()
+python_repl_tool = PythonAstREPLTool()
 
 # create a QUERY SQL tool
-query_sql_tool = QuerySQLDatabaseTool(db=db)
+langchain_query_sql_tool = QuerySQLDatabaseTool(db=db)
 
 # initialize the chat model
 llm = ChatBedrockConverse(
@@ -51,7 +73,7 @@ llm = ChatBedrockConverse(
 # Create runnable graph
 graph = create_react_agent(
     model=llm,
-    tools=[convert_gene_tool, query_sql_tool, repl_tool],
+    tools=[convert_gene_tool, langchain_query_sql_tool, python_repl_tool, python_query_sql_tool],
     checkpointer=InMemorySaver()
 )
 
@@ -83,7 +105,9 @@ def query_agent(user_input: str):
     if not system_message:
         start_session()
     graph_png_filename = f"graph/graph_{uuid.uuid4().hex[:8]}.png"
-    preamble = SystemMessage(f'If a graph is generated, save it as {graph_png_filename} and display it with <img>.')
+    preamble = SystemMessage(f"""
+                             If a graph is generated, save it as {graph_png_filename} and display it with `<img src={graph_png_filename} width=100%></img>`.
+                             """)
     user_message = HumanMessage(content=user_input)
     full_response = ""
     for step in graph.stream({"messages": [preamble, user_message]}, config, stream_mode="values"):
@@ -92,10 +116,13 @@ def query_agent(user_input: str):
         if step["messages"] and isinstance(step["messages"][-1], AIMessage):
             chunk = step["messages"][-1].content
             if isinstance(chunk, str):
+                # last AI message
                 full_response += chunk
+            # intermediate AI messages
             elif isinstance(chunk, dict) and "text" in chunk:
-                full_response += chunk["text"]
+                # remove trailing semicolon
+                full_response += chunk["text"][:-1] + "\n"
             elif isinstance(chunk, list) and "text" in chunk[0]:
-                full_response += chunk[0]["text"]
+                full_response += chunk[0]["text"][:-1] + "\n"
         
     return full_response
