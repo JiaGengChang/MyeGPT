@@ -41,7 +41,7 @@ def execute_query_python(query: str):
     import pandas as pd
     conn = psycopg2.connect(dsn=os.environ.get("COMMPASS_DSN"))
     with conn.cursor() as curs:
-        curs.execute(query)
+        curs.execute(query.replace("LIMIT 100","")) # forcefully remove LIMIT 100 clause
         result = curs.fetchall()
         df = pd.DataFrame(result, columns=[desc[0] for desc in curs.description])
         conn.close()
@@ -106,7 +106,7 @@ def query_agent(user_input: str):
         start_session()
     graph_png_filename = f"graph/graph_{uuid.uuid4().hex[:8]}.png"
     preamble = SystemMessage(f"""
-                             If a graph is generated, save it as {graph_png_filename} and display it with `<img src={graph_png_filename} width=100%></img>`.
+                             If a graph is generated, save it as {graph_png_filename} and display it with `<img src={graph_png_filename}></img>`.
                              """)
     user_message = HumanMessage(content=user_input)
     full_response = ""
