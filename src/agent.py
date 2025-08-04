@@ -8,7 +8,6 @@ from langchain_community.tools import QuerySQLDatabaseTool
 from langgraph.checkpoint.memory import InMemorySaver
 from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
 from langgraph.prebuilt import create_react_agent
-import json
 import uuid
 import matplotlib
 matplotlib.use('Agg') # non-interactive backend
