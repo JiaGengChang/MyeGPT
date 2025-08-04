@@ -23,7 +23,10 @@ os.makedirs(graph_folder, exist_ok=True)
 json_folder = os.path.join(app_dir, 'json')
 os.makedirs(json_folder, exist_ok=True)
 static_dir = os.path.join(app_dir, 'static')
+result_folder = os.path.join(app_dir, 'result')
+os.makedirs(result_folder, exist_ok=True)
 
+app.mount("/result", StaticFiles(directory=result_folder), name="result") # serve csv files
 app.mount("/graph", StaticFiles(directory=graph_folder), name="graph") # serve plotted graphs
 app.mount("/static", StaticFiles(directory=static_dir), name="static") # serve static files
 
