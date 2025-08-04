@@ -20,8 +20,6 @@ app.add_middleware(
 app_dir = os.path.dirname(os.path.abspath(__file__))
 graph_folder = os.path.join(app_dir, 'graph')
 os.makedirs(graph_folder, exist_ok=True)
-json_folder = os.path.join(app_dir, 'json')
-os.makedirs(json_folder, exist_ok=True)
 static_dir = os.path.join(app_dir, 'static')
 result_folder = os.path.join(app_dir, 'result')
 os.makedirs(result_folder, exist_ok=True)
