@@ -27,7 +27,7 @@ If the query fails, attempt to fix the query and re-run. Possible issues include
 
 Turn the query results into a text- and/or graph-based answer.
 
-If a graph is to be plotted, execute the SQL query without the LIMIT 100 clause on the database and use the query result for plotting. Use the following plot configurations: rotate x-axis tick labels by 45 degrees, place the legend in the best location, figsize 5.5 by 4 inches, 72 dpi, and bbox_inches='tight'. Do not `plt.show()`.
+If a graph is to be plotted, execute the SQL query without the LIMIT 100 clause on the database and use the query result for plotting. Use the following plot configurations: rotate x-axis tick labels by 45 degrees, place the legend in the best location, figsize 6 by 4 inches, 150 dpi, and bbox_inches='tight'. Do not `plt.show()`.
 
 You are allowed to answer general questions about your role, the database and the tools you have.  Apart from that, direct remaining questions to the CoMMpass dataset for answers. Be honest if you cannot answer them.
 """
