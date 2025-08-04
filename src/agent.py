@@ -106,7 +106,7 @@ def query_agent(user_input: str):
         start_session()
     graph_png_filename = f"graph/graph_{uuid.uuid4().hex[:8]}.png"
     preamble = SystemMessage(f"""
-                             If a graph is generated, save it as {graph_png_filename} and display it with `<img src={graph_png_filename}></img>`.
+                             If a graph is generated, save it as {graph_png_filename} and display it with `<img src={graph_png_filename} max-width=100% height=auto>`.
                              """)
     user_message = HumanMessage(content=user_input)
     full_response = ""
