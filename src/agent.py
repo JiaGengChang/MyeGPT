@@ -37,24 +37,6 @@ convert_gene_tool = StructuredTool.from_function(
     description="Convert a gene name to its corresponding Ensembl Gene stable ID (e.g. NSD2 to ENSG00000109685). Returns an error message if the gene name is not found or if it is not a gene name."
 )
 
-def save_query_results_to_json(results, file_path: str):
-    """
-    Save SQL query results (list of dicts or DataFrame) to a JSON file.
-    """
-    if isinstance(results, pd.DataFrame):
-        data = results.to_dict(orient="records")
-    else:
-        data = results
-    with open(file_path, "w") as f:
-        json.dump(data, f, indent=2)
-    return f"Query results saved to {file_path}"
-
-save_query_results_tool = StructuredTool.from_function(
-    func=save_query_results_to_json,
-    name="save_query_results_to_json",
-    description="Save SQL query results from `query_sql_tool` to a JSON file at the specified file path."
-)
-
 # python tool to do basic tasks like string manipulation and arithmetic
 repl_tool = PythonAstREPLTool()
 
