@@ -7,15 +7,16 @@ let isResponding = false;
 
 const controller = new AbortController();
 const timeoutId = setTimeout(() => controller.abort(), 30000);
+const loading_spinner_html = `<div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>`;
 
 function switchMode() {
     if (isResponding) {
         sendButtonIcon.textContent = '↑';
         sendButton.disabled = false;
         isResponding = false;
-    }
+    } 
     else {
-        sendButtonIcon.textContent = '◼';
+        sendButtonIcon.innerHTML = loading_spinner_html;
         sendButton.disabled = false;
         isResponding = true;
     }
