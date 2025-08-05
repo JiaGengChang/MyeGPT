@@ -6,7 +6,7 @@ clindata
 omicdata
 src/static/.DS_Store
 src/.DS_Store
-
+.DS_Store
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
