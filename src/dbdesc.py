@@ -1,24 +1,21 @@
-import os
-
 # Read the schema files of the clinical tables
-SCHEMADIR = os.environ.get("SCHEMADIR")
-with open(f"{SCHEMADIR}/MMRF_CoMMpass_IA22_PER_PATIENT_VISIT.tsv", "r") as f:
+with open("../schema/MMRF_CoMMpass_IA22_PER_PATIENT_VISIT.tsv", "r") as f:
     per_visit_schema = f.read()
-with open(f"{SCHEMADIR}/MMRF_CoMMpass_IA22_PER_PATIENT.tsv", "r") as f:
+with open("../schema/MMRF_CoMMpass_IA22_PER_PATIENT.tsv", "r") as f:
     per_patient_schema = f.read()
-with open(f"{SCHEMADIR}/MMRF_CoMMpass_IA22_STAND_ALONE_SURVIVAL.tsv", "r") as f:
+with open("../schema/MMRF_CoMMpass_IA22_STAND_ALONE_SURVIVAL.tsv", "r") as f:
     stand_alone_survival_schema = f.read()
-with open(f"{SCHEMADIR}/MMRF_CoMMpass_IA22_STAND_ALONE_TREATMENT_REGIMEN.tsv", "r") as f:
+with open("../schema/MMRF_CoMMpass_IA22_STAND_ALONE_TREATMENT_REGIMEN.tsv", "r") as f:
     stand_alone_treatment_regiment_schema = f.read()
-with open(f"{SCHEMADIR}/MMRF_CoMMpass_IA22_STAND_ALONE_TRTRESP.tsv", "r") as f:
+with open("../schema/MMRF_CoMMpass_IA22_STAND_ALONE_TRTRESP.tsv", "r") as f:
     stand_alone_trtresp_schema = f.read()
-with open(f"{SCHEMADIR}/MMRF_CoMMpass_IA22_exome_vcfmerger2_IGV_All_Canonical_NS_Variants.txt", "r") as f:
+with open("../schema/MMRF_CoMMpass_IA22_exome_vcfmerger2_IGV_All_Canonical_NS_Variants.txt", "r") as f:
     exome_ns_variants_schema = f.read()
-with open(f"{SCHEMADIR}/chromoth_categorical_df_pval0.05.tsv","r") as f:
+with open("../schema/chromoth_categorical_df_pval0.05.tsv","r") as f:
     chromothripsis_schema = f.read()
-with open(f"{SCHEMADIR}/commpass_gep_risk_scores.csv","r") as f:
+with open("../schema/commpass_gep_risk_scores.csv","r") as f:
     gep_scores_schema = f.read()
-with open(f"{SCHEMADIR}/mutsig_sbs_schema.tsv","r") as f:
+with open("../schema/mutsig_sbs_schema.tsv","r") as f:
     mutsig_sbs_schema = f.read()    
 
 # Create a description for the tables in the database
