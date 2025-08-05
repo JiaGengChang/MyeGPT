@@ -18,8 +18,7 @@ from prompt import latent_system_message
 db_uri = os.environ.get("COMMPASS_DB_URI")
 db = SQLDatabase.from_uri(db_uri)
 
-REFDIR = os.environ.get("REFDIR")
-gene_annot = pd.read_csv(f'{REFDIR}/gene_annotation.tsv', sep='\t')
+gene_annot = pd.read_csv(f'../refdata/gene_annotation.tsv', sep='\t')
 
 def convert_gene(gene_name: str):
     if gene_name.startswith("ENSG"):
