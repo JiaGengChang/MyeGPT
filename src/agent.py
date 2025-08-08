@@ -54,7 +54,7 @@ def execute_query_python(query: str):
 python_query_sql_tool = StructuredTool.from_function(
     func=execute_query_python,
     name="execute_query_with_python",
-    description="Executes the full query without the LIMIT 100 clause and saves the results to disk. Useful for downstream analysis for visualization etc."
+    description="Executes the full SQL query using python without the LIMIT 100 clause and saves the results to disk. Useful for downstream analysis for visualization etc."
 )
 
 # python tool to do basic tasks like string manipulation and arithmetic
@@ -105,7 +105,7 @@ def query_agent(user_input: str):
         start_session()
     graph_png_filename = f"graph/graph_{uuid.uuid4().hex[:8]}.png"
     preamble = SystemMessage(f"""
-                             If a graph is generated, save it as {graph_png_filename} and display it with `<img src={graph_png_filename} max-width=100% height=auto>`.
+                             If a graph is generated, save it as {graph_png_filename} and display it with `<img src={graph_png_filename} max-width=100% height=auto>` Should there be multiple graphs, add `_2`, `_3` suffixes etc., to the filename before the .png extension.
                              """)
     user_message = HumanMessage(content=user_input)
     full_response = ""
