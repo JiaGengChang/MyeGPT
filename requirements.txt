@@ -1,6 +1,5 @@
 dotenv
 fastapi
-ftplib
 langchain
 langchain-community
 langchain-core
