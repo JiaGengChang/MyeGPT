@@ -17,7 +17,7 @@ column	name	label
 16	D_PT_raceoth	Specify minority race
 17	D_PT_race	Race
 18	D_PT_ethnic	Ethnicity
-19	D_PT_gender	Gender
+19	D_PT_gender	Gender code (Male=1 Female=2)
 20	D_PT_DIDTHEPATIENT	Did the patient meet all eligibility requirements for this study?
 21	D_PT_screen	Screened Population
 22	D_PT_trtstdy	Treatment Start Date
