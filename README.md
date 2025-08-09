@@ -1,10 +1,10 @@
 # MyeGPT
 
-An agentic conversation application for researchers to mine the MMRF-CoMMpass dataset, built with LangChain.
+An agentic conversation application for researchers to perform research and discovery on the MMRF-CoMMpass dataset
 
 https://github.com/user-attachments/assets/44b4ea1b-146a-4c48-ae7f-677d3e19ec6a
 
-Scan the code to access it on mobile browser:
+Click [here](https://chat.myegpt.com) or scan the code below to access the live application:
 
 ![qrchimpX512](https://github.com/user-attachments/assets/f45a344b-4813-4c57-9664-2e0e8bbb86fe)
 
@@ -13,6 +13,10 @@ Scan the code to access it on mobile browser:
 1. Survival analysis based on TP53 mutation status
 
 https://github.com/user-attachments/assets/50ad070b-e316-4a1e-9451-2cf1ab1954ca
+
+## About
+
+MyeGPT is built with LangGraph and the LangChain AWS adapter.
 
 
 ## Project structure
