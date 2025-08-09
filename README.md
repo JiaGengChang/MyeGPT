@@ -2,7 +2,7 @@
 
 An agentic conversation application for researchers to mine the MMRF-CoMMpass dataset, built with LangChain.
 
-<img width="875" alt="Desktop site demonstration screenshot" src="https://github.com/user-attachments/assets/92959775-72aa-4aca-a0a2-3ab5051424db" />
+https://github.com/user-attachments/assets/44b4ea1b-146a-4c48-ae7f-677d3e19ec6a
 
 Scan the code to access it on mobile browser:
 
@@ -10,10 +10,9 @@ Scan the code to access it on mobile browser:
 
 ## Demo
 
-1. Create a desired figure
+1. Survival analysis based on TP53 mutation status
 
-https://github.com/user-attachments/assets/7a5aca54-c233-4831-8ace-6de29e6df061
-
+https://github.com/user-attachments/assets/50ad070b-e316-4a1e-9451-2cf1ab1954ca
 
 
 ## Project structure
@@ -46,3 +45,5 @@ myegpt/
 - Multiple Myeloma Research Foundation (MMRF) CoMMpass (Relating Clinical Outcomes in MM to Personal Assessment of Genetic Profile) trial (NCT01454297)
 - Patients and family members who contributed to the study
 - All members of the Chng Wee Joo lab for their inputs
+
+©2025 Chang Jia Geng. All rights reserved.
