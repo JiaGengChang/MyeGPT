@@ -46,4 +46,6 @@ myegpt/
 - Patients and family members who contributed to the study
 - All members of the Chng Wee Joo lab for their inputs
 
+## Copyright
 ©2025 Chang Jia Geng. All rights reserved.
+Contact for licensing and permission: changjiageng@u.nus.edu
