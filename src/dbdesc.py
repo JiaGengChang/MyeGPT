@@ -20,7 +20,7 @@ with open("../schema/mutsig_sbs_schema.tsv","r") as f:
 
 # Create a description for the tables in the database
 db_description = """
-The 'commpass' PostgreSQL 13.5 database contains data of 1143 newly diagnosed multiple myeloma patients. It has the following tables:
+The 'commpass' PostgreSQL 17.5 database contains data of 1143 newly diagnosed multiple myeloma patients. It has the following tables:
 - **per_patient**: Clinical data per patient, indexed by PUBLIC_ID. Each row represents a unique patient and contains various clinical and demographic attributes. The column number, name, and description are as follow:\n{per_patient_schema}.
 - **stand_alone_survival**: Survival data per patient, indexed by PUBLIC_ID. Contains survival outcomes and related metrics for each patient. Progression-free survival (PFS) is stored as censpfs (event indicator) and pfscdy (time to event in days), while overall survival (OS) is stored as censos (event indicator) and oscdy (time to event in days). The column number, name, and description are as follow:\n{stand_alone_survival_schema}
 - **canonical_ig**: Immunoglobulin gene translocations detected by Low coverage, Long insert Whole Genome Sequencing, indexed by PUBLIC_ID. Each column is a gene name which indicates whether the translocation event for the gene occured. Each value is either 0 (no translocation detected) or 1 (translocation detected). The columns are SeqWGS_WHSC1_CALL, SeqWGS_CCND1_CALL, SeqWGS_MAF_CALL, SeqWGS_MYC_CALL, SeqWGS_MAFA_CALL, SeqWGS_MAFB_CALL, SeqWGS_CCND2_CALL, and SeqWGS_CCND3_CALL.
