@@ -4,9 +4,10 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
+import asyncio 
 
 # src modules
-from agent import query_agent
+from agent import send_init_prompt, query_agent
 
 app = FastAPI()
 app.add_middleware(
@@ -28,10 +29,16 @@ app.mount("/result", StaticFiles(directory=result_folder), name="result") # serv
 app.mount("/graph", StaticFiles(directory=graph_folder), name="graph") # serve plotted graphs
 app.mount("/static", StaticFiles(directory=static_dir), name="static") # serve static files
 
+# "gate" to ensure model first receives init prompt
+app.state.init_prompt_done = asyncio.Event()
+
 # Serve landing page
 @app.get("/")
 async def serve_frontend():
-    return FileResponse("static/index.html")
+    response = FileResponse("static/index.html")
+    if not app.state.init_prompt_done.is_set():
+        asyncio.create_task(send_init_prompt(app))
+    return response
 
 class Query(BaseModel):
     user_input: str
@@ -39,6 +46,7 @@ class Query(BaseModel):
 # handle chat requests
 @app.post("/api/ask")
 async def ask(query: Query):
+    await app.state.init_prompt_done.wait()
     response = query_agent(query.user_input)
     return {"response": response}
 
