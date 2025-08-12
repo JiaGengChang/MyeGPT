@@ -1,4 +1,5 @@
 import os
+from fastapi import FastAPI
 import pandas as pd
 from langchain_aws import ChatBedrockConverse
 from langchain.tools import StructuredTool
@@ -95,7 +96,7 @@ graph = create_react_agent(
 # Create a system message for the agent
 # dynamic variables will be filled in at the start of each session
 # removed db description
-def create_system_message():
+def create_system_message() -> str:
     with open('prompt.txt', 'r') as f:
         latent_system_message = f.read()
     system_message = latent_system_message.format(
@@ -107,19 +108,18 @@ def create_system_message():
 system_message = None
 config = {"configurable": {"thread_id": "thread-001"}, "recursion_limit": 50}
 
-def start_session():
+async def send_init_prompt(app:FastAPI):
     global system_message
     global graph
     global config
     system_message = create_system_message()
-    graph.invoke({"messages" :[system_message]}, config)
+    await graph.ainvoke({"messages" :[system_message]}, config)
+    app.state.init_prompt_done.set()
 
 def query_agent(user_input: str):
     global system_message
     global graph
     global config
-    if not system_message:
-        start_session()
     graph_png_filename = f"graph/graph_{uuid.uuid4().hex[:8]}.png"
     preamble = SystemMessage(f"""
                              If a graph is generated, save it as {graph_png_filename} and display it with `<img src={graph_png_filename} max-width=100% height=auto>` Should there be multiple graphs, add `_2`, `_3` suffixes etc., to the filename before the .png extension.
