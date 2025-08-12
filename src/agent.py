@@ -9,14 +9,11 @@ from langgraph.checkpoint.memory import InMemorySaver
 from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
 from langgraph.prebuilt import create_react_agent
 import uuid
+import psycopg
 import matplotlib
 matplotlib.use('Agg') # non-interactive backend
 
-from dbdesc import db_description
-from prompt import latent_system_message
-
-db_uri = os.environ.get("COMMPASS_DB_URI")
-db = SQLDatabase.from_uri(db_uri)
+from vectorstore import connect_store
 
 gene_annot = pd.read_csv(f'../refdata/gene_annotation.tsv', sep='\t')
 
@@ -35,10 +32,7 @@ convert_gene_tool = StructuredTool.from_function(
     description="Convert a gene name to its corresponding Ensembl Gene stable ID (e.g. NSD2 to ENSG00000109685). Returns an error message if the gene name is not found or if it is not a gene name."
 )
 def execute_query_python(query: str):
-    import os
-    import psycopg2
-    import pandas as pd
-    conn = psycopg2.connect(dsn=os.environ.get("COMMPASS_DSN"))
+    conn = psycopg.connect(dsn=os.environ.get("COMMPASS_DSN"))
     with conn.cursor() as curs:
         curs.execute(query.replace("LIMIT 100","")) # forcefully remove LIMIT 100 clause
         result = curs.fetchall()
@@ -61,7 +55,28 @@ python_query_sql_tool = StructuredTool.from_function(
 python_repl_tool = PythonAstREPLTool()
 
 # create a QUERY SQL tool
+db_uri = os.environ.get("COMMPASS_DB_URI")
+db = SQLDatabase.from_uri(db_uri)
 langchain_query_sql_tool = QuerySQLDatabaseTool(db=db)
+
+# similarity search against our vector store
+def document_search(query: str):
+    # establish connection to postgres vector store
+    store = connect_store()
+    results = store.similarity_search(query,k=3)
+    if results:
+        return f"""Top 3 tables with relevant fields:
+        {[doc.page_content for doc in results]}
+        """
+    else:
+        return "No tables with relevant fields found"
+
+# tool to search for relevant database documents
+document_search_tool = StructuredTool.from_function(
+    func=document_search,
+    name="document_search",
+    description="Search for database tables that are relevant to the query. Returns the reference manual of top 3 tables relevant to the query."
+)
 
 # initialize the chat model
 llm = ChatBedrockConverse(
@@ -72,16 +87,18 @@ llm = ChatBedrockConverse(
 # Create runnable graph
 graph = create_react_agent(
     model=llm,
-    tools=[convert_gene_tool, langchain_query_sql_tool, python_repl_tool, python_query_sql_tool],
-    checkpointer=InMemorySaver()
+    tools=[document_search_tool, convert_gene_tool, langchain_query_sql_tool, python_repl_tool, python_query_sql_tool],
+    checkpointer=InMemorySaver(),
+    # store=connect_store(),
 )
 
 # Create a system message for the agent
 # dynamic variables will be filled in at the start of each session
-
+# removed db description
 def create_system_message():
+    with open('prompt.txt', 'r') as f:
+        latent_system_message = f.read()
     system_message = latent_system_message.format(
-        db_description=db_description,
         dialect=db.dialect,
         commpass_db_uri=db_uri
     )
