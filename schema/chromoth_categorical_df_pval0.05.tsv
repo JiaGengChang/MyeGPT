@@ -1,3 +1,0 @@
-column  name    label
-1   PUBLIC_ID   Patient identifier
-2   chromothripsis   Indicates whether chromothripsis occurred as per the ShatterSeek algorithm at significance level of 0.05. There are three kinds of values: `negative` means not occurred, `lowconf` means low confidence, and `highconf` means high confidence. Only `highconf` cases should be taken as positive. `negative` and `lowconf` cases are taken to be negative in chromothripsis.
