@@ -1,0 +1,122 @@
+Table name: `wgs_fish`
+Description: Contains FISH probe values for various genes and chromosome arms, such as 1q21, 17p13, RB1, and TP53. Rows starting with SeqWGS_Cp represents a FISH probe value for a patient in integer copy number statuses (-2, -1, 0, +1, or +2), with 2 exceptions: 1. SeqWGS_Cp_Hyperdiploid_Chr_Count indicates the number of hyperdiploid chromosomes detected in that sample. 2. SeqWGS_Cp_Hyperdiploid_Call column indicates whether the sample is hyperdiploid (1) or not (0). The remaining columns are ordinary copy number statuses. Rows starting with SeqWGS_SegmentMean represent the mean log ratio of the probe values.
+column_number | name | description
+1 | PUBLIC_ID | Patient public identifier. Last 4 digits are unique. e.g. MMRF_1234
+2 | SAMPLE | Patient sample identifier. Follows the format [PUBLIC_ID]_[VISIT_ID]_[BM=Bone Marrow/PB=Peripheral Blood]_CD138pos e.g. MMRF_1024_2_BM_CD138pos
+3 | SeqWGS_SegmentMean_10p14 | Segment mean probe value for chromosome 10p14
+4 | SeqWGS_SegmentMean_10q23 | Segment mean probe value for chromosome 10q23
+5 | SeqWGS_SegmentMean_11p15 | Segment mean probe value for chromosome 11p15
+6 | SeqWGS_SegmentMean_11q23 | Segment mean probe value for chromosome 11q23
+7 | SeqWGS_SegmentMean_12p13 | Segment mean probe value for chromosome 12p13
+8 | SeqWGS_SegmentMean_12q21 | Segment mean probe value for chromosome 12q21
+9 | SeqWGS_SegmentMean_13q14 | Segment mean probe value for chromosome 13q14
+10 | SeqWGS_SegmentMean_13q34 | Segment mean probe value for chromosome 13q34
+11 | SeqWGS_SegmentMean_14q23 | Segment mean probe value for chromosome 14q23
+12 | SeqWGS_SegmentMean_15q15 | Segment mean probe value for chromosome 15q15
+13 | SeqWGS_SegmentMean_15q26 | Segment mean probe value for chromosome 15q26
+14 | SeqWGS_SegmentMean_16p12 | Segment mean probe value for chromosome 16p12
+15 | SeqWGS_SegmentMean_16q22 | Segment mean probe value for chromosome 16q22
+16 | SeqWGS_SegmentMean_17p13 | Segment mean probe value for chromosome 17p13
+17 | SeqWGS_SegmentMean_17q23 | Segment mean probe value for chromosome 17q23
+18 | SeqWGS_SegmentMean_18p11 | Segment mean probe value for chromosome 18p11
+19 | SeqWGS_SegmentMean_18q21 | Segment mean probe value for chromosome 18q21
+20 | SeqWGS_SegmentMean_19p13 | Segment mean probe value for chromosome 19p13
+21 | SeqWGS_SegmentMean_19q13 | Segment mean probe value for chromosome 19q13
+22 | SeqWGS_SegmentMean_1p22 | Segment mean probe value for chromosome 1p22
+23 | SeqWGS_SegmentMean_1q21 | Segment mean probe value for chromosome 1q21
+24 | SeqWGS_SegmentMean_20p12 | Segment mean probe value for chromosome 20p12
+25 | SeqWGS_SegmentMean_20q13 | Segment mean probe value for chromosome 20q13
+26 | SeqWGS_SegmentMean_21q21 | Segment mean probe value for chromosome 21q21
+27 | SeqWGS_SegmentMean_21q22 | Segment mean probe value for chromosome 21q22
+28 | SeqWGS_SegmentMean_22q13 | Segment mean probe value for chromosome 22q13
+29 | SeqWGS_SegmentMean_2p23 | Segment mean probe value for chromosome 2p23
+30 | SeqWGS_SegmentMean_2q22 | Segment mean probe value for chromosome 2q22
+31 | SeqWGS_SegmentMean_3p22 | Segment mean probe value for chromosome 3p22
+32 | SeqWGS_SegmentMean_3q21 | Segment mean probe value for chromosome 3q21
+33 | SeqWGS_SegmentMean_4p15 | Segment mean probe value for chromosome 4p15
+34 | SeqWGS_SegmentMean_4q31 | Segment mean probe value for chromosome 4q31
+35 | SeqWGS_SegmentMean_5p15 | Segment mean probe value for chromosome 5p15
+36 | SeqWGS_SegmentMean_5q31 | Segment mean probe value for chromosome 5q31
+37 | SeqWGS_SegmentMean_6p22 | Segment mean probe value for chromosome 6p22
+38 | SeqWGS_SegmentMean_6q25 | Segment mean probe value for chromosome 6q25
+39 | SeqWGS_SegmentMean_7p14 | Segment mean probe value for chromosome 7p14
+40 | SeqWGS_SegmentMean_7q22 | Segment mean probe value for chromosome 7q22
+41 | SeqWGS_SegmentMean_8p22 | Segment mean probe value for chromosome 8p22
+42 | SeqWGS_SegmentMean_8q24 | Segment mean probe value for chromosome 8q24
+43 | SeqWGS_SegmentMean_9p13 | Segment mean probe value for chromosome 9p13
+44 | SeqWGS_SegmentMean_9q33 | Segment mean probe value for chromosome 9q33
+45 | SeqWGS_SegmentMean_BCMA | Segment mean probe value for BCMA gene
+46 | SeqWGS_SegmentMean_BIRCs | Segment mean probe value for BIRCs gene
+47 | SeqWGS_SegmentMean_CDKN2C | Segment mean probe value for CDKN2C gene
+48 | SeqWGS_SegmentMean_CYLD | Segment mean probe value for CYLD gene
+49 | SeqWGS_SegmentMean_FAM46C | Segment mean probe value for FAM46C gene
+50 | SeqWGS_SegmentMean_FCRL5 | Segment mean probe value for FCRL5 gene
+51 | SeqWGS_SegmentMean_GPRC5D | Segment mean probe value for GPRC5D gene
+52 | SeqWGS_SegmentMean_MYC | Segment mean probe value for MYC gene
+53 | SeqWGS_SegmentMean_RB1 | Segment mean probe value for RB1 gene
+54 | SeqWGS_SegmentMean_TP53 | Segment mean probe value for TP53 gene
+55 | SeqWGS_SegmentMean_TRAF2 | Segment mean probe value for TRAF2 gene
+56 | SeqWGS_SegmentMean_TRAF3 | Segment mean probe value for TRAF3 gene
+57 | SeqWGS_SegmentMean_UTX | Segment mean probe value for UTX gene
+58 | SeqWGS_SegmentMean_Xp11 | Segment mean probe value for chromosome Xp11
+59 | SeqWGS_SegmentMean_Xq22 | Segment mean probe value for chromosome Xq22
+60 | SeqWGS_Cp_Hyperdiploid_Chr_Count | Number of hyperdiploid chromosomes detected e.g. 0, 3, 4, 5
+61 | SeqWGS_Cp_Hyperdiploid_Call | Hyperdiploid status (1=hyperdiploid, 0=not hyperdiploid)
+62 | VISIT | A unique number assigned to the visit. e.g. 1
+63 | SeqWGS_Cp_10p14 | Copy number status for chromosome 10p14
+64 | SeqWGS_Cp_10q23 | Copy number status for chromosome 10q23
+65 | SeqWGS_Cp_11p15 | Copy number status for chromosome 11p15
+66 | SeqWGS_Cp_11q23 | Copy number status for chromosome 11q23
+67 | SeqWGS_Cp_12p13 | Copy number status for chromosome 12p13
+68 | SeqWGS_Cp_12q21 | Copy number status for chromosome 12q21
+69 | SeqWGS_Cp_13q14 | Copy number status for chromosome 13q14
+70 | SeqWGS_Cp_13q34 | Copy number status for chromosome 13q34
+71 | SeqWGS_Cp_14q23 | Copy number status for chromosome 14q23
+72 | SeqWGS_Cp_15q15 | Copy number status for chromosome 15q15
+73 | SeqWGS_Cp_15q26 | Copy number status for chromosome 15q26
+74 | SeqWGS_Cp_16p12 | Copy number status for chromosome 16p12
+75 | SeqWGS_Cp_16q22 | Copy number status for chromosome 16q22
+76 | SeqWGS_Cp_17p13 | Copy number status for chromosome 17p13
+77 | SeqWGS_Cp_17q23 | Copy number status for chromosome 17q23
+78 | SeqWGS_Cp_18p11 | Copy number status for chromosome 18p11
+79 | SeqWGS_Cp_18q21 | Copy number status for chromosome 18q21
+80 | SeqWGS_Cp_19p13 | Copy number status for chromosome 19p13
+81 | SeqWGS_Cp_19q13 | Copy number status for chromosome 19q13
+82 | SeqWGS_Cp_1p22 | Copy number status for chromosome 1p22
+83 | SeqWGS_Cp_1q21 | Copy number status for chromosome 1q21
+84 | SeqWGS_Cp_20p12 | Copy number status for chromosome 20p12
+85 | SeqWGS_Cp_20q13 | Copy number status for chromosome 20q13
+86 | SeqWGS_Cp_21q21 | Copy number status for chromosome 21q21
+87 | SeqWGS_Cp_21q22 | Copy number status for chromosome 21q22
+88 | SeqWGS_Cp_22q13 | Copy number status for chromosome 22q13
+89 | SeqWGS_Cp_2p23 | Copy number status for chromosome 2p23
+90 | SeqWGS_Cp_2q22 | Copy number status for chromosome 2q22
+91 | SeqWGS_Cp_3p22 | Copy number status for chromosome 3p22
+92 | SeqWGS_Cp_3q21 | Copy number status for chromosome 3q21
+93 | SeqWGS_Cp_4p15 | Copy number status for chromosome 4p15
+94 | SeqWGS_Cp_4q31 | Copy number status for chromosome 4q31
+95 | SeqWGS_Cp_5p15 | Copy number status for chromosome 5p15
+96 | SeqWGS_Cp_5q31 | Copy number status for chromosome 5q31
+97 | SeqWGS_Cp_6p22 | Copy number status for chromosome 6p22
+98 | SeqWGS_Cp_6q25 | Copy number status for chromosome 6q25
+99 | SeqWGS_Cp_7p14 | Copy number status for chromosome 7p14
+100 | SeqWGS_Cp_7q22 | Copy number status for chromosome 7q22
+101 | SeqWGS_Cp_8p22 | Copy number status for chromosome 8p22
+102 | SeqWGS_Cp_8q24 | Copy number status for chromosome 8q24
+103 | SeqWGS_Cp_9p13 | Copy number status for chromosome 9p13
+104 | SeqWGS_Cp_9q33 | Copy number status for chromosome 9q33
+105 | SeqWGS_Cp_BCMA | Copy number status for BCMA gene
+106 | SeqWGS_Cp_BIRCs | Copy number status for BIRCs gene
+107 | SeqWGS_Cp_CDKN2C | Copy number status for CDKN2C gene
+108 | SeqWGS_Cp_CYLD | Copy number status for CYLD gene
+109 | SeqWGS_Cp_FAM46C | Copy number status for FAM46C gene
+110 | SeqWGS_Cp_FCRL5 | Copy number status for FCRL5 gene
+111 | SeqWGS_Cp_GPRC5D | Copy number status for GPRC5D gene
+112 | SeqWGS_Cp_MYC | Copy number status for MYC gene
+113 | SeqWGS_Cp_RB1 | Copy number status for RB1 gene
+114 | SeqWGS_Cp_TP53 | Copy number status for TP53 gene
+115 | SeqWGS_Cp_TRAF2 | Copy number status for TRAF2 gene
+116 | SeqWGS_Cp_TRAF3 | Copy number status for TRAF3 gene
+117 | SeqWGS_Cp_UTX | Copy number status for UTX gene
+118 | SeqWGS_Cp_Xp11 | Copy number status for chromosome Xp11
+119 | SeqWGS_Cp_Xq22 | Copy number status for chromosome Xq22

@@ -1,0 +1,8 @@
+Table Name: `salmon_gene_unstranded_counts`
+Description: This is a gene expression matrix that has been melted to long format. Gene expression is quantified from RNA-Sequencing data using the Salmon algorithm.
+Each row details the integer read count (`Count`) for a particular gene GENCODE accession/Ensembl stable identifier (`Gene`), patient identifier (`PUBLIC_ID`), and sample identifier (`Sample`). 
+column_number | name | description
+1	PUBLIC_ID	Index column. Patient public identifier. Last 4 digits are unique. e.g. MMRF_1021
+2   Gene        Index column. GENCODE accession/ENSEMBL Stable ID of the gene. string. example: ENSG00000227830.
+3	SAMPLE_ID	Patient sample identifier. Follows the format [PUBLIC_ID]_[VISIT_ID]_[BM=Bone Marrow/PB=Peripheral Blood]_CD138pos e.g. MMRF_1024_2_BM_CD138pos
+4   Count   Read count. Number of RNA-Seq reads that map to the gene e.g. 497
