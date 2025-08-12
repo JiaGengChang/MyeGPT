@@ -1,6 +1,7 @@
 src/graph
 src/result
 src/*.ipynb
+src/*.png
 rollback.py
 clindata
 omicdata
