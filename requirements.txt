@@ -5,13 +5,15 @@ langchain-community
 langchain-core
 langchain-experimental
 langchain-aws
+langchain-postgres
 langgraph
 lifelines
 matplotlib
 pandas
-psycopg2-binary
+psycopg[binary]
 pydantic
 python-dotenv
 requests
 scipy
+sqlalchemy
 uvicorn
