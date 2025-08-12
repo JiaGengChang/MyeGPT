@@ -1,6 +1,11 @@
 import os
 import ftplib
-from dbdesc import readlines_ftp
+
+# Helper function to read text file through an FTP connection
+def readlines_ftp(handle:ftplib.FTP, filename: str) -> str:
+    data = []
+    handle.retrlines(f'RETR {filename}', data.append)
+    return '\n'.join(data)
 
 # Connect to FTP server and retrieve prompt.txt from prompt folder
 with ftplib.FTP() as ftp:
