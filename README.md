@@ -1,19 +1,22 @@
 # MyeGPT
 
-An agentic conversation application for researchers to mine the MMRF-CoMMpass dataset, built with LangChain.
+An agentic conversation application for researchers to perform research and discovery on the MMRF-CoMMpass dataset
 
-<img width="875" alt="Desktop site demonstration screenshot" src="https://github.com/user-attachments/assets/92959775-72aa-4aca-a0a2-3ab5051424db" />
+https://github.com/user-attachments/assets/44b4ea1b-146a-4c48-ae7f-677d3e19ec6a
 
-Scan the code to access it on mobile browser:
+Click [here](https://chat.myegpt.com) or scan the code below to access the live application:
 
 ![qrchimpX512](https://github.com/user-attachments/assets/f45a344b-4813-4c57-9664-2e0e8bbb86fe)
 
 ## Demo
 
-1. Create a desired figure
+1. Survival analysis based on TP53 mutation status
 
-https://github.com/user-attachments/assets/7a5aca54-c233-4831-8ace-6de29e6df061
+https://github.com/user-attachments/assets/50ad070b-e316-4a1e-9451-2cf1ab1954ca
 
+## About
+
+MyeGPT is built with LangGraph and the LangChain AWS adapter.
 
 
 ## Project structure
@@ -46,3 +49,7 @@ myegpt/
 - Multiple Myeloma Research Foundation (MMRF) CoMMpass (Relating Clinical Outcomes in MM to Personal Assessment of Genetic Profile) trial (NCT01454297)
 - Patients and family members who contributed to the study
 - All members of the Chng Wee Joo lab for their inputs
+
+## Copyright
+©2025 Chang Jia Geng. All rights reserved.
+Contact for licensing and permission: changjiageng@u.nus.edu
