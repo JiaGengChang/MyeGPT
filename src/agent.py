@@ -108,20 +108,14 @@ def query_agent(user_input: str):
                              If a graph is generated, save it as {graph_png_filename} and display it with `<img src={graph_png_filename} max-width=100% height=auto>` Should there be multiple graphs, add `_2`, `_3` suffixes etc., to the filename before the .png extension.
                              """)
     user_message = HumanMessage(content=user_input)
-    full_response = ""
+    
     for step in graph.stream({"messages": [preamble, user_message]}, config, stream_mode="values"):
         if step["messages"]:
             step["messages"][-1].pretty_print()
-        if step["messages"] and isinstance(step["messages"][-1], AIMessage):
-            chunk = step["messages"][-1].content
-            if isinstance(chunk, str):
-                # last AI message
-                full_response += chunk
-            # intermediate AI messages
-            elif isinstance(chunk, dict) and "text" in chunk:
-                # remove trailing semicolon
-                full_response += chunk["text"][:-1] + "\n"
-            elif isinstance(chunk, list) and "text" in chunk[0]:
-                full_response += chunk[0]["text"][:-1] + "\n"
-        
-    return full_response
+            if isinstance(step["messages"][-1], AIMessage):
+                chunk = step["messages"][-1].content
+                if isinstance(chunk, list):
+                    chunk = chunk[0]
+                if isinstance(chunk, dict) and "text" in chunk:
+                    chunk = chunk["text"][:-1]
+                yield chunk

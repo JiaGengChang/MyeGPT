@@ -1,6 +1,6 @@
 import os
 from fastapi import FastAPI
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
@@ -39,8 +39,10 @@ class Query(BaseModel):
 # handle chat requests
 @app.post("/api/ask")
 async def ask(query: Query):
-    response = query_agent(query.user_input)
-    return {"response": response}
+    def generate_response():
+        for chunk in query_agent(query.user_input):
+            yield chunk
+    return StreamingResponse(generate_response(), media_type="text/plain")
 
 if __name__ == "__main__":
     import uvicorn
