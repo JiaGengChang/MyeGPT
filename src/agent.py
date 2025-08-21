@@ -106,7 +106,7 @@ def create_system_message() -> str:
     return system_message
 
 system_message = None
-config = {"configurable": {"thread_id": "thread-001"}, "recursion_limit": 50}
+config = {"configurable": {"thread_id": "thread-001"}, "recursion_limit": 10}
 
 async def send_init_prompt(app:FastAPI):
     global system_message
@@ -122,7 +122,6 @@ async def send_init_prompt(app:FastAPI):
     app.state.init_prompt_done.set()
 
 def query_agent(user_input: str):
-    global system_message
     global graph
     global config
     graph_png_filename = f"graph/graph_{uuid.uuid4().hex[:8]}.png"
