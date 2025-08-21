@@ -90,7 +90,7 @@ graph = create_react_agent(
     model=llm,
     tools=[document_search_tool, convert_gene_tool, langchain_query_sql_tool, python_repl_tool, python_query_sql_tool],
     checkpointer=InMemorySaver(),
-    # store=connect_store(),
+    store=connect_store(),
 )
 
 # Create a system message for the agent
