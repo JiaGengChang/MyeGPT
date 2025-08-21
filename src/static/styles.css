@@ -47,19 +47,24 @@ body {
     word-wrap: break-word;
     line-height: 1.5;
     padding: 10px 20px;
+    border-radius: 20px;
+    max-width: 90%;
   }
   
   .chat-message.user {
-    background-color: mistyrose;
+    background-color: rgb(250, 243, 214);
     border-radius: 20px 1px 20px 20px;
     max-width: 60%;
     margin-left: auto;
   }
   
-  .chat-message.assistant {
-    background-color: lavender;
+  .chat-message.ai-response {
+    background-color: rgb(230, 243, 254);
     border-radius: 20px 20px 20px 1px;
-    max-width: 90%;
+  }
+
+  .chat-message.ai-thinking {
+    background-color: rgb(240, 246, 251);
   }
   
   .chat-input-container {
