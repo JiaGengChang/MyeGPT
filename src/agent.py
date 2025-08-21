@@ -113,7 +113,12 @@ async def send_init_prompt(app:FastAPI):
     global graph
     global config
     system_message = create_system_message()
-    await graph.ainvoke({"messages" :[system_message]}, config)
+    init_response = await graph.ainvoke({"messages" :[system_message]}, config)
+
+    # Store the init response for injection into HTML
+    app.state.init_response = init_response["messages"][-1].content
+    
+    # Open the gate for queries
     app.state.init_prompt_done.set()
 
 def query_agent(user_input: str):
