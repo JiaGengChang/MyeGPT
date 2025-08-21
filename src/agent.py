@@ -35,7 +35,7 @@ convert_gene_tool = StructuredTool.from_function(
 def execute_sql_query_with_python(query: str):
     conn = psycopg.connect(os.environ.get("COMMPASS_DSN"))
     with conn.cursor() as curs:
-        curs.execute(query.replace("LIMIT 100","")) # forcefully remove LIMIT 100 clause
+        curs.execute(re.sub(r'LIMIT \d+', '', query, flags=re.IGNORECASE))
         result = curs.fetchall()
         df = pd.DataFrame(result, columns=[desc[0] for desc in curs.description])
         conn.close()
