@@ -32,8 +32,8 @@ convert_gene_tool = StructuredTool.from_function(
     name="convert_gene",
     description="Convert a gene name to its corresponding Ensembl Gene stable ID (e.g. NSD2 to ENSG00000109685). Returns an error message if the gene name is not found or if it is not a gene name."
 )
-def execute_query_python(query: str):
-    conn = psycopg.connect(dsn=os.environ.get("COMMPASS_DSN"))
+def execute_sql_query_with_python(query: str):
+    conn = psycopg.connect(os.environ.get("COMMPASS_DSN"))
     with conn.cursor() as curs:
         curs.execute(query.replace("LIMIT 100","")) # forcefully remove LIMIT 100 clause
         result = curs.fetchall()
