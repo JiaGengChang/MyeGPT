@@ -22,6 +22,39 @@ function switchMode() {
     }
 }
 
+async function initializeChat() {
+    try {
+        const response = await fetch('/api/init', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) throw new Error('Failed to initialize chat');
+        
+        const message = await response.text();
+
+        // Create initial message container
+        const initialMessageElement = document.createElement('div');
+        initialMessageElement.classList.add('chat-message', 'ai-response');
+        initialMessageElement.innerHTML = message.replace(/\n/g, '<br>'); 
+        
+        const initialMessageContainer = document.createElement('div');
+        initialMessageContainer.classList.add('chat-message-container');
+        initialMessageContainer.appendChild(initialMessageElement);
+        chatHistory.appendChild(initialMessageContainer);
+        
+        chatHistory.scrollTop = chatHistory.scrollHeight;
+        
+    } catch (error) {
+        console.error('Error initializing chat:', error);
+    }
+}
+
+// Call on page load
+document.addEventListener('DOMContentLoaded', initializeChat);
+
 async function sendMessage() {
     const message = chatInput.value.trim();
     if (!message) return;
