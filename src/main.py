@@ -1,6 +1,6 @@
 import os
 from fastapi import FastAPI
-from fastapi.responses import FileResponse, StreamingResponse
+from fastapi.responses import FileResponse, StreamingResponse, PlainTextResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
@@ -36,9 +36,16 @@ app.state.init_prompt_done = asyncio.Event()
 @app.get("/")
 async def serve_frontend():
     response = FileResponse("static/index.html")
+    # Create task to send init prompt
     if not app.state.init_prompt_done.is_set():
         asyncio.create_task(send_init_prompt(app))
     return response
+
+# retrieve response to init prompt
+@app.post("/api/init")
+async def get_init_response():
+    await app.state.init_prompt_done.wait()
+    return PlainTextResponse(app.state.init_response)
 
 class Query(BaseModel):
     user_input: str
