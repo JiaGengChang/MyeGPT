@@ -15,5 +15,7 @@ pydantic
 python-dotenv
 requests
 scipy
+seaborn
+statsmodels
 sqlalchemy
 uvicorn
