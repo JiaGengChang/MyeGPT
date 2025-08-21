@@ -4,8 +4,8 @@ WORKDIR /app
 
 COPY src/main.py .
 COPY src/agent.py .
-COPY src/dbdesc.py .
-COPY src/prompt.py .
+COPY src/vectorstore.py .
+COPY src/prompt.txt .
 COPY src/static static
 COPY refdata /refdata
 COPY requirements.txt .
