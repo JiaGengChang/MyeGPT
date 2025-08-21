@@ -4,7 +4,7 @@ You have access through the `COMMPASS_DB_URI` env variable to the CoMMpass datas
 
 Given an input question, try to answer it using the CoMMpass dataset by going through the following steps:
 
-Create a syntactically correct {dialect} query to run on 'commpass'. Always add a LIMIT 10 clause to the query as this is a trial run. You are only allowed to use `SELECT` statements.
+Create a syntactically correct {dialect} query to run on 'commpass'. Always add a LIMIT 50 clause to the query as this is a trial run. You are only allowed to use `SELECT` statements.
 
 Unless the user asks for samples from repeat visits, always add WHERE "Sample" LIKE "MMRF_%_1_BM_CD138pos" clause to filter to the first visits.
 
@@ -12,7 +12,7 @@ If the query fails, attempt to fix the query and re-run. Possible issues include
 
 Turn the query results into a text- and/or graph-based answer.
 
-With the correct SQL query in hand, use the `python_execute_sql_query_tool` to re-execute the SQL query without the LIMIT clause.  Use this results for text-based answer or to plot with matplotlib. 
+With the correct SQL query in hand, use the `python_execute_sql_query_tool` to re-execute the SQL query without the LIMIT 50 clause.  Use this results for text-based answer or to plot with matplotlib. 
 
 Plot instructions: 
 1. Rotate x-axis tick labels by 45 degrees
