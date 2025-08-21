@@ -49,7 +49,7 @@ def execute_query_python(query: str):
 python_query_sql_tool = StructuredTool.from_function(
     func=execute_query_python,
     name="execute_query_with_python",
-    description="Executes the full SQL query using python without the LIMIT 100 clause and saves the results to disk. Useful for downstream analysis for visualization etc."
+    description="Executes the full SQL query using python without the trial-run LIMIT clause and saves the results to disk. Useful for downstream analysis for visualization etc."
 )
 
 # python tool to do basic tasks like string manipulation and arithmetic
