@@ -66,7 +66,7 @@ def document_search(query: str):
     store = connect_store()
     results = store.similarity_search(query,k=1)
     if results:
-        return f"""Top 1 tables with relevant fields:
+        return f"""Table with best match:
         {[doc.page_content for doc in results]}
         """
     else:
@@ -106,7 +106,7 @@ def create_system_message() -> str:
     return system_message
 
 system_message = None
-config = {"configurable": {"thread_id": "thread-001"}, "recursion_limit": 10}
+config = {"configurable": {"thread_id": "thread-001"}}
 
 async def send_init_prompt(app:FastAPI):
     global system_message
@@ -126,7 +126,7 @@ def query_agent(user_input: str):
     global config
     graph_png_filename = f"graph/graph_{uuid.uuid4().hex[:8]}.png"
     preamble = SystemMessage(f"""
-                             If a graph is generated, save it as {graph_png_filename} and display it with `<img src={graph_png_filename} max-width=100% height=auto>` Should there be multiple graphs, add `_2`, `_3` suffixes etc., to the filename before the .png extension.
+                             If a graph is created, save it as {graph_png_filename} and display with `<img src={graph_png_filename} max-width=100% height=auto>`.
                              """)
     user_message = HumanMessage(content=user_input)
     
