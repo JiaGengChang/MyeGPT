@@ -15,6 +15,7 @@ import matplotlib
 matplotlib.use('Agg') # non-interactive backend
 
 from vectorstore import connect_store
+import re
 
 gene_annot = pd.read_csv(f'../refdata/gene_annotation.tsv', sep='\t')
 
@@ -29,8 +30,8 @@ def convert_gene(gene_name: str):
 
 convert_gene_tool = StructuredTool.from_function(
     func=convert_gene,
-    name="convert_gene",
-    description="Convert a gene name to its corresponding Ensembl Gene stable ID (e.g. NSD2 to ENSG00000109685). Returns an error message if the gene name is not found or if it is not a gene name."
+    name="convert_gene_name_to_accession",
+    description="Convert a gene name to its corresponding GENCODE accession aka Ensembl Gene stable ID (e.g. from NSD2 to ENSG00000109685). Returns an error message if the gene name is not found or if it is not a gene name."
 )
 def execute_sql_query_with_python(query: str):
     conn = psycopg.connect(os.environ.get("COMMPASS_DSN"))
@@ -76,7 +77,7 @@ def document_search(query: str):
 document_search_tool = StructuredTool.from_function(
     func=document_search,
     name="document_search",
-    description="Search for database tables that are relevant to the query. Returns the reference manual of top 3 tables relevant to the query. The query should only include one subject, such as survival data, gene  expression data, or copy number data - do not mix multiple concepts at once."
+    description="Returns the reference manual of the table most relevant to the query. The query should only involve one subject, such as survival data, gene expression data, or copy number data - do not mix multiple concepts at once."
 )
 
 # initialize the chat model
@@ -106,7 +107,7 @@ def create_system_message() -> str:
     return system_message
 
 system_message = None
-config = {"configurable": {"thread_id": "thread-001"}}
+config = {"configurable": {"thread_id": "thread-001"}, "recursion_limit": 50}
 
 async def send_init_prompt(app:FastAPI):
     global system_message
@@ -139,4 +140,5 @@ def query_agent(user_input: str):
                     chunk = chunk[0]
                 if isinstance(chunk, dict) and "text" in chunk:
                     chunk = chunk["text"][:-1]
-                yield chunk
+                if isinstance(chunk, str):
+                    yield chunk
