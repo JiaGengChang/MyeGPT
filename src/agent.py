@@ -46,9 +46,9 @@ def execute_sql_query_with_python(query: str):
     else:
         return "Query returned no results. No output file created."
 
-python_query_sql_tool = StructuredTool.from_function(
-    func=execute_query_python,
-    name="execute_query_with_python",
+python_execute_sql_query_tool = StructuredTool.from_function(
+    func=execute_sql_query_with_python,
+    name="execute_full_sql_query_with_python",
     description="Executes the full SQL query using python without the trial-run LIMIT clause and saves the results to disk. Useful for downstream analysis for visualization etc."
 )
 
@@ -88,7 +88,7 @@ llm = ChatBedrockConverse(
 # Create runnable graph
 graph = create_react_agent(
     model=llm,
-    tools=[document_search_tool, convert_gene_tool, langchain_query_sql_tool, python_repl_tool, python_query_sql_tool],
+    tools=[document_search_tool, convert_gene_tool, langchain_query_sql_tool, python_repl_tool, python_execute_sql_query_tool],
     checkpointer=InMemorySaver(),
     store=connect_store(),
 )
