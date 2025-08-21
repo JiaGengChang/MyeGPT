@@ -52,22 +52,58 @@ async function sendMessage() {
             },
             body: JSON.stringify({ user_input: message }),  
         });
-        if (!response.ok) throw new Error('Failed to send message');
-        // Parse JSON response from backend
-        const data = await response.json();
-        const botResponse = data.response;
-        // Add bot's response to chat history
-        const botMessageElement = document.createElement('div');
-        botMessageElement.classList.add('chat-message', 'assistant');
-        botMessageElement.innerHTML = botResponse.replace(/\n/g, '<br>');
-        const botMessageContainer = document.createElement('div');
-        botMessageContainer.classList.add('chat-message-container');
-        botMessageContainer.appendChild(botMessageElement);
-        chatHistory.appendChild(botMessageContainer);
-        
-        chatHistory.scrollTop = chatHistory.scrollHeight;
 
-    } catch (error) {
+        if (!response.ok) throw new Error('Failed to send message');
+        
+        // Read the streaming response
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        
+        let lastThinkingContainer = null;
+        
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            
+            const chunk = decoder.decode(value);
+            
+            // Check if this is a thinking chunk
+            const isThinking = chunk.startsWith('<thinking>') && chunk.endsWith('</thinking>');
+            
+            // Remove previous container if it was thinking
+            if (lastThinkingContainer && !isThinking) {
+            // Add fade-out animation before removing
+            lastThinkingContainer.style.transition = 'opacity 0.3s ease-out';
+            lastThinkingContainer.style.opacity = '0';
+            setTimeout(() => lastThinkingContainer.parentElement.remove(), 300);
+            lastThinkingContainer = null;
+            }
+            
+            // Create a new container for each chunk
+            const chunkMessageElement = document.createElement('div');
+            chunkMessageElement.classList.add('chat-message');
+            // In case we want to stylize it differently
+            if (isThinking) {
+            chunkMessageElement.classList.add('ai-thinking');
+            } else {
+            chunkMessageElement.classList.add('ai-response');
+            }
+            chunkMessageElement.innerHTML = chunk.replace(/\n/g, '<br>');
+            
+            const chunkMessageContainer = document.createElement('div');
+            chunkMessageContainer.classList.add('chat-message-container');
+            chunkMessageContainer.appendChild(chunkMessageElement);
+            chatHistory.appendChild(chunkMessageContainer);
+            
+            // Track thinking containers
+            if (isThinking) {
+            lastThinkingContainer = chunkMessageContainer;
+            }
+            
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+        }
+
+        } catch (error) {
         console.error('Error:', error);
     } finally {
         switchMode();
