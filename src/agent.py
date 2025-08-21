@@ -126,7 +126,7 @@ def query_agent(user_input: str):
     global config
     graph_png_filename = f"graph/graph_{uuid.uuid4().hex[:8]}.png"
     preamble = SystemMessage(f"""
-                             If a graph is created, save it as {graph_png_filename} and display with `<img src={graph_png_filename} max-width=100% height=auto>`.
+                             If a graph is created, save it as {graph_png_filename} and display with `<img src={graph_png_filename} width=100% height=auto>`.
                              """)
     user_message = HumanMessage(content=user_input)
     
