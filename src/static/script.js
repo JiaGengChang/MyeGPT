@@ -22,31 +22,39 @@ function switchMode() {
     }
 }
 
+function create_spinner() {
+    const spinner = document.createElement('div');
+    spinner.classList.add('init-spinner');
+    chatHistory.appendChild(spinner);
+    window.spinner = spinner; // enable global access
+}
+
+// Insert an AI message into chat history
+function createBotMessage(message) {
+    const botMessageElement = document.createElement('div');
+    botMessageElement.classList.add('chat-message', 'ai-response');
+    botMessageElement.innerHTML = message.replace(/\n/g, '<br>'); 
+    const botMessageContainer = document.createElement('div');
+    botMessageContainer.classList.add('chat-message-container');
+    botMessageContainer.appendChild(botMessageElement);
+    chatHistory.appendChild(botMessageContainer);
+    chatHistory.scrollTop = chatHistory.scrollHeight;
+    return botMessageContainer;
+}
+
 async function initializeChat() {
     try {
+        create_spinner()
         const response = await fetch('/api/init', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
         });
-
         if (!response.ok) throw new Error('Failed to initialize chat');
-        
         const message = await response.text();
-
-        // Create initial message container
-        const initialMessageElement = document.createElement('div');
-        initialMessageElement.classList.add('chat-message', 'ai-response');
-        initialMessageElement.innerHTML = message.replace(/\n/g, '<br>'); 
-        
-        const initialMessageContainer = document.createElement('div');
-        initialMessageContainer.classList.add('chat-message-container');
-        initialMessageContainer.appendChild(initialMessageElement);
-        chatHistory.appendChild(initialMessageContainer);
-        
-        chatHistory.scrollTop = chatHistory.scrollHeight;
-        
+        window.spinner.remove();
+        createBotMessage(message)        
     } catch (error) {
         console.error('Error initializing chat:', error);
     }
@@ -112,28 +120,28 @@ async function sendMessage() {
             lastThinkingContainer = null;
             }
             
-            // Create a new container for each chunk
-            const chunkMessageElement = document.createElement('div');
-            chunkMessageElement.classList.add('chat-message');
-            // In case we want to stylize it differently
+            // // Create a new container for each chunk
+            const botMessageContainer = createBotMessage(chunk);
+            // const chunkMessageElement = document.createElement('div');
+            // chunkMessageElement.classList.add('chat-message');
+            // // In case we want to stylize it differently
             if (isThinking) {
-            chunkMessageElement.classList.add('ai-thinking');
+                botMessageContainer.firstElementChild.classList.add('ai-thinking');
             } else {
-            chunkMessageElement.classList.add('ai-response');
-            }
-            chunkMessageElement.innerHTML = chunk.replace(/\n/g, '<br>');
-            
-            const chunkMessageContainer = document.createElement('div');
-            chunkMessageContainer.classList.add('chat-message-container');
-            chunkMessageContainer.appendChild(chunkMessageElement);
-            chatHistory.appendChild(chunkMessageContainer);
-            
+                botMessageContainer.firstElementChild.classList.add('ai-response');
+            };
+            // chunkMessageElement.innerHTML = chunk.replace(/\n/g, '<br>');
+            // const botMessageContainer = document.createElement('div');
+            // botMessageContainer.classList.add('chat-message-container');
+            // botMessageContainer.appendChild(chunkMessageElement);
+            // chatHistory.appendChild(botMessageContainer);
+            // chatHistory.scrollTop = chatHistory.scrollHeight;
+
             // Track thinking containers
             if (isThinking) {
-            lastThinkingContainer = chunkMessageContainer;
+            lastThinkingContainer = botMessageContainer;
             }
             
-            chatHistory.scrollTop = chatHistory.scrollHeight;
         }
 
         } catch (error) {
