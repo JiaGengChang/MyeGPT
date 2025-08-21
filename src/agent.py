@@ -64,9 +64,9 @@ langchain_query_sql_tool = QuerySQLDatabaseTool(db=db)
 def document_search(query: str):
     # establish connection to postgres vector store
     store = connect_store()
-    results = store.similarity_search(query,k=3)
+    results = store.similarity_search(query,k=1)
     if results:
-        return f"""Top 3 tables with relevant fields:
+        return f"""Top 1 tables with relevant fields:
         {[doc.page_content for doc in results]}
         """
     else:
@@ -76,7 +76,7 @@ def document_search(query: str):
 document_search_tool = StructuredTool.from_function(
     func=document_search,
     name="document_search",
-    description="Search for database tables that are relevant to the query. Returns the reference manual of top 3 tables relevant to the query."
+    description="Search for database tables that are relevant to the query. Returns the reference manual of top 3 tables relevant to the query. The query should only include one subject, such as survival data, gene  expression data, or copy number data - do not mix multiple concepts at once."
 )
 
 # initialize the chat model
