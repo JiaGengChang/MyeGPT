@@ -78,6 +78,19 @@ async function initializeChat() {
 document.addEventListener('DOMContentLoaded', initializeChat);
 
 async function sendMessage() {
+    // Check if window width is below 768px, then remove logo
+    if (window.innerWidth < 768) {
+        //remove logo if exists
+        const headerImg = document.querySelector('.header img');
+        if (headerImg) {
+            headerImg.remove();
+        }
+        //reduce h1 font size
+        const headerH1 = document.querySelector('.header h1');
+        if (headerH1) {
+            headerH1.style.fontSize = '1.2em';
+        }
+    }
     const message = chatInput.value.trim();
     if (!message) return;
     switchMode();
