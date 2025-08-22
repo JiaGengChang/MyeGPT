@@ -226,12 +226,28 @@ body {
   }
 }
 
-.init-spinner {
+.init-spinner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.init-spinner-message {
+  font-size: 16px;
+  text-align: center;
+  width: 20vw;
+  height: auto;
+  color: #7b7b7b;
+}
+
+.init-spinner-element {
   border: 16px solid #cacaca;
   border-top: 16px solid #515151;
   border-radius: 50%;
-  width: 100px;
-  height: 100px;
+  width: 10vw;
+  max-width: 100px;
+  height: 10vw;
+  max-height: 100px;
   animation: init-spin 2s linear infinite;
 }
 

@@ -23,10 +23,24 @@ function switchMode() {
 }
 
 function create_spinner() {
-    const spinner = document.createElement('div');
-    spinner.classList.add('init-spinner');
-    chatHistory.appendChild(spinner);
-    window.spinner = spinner; // enable global access
+    const spinnerContainer = document.createElement('div');
+    spinnerContainer.classList.add('init-spinner-container');
+    const spinnerElement = document.createElement('div');
+    spinnerElement.classList.add('init-spinner-element');
+    spinnerContainer.appendChild(spinnerElement);
+    const spinnerMessage = document.createElement('div');
+    spinnerMessage.classList.add('init-spinner-message');    
+    
+    // Timer
+    let seconds = 0;
+    setInterval(() => {
+        seconds++;
+        spinnerMessage.innerHTML = `<p>Initializing... (${seconds}s)<br>Please refresh if it takes over 10 seconds</p>`;
+    }, 1000);
+    
+    spinnerContainer.appendChild(spinnerMessage);
+    chatHistory.appendChild(spinnerContainer);
+    window.spinner = spinnerContainer; // enable global access
 }
 
 // Insert an AI message into chat history
