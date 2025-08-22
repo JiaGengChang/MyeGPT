@@ -40,7 +40,9 @@ def create_system_message() -> str:
         dialect=db.dialect,
         commpass_db_uri=db_uri
     )
-    return [HumanMessage(content="."), SystemMessage(content=system_message)]
+    return [HumanMessage(content="."), 
+            SystemMessage(content=system_message), 
+            HumanMessage(content="Hello"),]
 
 system_message = None
 config0 = {"configurable": {"thread_id": "thread-000"}, "recursion_limit": 5} # init configuration
