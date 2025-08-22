@@ -16,15 +16,21 @@ body {
 
   .header {
     width: 100%;
-    font-size: 16px;
-    color: rgb(0, 0, 0);
-    padding: 1rem;
-    text-align: center;
-    font-family: sans-serif;
-  }
-
-  .header h1 {
+    padding: 1rem 1rem 0rem 1rem;
     margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .header img {
+    width: 5em;
+    max-width: 80px;
+    vertical-align: middle;
+  }
+  
+  .header h1 {
+    font-size: 1.5em;
   }
 
   .chat-history {
