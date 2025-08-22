@@ -30,12 +30,12 @@ graph = create_react_agent(
 # dynamic variables will be filled in at the start of each session
 # removed db description
 def create_system_message() -> str:
+    db_uri = os.environ.get("COMMPASS_DB_URI")
+    db = SQLDatabase.from_uri(db_uri)
     with open('prompt.txt', 'r') as f:
         latent_system_message = f.read()
     system_message = latent_system_message.format(
         dialect=db.dialect,
-    db_uri = os.environ.get("COMMPASS_DB_URI")
-    db = SQLDatabase.from_uri(db_uri)
         commpass_db_uri=db_uri
     )
     return [HumanMessage(content="."), 
