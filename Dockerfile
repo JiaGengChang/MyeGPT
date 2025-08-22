@@ -4,6 +4,7 @@ WORKDIR /app
 
 COPY src/main.py .
 COPY src/agent.py .
+COPY src/tools.py .
 COPY src/vectorstore.py .
 COPY src/prompt.txt .
 COPY src/static static
