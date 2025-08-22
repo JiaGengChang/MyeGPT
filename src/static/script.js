@@ -68,7 +68,7 @@ async function initializeChat() {
         if (!response.ok) throw new Error('Failed to initialize chat');
         const message = await response.text();
         window.spinner.remove();
-        createBotMessage(message)        
+        createBotMessage(message);
     } catch (error) {
         console.error('Error initializing chat:', error);
     }
