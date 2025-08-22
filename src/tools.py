@@ -1,5 +1,6 @@
 import os
 import re
+import uuid
 import psycopg
 import pandas as pd
 from langchain.tools import StructuredTool
