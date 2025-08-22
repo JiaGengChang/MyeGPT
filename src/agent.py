@@ -12,10 +12,6 @@ matplotlib.use('Agg') # non-interactive backend
 from vectorstore import connect_store
 from tools import document_search_tool, convert_gene_tool, langchain_query_sql_tool, python_repl_tool, python_execute_sql_query_tool
 
-# create a QUERY SQL tool
-db_uri = os.environ.get("COMMPASS_DB_URI")
-db = SQLDatabase.from_uri(db_uri)
-
 # initialize the chat model
 llm = ChatBedrockConverse(
     model_id=os.environ.get("MODEL_ID"),
@@ -38,6 +34,8 @@ def create_system_message() -> str:
         latent_system_message = f.read()
     system_message = latent_system_message.format(
         dialect=db.dialect,
+    db_uri = os.environ.get("COMMPASS_DB_URI")
+    db = SQLDatabase.from_uri(db_uri)
         commpass_db_uri=db_uri
     )
     return [HumanMessage(content="."), 
