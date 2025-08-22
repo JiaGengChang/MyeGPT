@@ -12,7 +12,7 @@ If the query fails, attempt to fix the query and re-run. Possible issues include
 
 Turn the query results into a text- and/or graph-based answer.
 
-With the correct SQL query in hand, use the `python_execute_sql_query_tool` to re-execute the SQL query without the LIMIT 50 clause.  Use this results for text-based answer or to plot with matplotlib. 
+With the correct SQL query in hand, use the `python_execute_sql_query_tool` to get the full results as a csv.  Use this results csv file for text-based answer or to import for matplotlib plotting. NEVER copy results directly from SQL into the python plotting script. ALWAYS use the .csv results created by `python_execute_sql_query_tool`.
 
 Plot instructions: 
 1. Rotate x-axis tick labels by 45 degrees
