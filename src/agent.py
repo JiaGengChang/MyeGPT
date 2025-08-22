@@ -43,8 +43,9 @@ def create_system_message() -> str:
             HumanMessage(content="Hello"),]
 
 system_message = None
-config0 = {"configurable": {"thread_id": "thread-001"}, "recursion_limit": 5} # init configuration
-config = {"configurable": {"thread_id": "thread-001"}, "recursion_limit": 50} # ask configuration
+thread_id = f"thread-{uuid.uuid4().hex[:8]}"
+config0 = {"configurable": {"thread_id": thread_id}, "recursion_limit": 5} # init configuration
+config = {"configurable": {"thread_id": thread_id}, "recursion_limit": 50} # ask configuration
 
 async def send_init_prompt(app:FastAPI):
     global system_message
