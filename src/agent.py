@@ -40,17 +40,18 @@ def create_system_message() -> str:
         dialect=db.dialect,
         commpass_db_uri=db_uri
     )
-    return system_message
+    return [HumanMessage(content="."), SystemMessage(content=system_message)]
 
 system_message = None
-config = {"configurable": {"thread_id": "thread-001"}, "recursion_limit": 50}
+config0 = {"configurable": {"thread_id": "thread-000"}, "recursion_limit": 5} # init configuration
+config = {"configurable": {"thread_id": "thread-001"}, "recursion_limit": 50} # ask configuration
 
 async def send_init_prompt(app:FastAPI):
     global system_message
     global graph
     global config
     system_message = create_system_message()
-    init_response = await graph.ainvoke({"messages" :[system_message]}, config)
+    init_response = await graph.ainvoke({"messages" :system_message}, config0)
 
     # Store the init response for injection into HTML
     app.state.init_response = init_response["messages"][-1].content
