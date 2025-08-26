@@ -6,47 +6,49 @@ column_number | name | description
 3	VISIT	A unique number assigned to the visit. e.g. 1 means first visit at which diagnosis was made.
 4	VJ_INTERVAL	Record Interval
 5	VISITDY Day of Visit
-6	AT_DEFINITEDEVEL	
+--After treatment checkup--
+6	AT_DEFINITEDEVEL    "Checked" means yes
 7	AT_WASANASSESSME	Was an assessment of treatment response performed since the last study visit?
-8	AT_RESPONSEASSES	
+8	AT_RESPONSEASSES	Day (since baseline) the response assessment was done.
 9	AT_TREATMENTRESP	Treatment Response
-13	AT_INCREASEOF25F	
-14	AT_SERUMMCOMPONE	
-15	AT_URINEMCOMPONE	
-16	AT_ONLYINPATIENT	
-17	AT_ONLYINPATIENT2	
-18	AT_DEVELOPMENTOF	
+13	AT_INCREASEOF25F	"Checked" means yes
+14	AT_SERUMMCOMPONE	"Checked" means yes	
+15	AT_URINEMCOMPONE	"Checked" means yes	
+16	AT_ONLYINPATIENT	"Checked" means yes
+17	AT_ONLYINPATIENT2	"Checked" means yes
+18	AT_DEVELOPMENTOF	"Checked" means yes
+--Bone assessment--
 19	BA_WASABONEASSES	Was a bone assessment done since the last study visit?
 20	BA_DAYOFASSESSM	Date of assessment
-21	BA_TYPEOFBONEASS	Type of bone assessment
-22	BA_SPECIFY	Other bone assessment, specify
-23	BA_IMAGEINTERPRE	Image Interpretation
-24	BA_LYTICLESIONS	Lytic Lesions
-25	BA_OFLYTICLESION	# of Lytic Lesions
-26	BA_OSTEOPENIAOST	Osteopenia / Osteoporosis
-27	BA_PATHOLOGICFRA	Pathologic fracture
-28	BA_MULTIPLEDISSE	Multiple disseminated lesions
-29	BA_SKULL	Yes/No bone lesion assessment for Skull
-30	BA_SPINE	Yes/No bone lesion assessment for Spine
-31	BA_CERVICAL	Yes/No bone lesion assessment for Cervical
-32	BA_THORACIC	Yes/No bone lesion assessment for Thoracic
-33	BA_LUMBAR	Yes/No bone lesion assessment for Lumbar
-34	BA_SACRAL	Yes/No bone lesion assessment for Sacral
-35	BA_PELVIS	Yes/No bone lesion assessment for Pelvis
-36	BA_RIGHT	Yes/No bone lesion assessment for Right region 1
-37	BA_LEFT	Yes/No bone lesion assessment for Left region 2
-38	BA_FEMUR	Yes/No bone lesion assessment for Femur
-39	BA_RIGHT2	Yes/No bone lesion assessment for Right region 2
-40	BA_LEFT2	Yes/No bone lesion assessment for Left region 2
-41	BA_HUMERUS	Yes/No bone lesion assessment for Humerus
-42	BA_RIGHT3	Yes/No bone lesion assessment for Right region 3
-43	BA_LEFT3	Yes/No bone lesion assessment for Left region 3
-44	BA_RIBS	Yes/No bone lesion assessment for Ribs
-45	BA_RIGHT4	Yes/No bone lesion assessment for Right region 4
+21	BA_TYPEOFBONEASS	Type of bone assessment. Unstructured field.
+22	BA_SPECIFY	Other bone assessment, specify. Unstructured field.
+23	BA_IMAGEINTERPRE	Clinical interpretation of bone assessment. Categorized as normal/clinically significant/clinically insignificant abnormality, is abnormality related or unrelated to MM.
+24	BA_LYTICLESIONS	Were there lytic Lesions? "Checked"/"checked" means yes.
+25	BA_OFLYTICLESION	Number of Lytic Lesions. Ordinal categories: "0", "1", "2", or ">=3"
+26	BA_OSTEOPENIAOST	Osteopenia / Osteoporosis. "checked" means yes.
+27	BA_PATHOLOGICFRA	Pathologic fracture. "checked" means yes.
+28	BA_MULTIPLEDISSE	Multiple disseminated lesions. "checked" means yes.
+29	BA_SKULL	Bone lesion in Skull
+30	BA_SPINE	Bone lesion in Spine
+31	BA_CERVICAL	Bone lesion in Cervical
+32	BA_THORACIC	Bone lesion in Thoracic
+33	BA_LUMBAR	Bone lesion in Lumbar
+34	BA_SACRAL	Bone lesion in Sacral
+35	BA_PELVIS	Bone lesion in Pelvis
+36	BA_RIGHT	Bone lesion in Right region 1
+37	BA_LEFT	Bone lesion in Left region 2
+38	BA_FEMUR	Bone lesion in Femur
+39	BA_RIGHT2	Bone lesion in Right region 2
+40	BA_LEFT2	Bone lesion in Left region 2
+41	BA_HUMERUS	Bone lesion in Humerus
+42	BA_RIGHT3	Bone lesion in Right region 3
+43	BA_LEFT3	Bone lesion in Left region 3
+44	BA_RIBS	Bone lesion in Ribs
+45	BA_RIGHT4	Bone lesion in Right region 4
 46	BA_NUMBERAFFECTE	Number of ribs affected (right side)
-47	BA_LEFT4	Yes/No bone lesion assessment for Left region 4
+47	BA_LEFT4	Bone lesion in Left region 4
 48	BA_NUMBERAFFECTE2	Number of ribs affected (leftt side)
-49	BA_OTHER	Yes/No bone lesion assessment for Other
+49	BA_OTHER	Bone lesion in Other
 50	BB_SPECIFY	Specify for BA_OTHER
 51	BB_REASONFORPROC	Reason for procedure
 52	BB_CELLULARITY2	
@@ -56,6 +58,7 @@ column_number | name | description
 56	BB_WASBIOPSYSPEC	Was biopsy specimen adequate for cellularity?
 57	BB_IFNOPLEASESPE	If biopsy specimen not adequate for cellularity, specify
 58	BB_CELLULARITY	
+--Bone marrow aspirate--
 59	BONE_WASABONEMARRO	Was a bone marrow aspirate performed since the last study visit?
 60	BONE_DAYOFCOLLECT	BMA date of collection
 61	BONE_WASBONEMARROW	Was bone marrow sample sent to the Spectrum Health?
@@ -89,7 +92,7 @@ column_number | name | description
 90	BONE_RANGELOW3	BMA: (%cells positive by FLOW) -  %PC low end of range
 91	BONE_RANGEHIGH3	BMA: (%cells positive by FLOW) - %PC high end of range
 92	BONE_UNKNOWN	BMA: (%cells positive by FLOW) - not done/unknown
-93	BONE_PC	
+93	BONE_PC     "checked" means yes.	
 95	BONE_REPORTEDASPER2	PC in clot section or BM biopsy: Reported as %PC positive for CD138 by IHC
 96	BONE_PC9	PC in clot section or BM biopsy: (%PC positive for CD138 by IHC) - reported as %PC
 97	BONE_PC3	PC in clot section or BM biopsy: (%PC positive for CD138 by IHC) - %PC
@@ -112,18 +115,21 @@ column_number | name | description
 114	BONE_RANGEHIGH6	PC in clot section or BM biopsy: (%cells positive by FLOW) - %PC high end of range
 115	BONE_NOTDONEUNKNOW	PC in clot section or BM biopsy: (%cells positive by FLOW) - not done/unknown
 116	BONE_DOESTHEPCRESU	Does the %PC result reported above apply to BMA specimen taken at the same time as the specimen submitted to CoMMpass Central Lab
+--Bone marrow transplant--
 117	BMT_WASABONEMARRO	Was a bone marrow transplant performed?
 118	BMT_DAYOFTRANSPL	Date of transplant
-119	BMT_AUTOLOGOUS	Autologous
-120	BMT_ALLOGENIC	Allogenic
-121	BMT_PLEASESPECIFY	Please specify type of Allogenic transplant
-122	BMT_SPECIFY	Other type of allogenic transplant, specify
-123	BMT_STEMCELLS	Stem cells
-124	BMT_BONEMARROW	Bone marrow
-125	BMT_NUMBER	Number
-126	ECOG_PERFORMANCEST	Performance Status
+119	BMT_AUTOLOGOUS	Autologous transplant
+120	BMT_ALLOGENIC	Allogenic transplant
+121	BMT_PLEASESPECIFY	Type of allogenic transplant
+122	BMT_SPECIFY	Type of allogenic transplant
+123	BMT_STEMCELLS	Transplant involves Stem cells
+124	BMT_BONEMARROW	Transplant involves Bone marrow
+125	BMT_NUMBER	Single transplant or tandem (double-auto) transplant - within a few months of each other.
+--ECOG--
+126	ECOG_PERFORMANCEST	ECOG Performance Status. A numerical scale from 0-5 to assess patient's functional capacity and daily living ability.
 127	ECOG_WASANECOGASSE	Was an ECOG assessment performed since the last study visit?
-128	ECOG_ASSESSMENTDAT	Assessment Date
+128	ECOG_ASSESSMENTDAT	Assessment Date of ECOG
+---Individual consent---
 129	IC_DAYOFINFORME	Date of Informed Consent
 130	IC_DAYOFVISIT	Date of visit
 131	IC_DAYUNIVERSAL	Date Universal Consent signed
@@ -146,11 +152,13 @@ column_number | name | description
 148	IC_THEPATIENTISA	The patient is a candidate for systemic therapy that includes an IMiDÂ® (e.g., lenalidomide, pomalidomide, thalidomide) and/or proteasome inhibitor (e.g., bortezomib, carfilzomib) as part of the initia
 149	IC_URINEMPROTEIN	Urine M protein &#8805; 200 mg/24 hrs
 150	IC_WASTHISPATIEN2	Was this patient previously consented for this study?
+--Surgery--
 151	MMSURG_SPECIFY	Other multiple myeloma surgery, specify
 152	MMSURG_NONE	No multiple myeloma surgery
 153	MMSURG_VERTEBROPLAST	Vertebroplasty
 154	MMSURG_KYPHOPLASTY	Kyphoplasty
 155	MMSURG_OTHER	Other multiple myeloma surgery
+--Peripheral nerve neuropathy--
 156	PN_WASANEUROLOGI	Was a neurologic assessment performed since the last study visit?
 157	PN_ASSESSMENTDAT	Peripheral neuropathy assessment date
 158	PN_PERIPHERALSEN	Peripheral sensory neuropathy present?
@@ -214,6 +222,7 @@ column_number | name | description
 216	ST_WASTHEREACHAN	Was there a change in Plasmacytomas since last visit
 217	ST_INCREASEINSIZE	Was there an increase in Size
 218	ST_RESULTOFEXAMI	Result of Examination
+--Immunohistochemistry results--
 219	D_IM_DCL_PATIENT_ID	Public Patient ID
 220	D_IM_COLLECTION_DAY	Collection Date
 221	D_IM_PROCESSING_DAY	Processing Date
@@ -291,6 +300,7 @@ column_number | name | description
 293	D_IM_crhit	Flag for an acceptable sample for CR
 294	D_IM_pdhit	Flag for an acceptable sample for PD
 295	D_IM_hit	Flag for an acceptable sample
+--Laboratory biochemistry values--
 296	D_LAB_cbc_abs_neut	Absolute Neutrophil count x10^9/L
 297	D_LAB_chem_albumin	Albumin (g/L)
 298	D_LAB_chem_bun	Blood Urea Nitrogen (mmol/L)
@@ -314,56 +324,7 @@ column_number | name | description
 316	D_LAB_serum_c_reactive_protein	C-Reactive Protein (mg/dL)
 317	D_LAB_serum_igd	Serum IgD (mg/L)
 318	D_LAB_serum_ige	Serum IgE (mg/L)
-319	D_QOL_Q1	
-320	D_QOL_Q2	
-321	D_QOL_Q3	
-322	D_QOL_Q4	
-323	D_QOL_Q5	
-324	D_QOL_Q6	
-325	D_QOL_Q7	
-326	D_QOL_Q8	
-327	D_QOL_Q9	
-328	D_QOL_Q10	
-329	D_QOL_Q11	
-330	D_QOL_Q12	
-331	D_QOL_Q13	
-332	D_QOL_Q14	
-333	D_QOL_Q15	
-334	D_QOL_Q16	
-335	D_QOL_Q17	
-336	D_QOL_Q18	
-337	D_QOL_Q19	
-338	D_QOL_Q20	
-339	D_QOL_Q21	
-340	D_QOL_Q22	
-341	D_QOL_Q23	
-342	D_QOL_Q24	
-343	D_QOL_Q25	
-344	D_QOL_Q26	
-345	D_QOL_Q27	
-346	D_QOL_Q28	
-347	D_QOL_Q29	
-348	D_QOL_Q30	
-349	D_QOL_Q31	
-350	D_QOL_Q32	
-351	D_QOL_Q33	
-352	D_QOL_Q34	
-353	D_QOL_Q35	
-354	D_QOL_Q36	
-355	D_QOL_Q37	
-356	D_QOL_Q38	
-357	D_QOL_Q39	
-358	D_QOL_Q40	
-359	D_QOL_Q41	
-360	D_QOL_Q42	
-361	D_QOL_Q43	
-362	D_QOL_Q44	
-363	D_QOL_Q45	
-364	D_QOL_Q46	
-365	D_QOL_Q47	
-366	D_QOL_Q48	
-367	D_QOL_Q49	
-368	D_QOL_Q50	
+--Quality of life questionnaire--
 369	D_QOL_QLQ_MY20	Was EORTC QLQ-MY20 questionnaire completed at this visit?
 370	D_QOL_QOL_DY	
 371	D_QOL_QLQ_C30	Was EORTC QLQ-C30 questionnaire completed at this visit?
@@ -406,23 +367,25 @@ column_number | name | description
 408	D_QOL_mMYSE	Mean of Side Effects of Treatment Questions
 409	D_QOL_MYSE	Side effects of treatment
 410	D_QOL_enr	Enrolled Population
-411	SAMPLE_TYPE	
-412	SPECIMEN_ID	
-413	KEATSNFKB_INDEX	
-414	KEATSPROLIF_INDEX	
-415	PI_PBL_INDEX	
-416	UAMS70_INDEX	
-417	UAMS70_CALL	
-418	PI_PBL_CALL	
-419	LDH_level	LDH categorized (High/Normal/Low)
-421	CMMC_VISIT_NAME	CMMC Visit Name
-422	CMMC_COMMENTS	CMMC Comments
-423	CMMC	
-424	CMMC_REASONFORPROC	CMMC Matched Sample Reason from CRF
-425	CMMC_BONE_SPECIFY2	CMMC Sample Reason Specify from CRF
-426	CMMC_REASONCODE	CMMC Matched Coded Sample Reason from CRF
-427	CMMC_CRHIT	CMMC CR Hit
-428	CMMC_PDHIT	CMMC PD Hit
-429	CMMC_HIT	CMMC CR or PD Hit
-430	CMMC_RECDY	CMMC Received Day
+411	SAMPLE_TYPE Either serial (same as previous), BM (bone marrow) baseline, or PB (peripheral blood).	
+412	SPECIMEN_ID	An ID for the specimen, of the format [PUBLIC_ID]_[VISIT_ID]_[TISSUE SITE: BM|PB]
+--Risk indices--
+413	KEATSNFKB_INDEX Jonathan Keats' NF KappaB index, a scalar value positively correlated with risk
+414	KEATSPROLIF_INDEX	Jonathan Keats' Proliferation index, a scalar value positively correlated with risk
+415	PI_PBL_INDEX	An unknown "PI_PBL" index.
+416	UAMS70_INDEX	UAMS70 index
+417	UAMS70_CALL	    UAMS70 classification. Code 1 = high risk, top 15 percentile in the UAMS70 index, 0 = standard risk, bottom 85 percentile in the UAMS70 index.
+418	PI_PBL_CALL	    Unknown "PI_PBL" classification, Code 1 = positive, 0 = negative.
+419	LDH_level	LDH-level categorized as High/Normal/Low
+--Circulating multiple myeloma cell--
+421	CMMC_VISIT_NAME	Reason for CMMC appointment e.g., follow up, Screening, Restaging, Baseline, Post-transplant, Remission/Response, Relapse/progression
+422	CMMC_COMMENTS	Additional remarks left by clinician. Unstructured field.
+423	CMMC	Number of circulating multiple myeloma cells detected from blood lab test. A positive integer or zero.
+424	CMMC_REASONFORPROC	Reason for counting the cells e.g., post-transplant, confirm progression, Confirm response, Restaging disease
+425	CMMC_BONE_SPECIFY2	Additional remarks left by clinician. Unstructured field.
+426	CMMC_REASONCODE	Ignore
+427	CMMC_CRHIT	Complete remission confirmed based on circulating MM cell count.
+428	CMMC_PDHIT	Progression of disease confirmed based on circulating MM cell count.
+429	CMMC_HIT	Either complete remission or progression of disease hit.
+430	CMMC_RECDY	Day relative to diagnosis was the cell count done. A negative number means the test was done prior to diagnosis.
 431	enr	Enrolled Population. Ignore as it is always 1 (constant column).
