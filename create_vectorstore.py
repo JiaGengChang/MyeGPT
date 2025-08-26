@@ -163,18 +163,9 @@ def main():
     # Create an embedding class instance
     embeddings = BedrockEmbeddings(model_id="amazon.titan-embed-text-v2:0", region_name="us-east-1")
 
-    # from langchain_openai import OpenAIEmbeddings
-    # embeddings = OpenAIEmbeddings(model="text-embedding-3-large")
-
-    # create pgengine connection pool
-    # CONNECTION_STRING = (
-    #     f"postgresql+asyncpg://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}"
-    #     f":{POSTGRES_PORT}/{POSTGRES_DB}"
-    # )
     CONNECTION_STRING = os.environ.get("COMMPASS_DB_URI")
 
     # Create an SQLAlchemy Async Engine
-    # engine = create_async_engine(CONNECTION_STRING)
     pg_engine = PGEngine.from_connection_string(CONNECTION_STRING)
     
     # Initialize empty table
