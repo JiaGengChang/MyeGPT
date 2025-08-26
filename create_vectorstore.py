@@ -121,12 +121,12 @@ def main():
         Document(
             id=str(uuid.uuid4()),
             page_content=per_patient_content,
-            metadata={"category": "child", "data modality": "Per Patient Clinical/Demographic Data"},
+            metadata={"category": "child", "data modality": "Patient-level Clinical/Demographic Data"},
         ),
         Document(
             id=str(uuid.uuid4()),
             page_content=per_visit_content,
-            metadata={"category": "child", "data modality": "Per Patient Visit Clinical/Demographic Data"},
+            metadata={"category": "child", "data modality": "Patient Visit-level Clinical/Demographic Data"},
         ),
         Document(
             id=str(uuid.uuid4()),

@@ -4,10 +4,10 @@ An overview of the `commpass` database and a brief description of what each of t
 MAIN TEXT:
 The 'commpass' PostgreSQL 17.5 database contains data of 1143 newly diagnosed multiple myeloma patients. All tables are based on CoMMpass Interim Analysis 22 (IA22), except for `canonical_ig` which is based on IA16 and `gene annotation` table which comes from Ensembl. The original data is downloaded from from https://research.themmrf.org/. 
 
-- **per_patient**: Clinical data per patient, indexed by PUBLIC_ID. Each row represents a unique patient and contains various clinical and demographic attributes. 
+- **per_patient**: Clinical data per patient, indexed by PUBLIC_ID. Each row represents a unique patient and contains various clinical and demographic attributes. This table contains information that do not change over patient visits e.g. race, gender, age of diagnosis, etc.
 {per_patient_schema}.
 
-- **per_visit**: Clinical data per visit, indexed by PUBLIC_ID. Each row represents a visit for a patient, with visit-specific clinical details. 
+- **per_visit**: Clinical data per visit made by each patient, indexed by PUBLIC_ID. Each row represents a visit for a patient, with visit-specific clinical details. Each patient will have multiple visits and the data recorded by individual visits are stored here e.g., blood test results, bone marrow screening report, disease progression.
 {per_visit_schema}
 
 - **stand_alone_survival**: Survival data per patient, indexed by PUBLIC_ID. Contains survival outcomes and related metrics for each patient. Progression-free survival (PFS) is stored as censpfs (event indicator) and pfscdy (time to event in days), while overall survival (OS) is stored as censos (event indicator) and oscdy (time to event in days). 
