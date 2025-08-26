@@ -1,11 +1,11 @@
 Table Name: `per_visit`
-Description: Patient level clinical demographic information, obtained from the clinic. If column description is missing, avoid using it unless explicitly asked to.
+Description: Clinical data obtained from each visit made by a patient. Each patient has multiple visits throughout the treatment journey and  results for each visit are recorded here. If column description is missing, avoid using it unless explicitly asked to.
 column_number | name | description
 1	PUBLIC_ID	Index column. Patient public identifier. Last 4 digits are unique. e.g. MMRF_1234
 2	SPECTRUM_SEQ	Ignore this column
 3	VISIT	A unique number assigned to the visit. e.g. 1 means first visit at which diagnosis was made.
 4	VJ_INTERVAL	Record Interval
-5	VISITDY Day of Visit
+5	VISITDY Day of Visit counting from day of diagnosis
 --After treatment checkup--
 6	AT_DEFINITEDEVEL    "Checked" means yes
 7	AT_WASANASSESSME	Was an assessment of treatment response performed since the last study visit?
