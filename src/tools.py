@@ -58,12 +58,12 @@ db = SQLDatabase.from_uri(db_uri)
 langchain_query_sql_tool = QuerySQLDatabaseTool(db=db)
 
 # similarity search against our vector store
-def document_search(query: str):
+def document_search(query: str, k:int = 1):
     # establish connection to postgres vector store
     store = connect_store()
-    results = store.similarity_search(query,k=1)
+    results = store.similarity_search(query, k=k)
     if results:
-        return f"""Table with best match:
+        return f"""The top {k} table(s) with best match:
         {[doc.page_content for doc in results]}
         """
     else:
@@ -73,5 +73,5 @@ def document_search(query: str):
 document_search_tool = StructuredTool.from_function(
     func=document_search,
     name="document_search",
-    description="Returns the reference manual of the table most relevant to the query. The query should only involve one subject, such as survival data, gene expression data, or copy number data - do not mix multiple concepts at once."
+    description="Returns the reference manual of top K tables most relevant to the query. The query should only involve one subject, such as survival data, gene expression data, or copy number data - do not mix multiple concepts at once."
 )
