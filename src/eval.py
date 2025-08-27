@@ -1,7 +1,7 @@
 import os
 import re
 from dotenv import load_dotenv
-assert load_dotenv('.env')
+assert load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 from langsmith import Client
 from openevals.llm import create_llm_as_judge
 from openevals.prompts import CORRECTNESS_PROMPT
@@ -32,9 +32,9 @@ def scorer(inputs: dict, outputs: dict, reference_outputs: dict):
     return eval_result
 
 async def main():
-    async with aiohttp.ClientSession() as session:
+    async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False)) as session:
         async with await session.get(
-            os.environ.get("APP_API_ENDPOINT")
+            os.environ.get("APP_API_ENDPOINT"),
         ) as _:
 
             async def target(inputs: dict) -> dict:
