@@ -1,31 +1,19 @@
 import os
 import re
-import requests
 from dotenv import load_dotenv
 assert load_dotenv('.env')
 from langsmith import Client
 from openevals.llm import create_llm_as_judge
 from openevals.prompts import CORRECTNESS_PROMPT
-from langchain_aws import ChatBedrockConverse
+from langchain_aws import ChatBedrock
+import aiohttp
+import asyncio
 
 # Define the input and reference output pairs that you'll use to evaluate your app
 client = Client()
 
-# Application logic
-def target(inputs: dict) -> dict:
-    response = requests.post(
-        os.environ.get("APPLICATION_API_URL"),
-        headers={"Content-Type": "application/json"},
-        json={"user_input": inputs["question"]},
-    )
-    answer = response.json().get("response", "No response from API")
-    # Remove HTML tags
-    clean_answer = re.sub(r'<.*?>', '', answer)
-    return {"answer": clean_answer}
-
-llm = ChatBedrockConverse(
-    model_id=os.environ.get("MODEL_ID"),
-    temperature=0.,
+llm = ChatBedrock(
+    model_id=os.environ.get("MODEL_ID")
 )
 
 # a correctness score from 0 to 1, where 1 is the best
@@ -43,14 +31,32 @@ def scorer(inputs: dict, outputs: dict, reference_outputs: dict):
     )
     return eval_result
 
+async def main():
+    async with aiohttp.ClientSession() as session:
+        async with await session.get(
+            os.environ.get("APP_API_ENDPOINT")
+        ) as _:
+
+            async def target(inputs: dict) -> dict:
+                async with session.post(
+                    os.path.join(os.environ.get("APP_API_ENDPOINT"),'api', 'ask'),
+                    headers={"Content-Type": "application/json"},
+                    json={"user_input": str(inputs)},
+                ) as response:
+                    html_answer = await response.text()
+                    plaintext_answer = re.sub(r'<.*?>', '', html_answer)
+                    return {"answer": plaintext_answer}
+
+            await client.aevaluate(
+                target,
+                data=os.environ.get("EVAL_DATASET_NAME"),
+                evaluators=[scorer],
+                max_concurrency=1,
+                experiment_prefix=os.environ.get("APP_API_ENDPOINT").replace("http://", "").replace("https://", ""),
+                metadata={
+                    'model': os.environ.get("MODEL"),
+                }
+            )
+
 if __name__ == "__main__":
-    experiment_results = client.evaluate(
-        target,
-        data=os.environ.get("DATASET_NAME"),
-        evaluators=[scorer],
-        max_concurrency=1,
-        experiment_prefix=os.environ.get("APPLICATION_API_URL").replace("https://", "").replace("/", "_"),
-        metadata={
-            'model': os.environ.get("MODEL"),
-        }
-)
+    asyncio.run(main())
