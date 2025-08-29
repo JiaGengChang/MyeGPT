@@ -5,15 +5,16 @@ assert load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 from langsmith import Client
 from openevals.llm import create_llm_as_judge
 from openevals.prompts import CORRECTNESS_PROMPT
-from langchain_aws import ChatBedrock
+from langchain_aws import ChatBedrockConverse
 import aiohttp
 import asyncio
 
 # Define the input and reference output pairs that you'll use to evaluate your app
 client = Client()
 
-llm = ChatBedrock(
-    model_id=os.environ.get("MODEL_ID")
+llm = ChatBedrockConverse(
+    model_id=os.environ.get("EVAL_MODEL_ID"),
+    temperature=0.
 )
 
 # a correctness score from 0 to 1, where 1 is the best
@@ -51,10 +52,12 @@ async def main():
                 target,
                 data=os.environ.get("EVAL_DATASET_NAME"),
                 evaluators=[scorer],
-                max_concurrency=1,
-                experiment_prefix=os.environ.get("APP_API_ENDPOINT").replace("http://", "").replace("https://", ""),
+                max_concurrency=0,
+                num_repetitions=1,
+                experiment_prefix=os.environ.get("EVAL_DATASET_NAME"),
                 metadata={
-                    'model': os.environ.get("MODEL"),
+                    'app_llm': os.environ.get("MODEL_ID"),
+                    'eval_llm': os.environ.get("EVAL_MODEL_ID"),
                 }
             )
 
