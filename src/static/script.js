@@ -59,16 +59,17 @@ function createBotMessage(message) {
 async function initializeChat() {
     try {
         create_spinner()
-        const response = await fetch('/api/init', {
+        const initResponse = await fetch('/api/init', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+            'Content-Type': 'application/json',
             },
         });
-        if (!response.ok) throw new Error('Failed to initialize chat');
-        const message = await response.text();
+        if (!initResponse.ok) throw new Error('Failed to initialize chat');
+        const response = await initResponse.json();
         window.spinner.remove();
-        createBotMessage(message);
+        createBotMessage(`Session ID: ${response.thread_id}`);
+        createBotMessage(response.message);
     } catch (error) {
         console.error('Error initializing chat:', error);
     }
