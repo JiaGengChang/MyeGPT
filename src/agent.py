@@ -9,7 +9,6 @@ import uuid
 import matplotlib
 matplotlib.use('Agg') # non-interactive backend
 
-from vectorstore import connect_store
 from tools import document_search_tool, convert_gene_tool, langchain_query_sql_tool, python_repl_tool, python_execute_sql_query_tool
 
 # initialize the chat model
