@@ -7,10 +7,11 @@ langchain-experimental
 langchain-aws
 langchain-postgres
 langgraph
+langgraph-checkpoint-postgres
 lifelines
 matplotlib
 pandas
-psycopg[binary]
+psycopg[binary,pool]
 pydantic
 python-dotenv
 requests
