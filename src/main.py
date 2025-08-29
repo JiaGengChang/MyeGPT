@@ -1,15 +1,25 @@
 import os
-from fastapi import FastAPI
-from fastapi.responses import FileResponse, StreamingResponse, PlainTextResponse
+from fastapi import FastAPI, Request
+from fastapi.responses import FileResponse, StreamingResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 import asyncio 
+from contextlib import asynccontextmanager
+from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
 
 # src modules
 from agent import send_init_prompt, query_agent
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    async with AsyncPostgresSaver.from_conn_string(os.environ.get("COMMPASS_MEMORY_DB_URI")) as checkpointer:
+        await checkpointer.setup()
+        app.state.checkpointer = checkpointer
+        yield
+
+app = FastAPI(lifespan=lifespan)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -34,7 +44,9 @@ app.state.init_prompt_done = asyncio.Event()
 
 # Serve landing page
 @app.get("/")
-async def serve_frontend():
+async def serve_frontend(request: Request):
+    # assign client host IP address as session ID
+    app.state.thread_id = request.client.host
     response = FileResponse("static/index.html")
     # Create task to send init prompt
     if not app.state.init_prompt_done.is_set():
@@ -45,7 +57,10 @@ async def serve_frontend():
 @app.post("/api/init")
 async def get_init_response():
     await app.state.init_prompt_done.wait()
-    return PlainTextResponse(app.state.init_response)
+    return JSONResponse({
+        "message": app.state.init_response,
+        "thread_id": app.state.thread_id
+    })
 
 class Query(BaseModel):
     user_input: str

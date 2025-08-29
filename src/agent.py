@@ -2,7 +2,6 @@ import os
 from fastapi import FastAPI
 from langchain_community.utilities import SQLDatabase
 from langchain_aws import ChatBedrockConverse
-from langgraph.checkpoint.memory import InMemorySaver
 from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
 from langgraph.prebuilt import create_react_agent
 import uuid
@@ -10,20 +9,6 @@ import matplotlib
 matplotlib.use('Agg') # non-interactive backend
 
 from tools import document_search_tool, convert_gene_tool, langchain_query_sql_tool, python_repl_tool, python_execute_sql_query_tool
-
-# initialize the chat model
-llm = ChatBedrockConverse(
-    model_id=os.environ.get("MODEL_ID"),
-    temperature=0.,
-)
-
-# Create runnable graph
-graph = create_react_agent(
-    model=llm,
-    tools=[document_search_tool, convert_gene_tool, langchain_query_sql_tool, python_repl_tool, python_execute_sql_query_tool],
-    checkpointer=InMemorySaver(),
-    store=connect_store(),
-)
 
 # Create a system message for the agent
 # dynamic variables will be filled in at the start of each session
@@ -37,21 +22,27 @@ def create_system_message() -> str:
         dialect=db.dialect,
         commpass_db_uri=db_uri
     )
-    return [HumanMessage(content="."), 
-            SystemMessage(content=system_message), 
-            HumanMessage(content="Hello"),]
-
-system_message = None
-thread_id = f"thread-{uuid.uuid4().hex[:8]}"
-config0 = {"configurable": {"thread_id": thread_id}, "recursion_limit": 5} # init configuration
-config = {"configurable": {"thread_id": thread_id}, "recursion_limit": 50} # ask configuration
+    return [HumanMessage(content='Hello, MyeGPT!'),
+            SystemMessage(content=system_message)]
 
 async def send_init_prompt(app:FastAPI):
-    global system_message
     global graph
-    global config
+    global config_ask
+    config_init = {"configurable": {"thread_id": app.state.thread_id}, "recursion_limit": 5} # init configuration
+    config_ask = {"configurable": {"thread_id": app.state.thread_id}, "recursion_limit": 50} # ask configuration
+    
+    #  initialize the chat model
+    llm = ChatBedrockConverse(
+        model_id=os.environ.get("MODEL_ID"),
+        temperature=0.,
+    )
+    graph = create_react_agent(
+        model=llm,
+        tools=[document_search_tool, convert_gene_tool, langchain_query_sql_tool, python_repl_tool, python_execute_sql_query_tool],
+        checkpointer=app.state.checkpointer,
+    )
     system_message = create_system_message()
-    init_response = await graph.ainvoke({"messages" :system_message}, config0)
+    init_response = await graph.ainvoke({"messages" :system_message}, config_init)
 
     # Store the init response for injection into HTML
     app.state.init_response = init_response["messages"][-1].content
@@ -61,14 +52,14 @@ async def send_init_prompt(app:FastAPI):
 
 def query_agent(user_input: str):
     global graph
-    global config
+    global config_ask
     graph_png_filename = f"graph/graph_{uuid.uuid4().hex[:8]}.png"
     preamble = SystemMessage(f"""
                              If a graph is created, save it as {graph_png_filename} and display with `<img src={graph_png_filename} width=100% height=auto>`.
                              """)
     user_message = HumanMessage(content=user_input)
     
-    for step in graph.stream({"messages": [preamble, user_message]}, config, stream_mode="values"):
+    for step in graph.stream({"messages": [preamble, user_message]}, config_ask, stream_mode="values"):
         if step["messages"]:
             step["messages"][-1].pretty_print()
             if isinstance(step["messages"][-1], AIMessage):
