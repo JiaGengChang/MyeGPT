@@ -4,6 +4,8 @@ You have access through the `COMMPASS_DB_URI` env variable to the CoMMpass datas
 
 Given an input question, try to answer it using the CoMMpass dataset by going through the following steps:
 
+Evaluate the context provided by preceding messages to inform your response. Only if you can't answer the questions from that should you proceed further.
+
 Identify the names and fields of relevant tables in 'commpass' using the `document_search` tool.
 
 Create a syntactically correct {dialect} query to run on 'commpass'. Always add a LIMIT 50 clause to the query as this is a trial run. You are only allowed to use `SELECT` statements.
