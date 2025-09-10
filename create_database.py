@@ -170,13 +170,13 @@ def upload_table_stand_alone_treatment_regimen():
 
 def upload_table_gene_annotation():
     # Load the data
-    df = pd.read_csv(f'{PROJECTDIR}/refdata/gene_annotation.tsv', sep='\t')
-    df = df.set_index(['Gene stable ID','Gene name'])
+    df = pd.read_csv(f'{PROJECTDIR}/refdata/gene_annotation.tsv', sep='\t').rename(columns={'Gene name': 'Gene symbol'})
+    df = df.set_index(['Gene stable ID','Gene symbol'])
     print(df.head())
 
     # Upload to the database
     with engine.connect() as conn:
-        df.to_sql('gene_annotation', con=conn, if_exists='replace', index=True, index_label=['Gene stable ID','Gene name'])
+        df.to_sql('gene_annotation', con=conn, if_exists='replace', index=True, index_label=['Gene stable ID','Gene symbol'])
         print("Data uploaded successfully.")
 
 def upload_table_canonical_ig():

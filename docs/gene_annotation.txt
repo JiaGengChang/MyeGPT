@@ -2,7 +2,7 @@ Table Name: `gene_annotation`
 Description: Metadata of genes like their accession/identifier, their canonical name/gene symbol, and genomic coordinates (chromosome, start, and end).
 column_number | name | description
 1       Gene stable ID	            Index column. GENCODE accession/ENSEMBL Stable ID of the gene. string. example: ENSG00000227830.
-2       Gene name	                Index column. Canonical name of the gene aka the gene symbol. string. example: TRIM60P3Y
-3       Chromosome/scaffold name    Chromosome name, without the 'chr' prefix. It can only be one of 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, X or Y.
+2       Gene symbol	                Index column. HGNC-approved symbol of the gene. string. example: TRIM60P3Y
+3       Chromosome/scaffold name    Chromosome name, without the 'chr' prefix. string. It can only be one of 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, X or Y.
 4       Gene start (bp)             Genomic coordinate of gene start. integer. example: 8413037
 5       Gene end (bp)               Genomic coordinate of gene end. integer. example: 8414054
