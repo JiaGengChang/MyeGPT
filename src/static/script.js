@@ -35,7 +35,7 @@ function create_spinner() {
     let seconds = 0;
     setInterval(() => {
         seconds++;
-        spinnerMessage.innerHTML = `<p>Initializing... (${seconds}s)<br>Please refresh if it takes over 10 seconds</p>`;
+        spinnerMessage.innerHTML = `<p>Loading chat history... (${seconds}s)<br>Please refresh if it takes over 10 seconds</p>`;
     }, 1000);
     
     spinnerContainer.appendChild(spinnerMessage);
