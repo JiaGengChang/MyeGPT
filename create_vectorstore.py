@@ -71,6 +71,8 @@ def main():
     with open("docs/wgs_fish.txt", "r", encoding="utf-8") as f:
         wgs_fish_content = f.read()
 
+    with open("docs/hgnc_nomenclature.txt", "r", encoding="utf-8") as f:
+        hgnc_content = f.read()
 
     docs = [
         Document(
@@ -102,6 +104,11 @@ def main():
             id=str(uuid.uuid4()),
             page_content=gene_annotation_content,
             metadata={"category": "child", "data modality": "Reference Gene Annotation"},
+        ),
+        Document(
+            id=str(uuid.uuid4()),
+            page_content=hgnc_content,
+            metadata={"category": "child", "data modality": "HGNC Gene Nomenclature"},
         ),
         Document(
             id=str(uuid.uuid4()),

@@ -264,6 +264,20 @@ def upload_table_baf():
         df.to_sql('gatk_baf', con=conn, if_exists='replace', index=True, index_label='SAMPLE')
         print("Data uploaded successfully.")
 
+def upload_table_hgnc():
+    # Complete set of human genes with current symbols, current aliases and previous symbols
+    # useful for interchangeable gene names like MMSET and NSD2
+    df = pd.read_csv(f'./refdata/hgnc_nomenclature.tsv', sep='\t').rename(columns={'Ensembl gene ID': 'Gene stable ID',
+                                                                                   'Approved symbol': 'Gene symbol',
+                                                                                   'Approved name':   'Gene name'})
+    df = df.set_index(['Gene stable ID','Gene symbol'])
+    print(df.head())
+
+    # Upload to the database
+    with engine.connect() as conn:
+        df.to_sql('hgnc_nomenclature', con=conn, if_exists='replace', index=True, index_label=['Gene stable ID','Gene symbol'])
+        print("Data uploaded successfully.")
+
 if __name__ == "__main__":
     import os
     from dotenv import load_dotenv
@@ -292,5 +306,6 @@ if __name__ == "__main__":
         upload_table_chromothripsis()
         upload_table_gep_scores()
         upload_table_baf()
+        upload_table_hgnc()
         exit()
 
