@@ -267,7 +267,7 @@ def upload_table_baf():
 if __name__ == "__main__":
     import os
     from dotenv import load_dotenv
-    assert load_dotenv('.env')
+    assert load_dotenv('src/.env')
     db_uri = os.environ.get("COMMPASS_DB_URI")
     engine = create_engine(db_uri)
 
