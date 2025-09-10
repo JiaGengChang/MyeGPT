@@ -46,7 +46,7 @@ function create_spinner() {
 // Insert an AI message into chat history
 function createBotMessage(message) {
     const botMessageElement = document.createElement('div');
-    botMessageElement.classList.add('chat-message', 'ai-response');
+    botMessageElement.classList.add('chat-message', 'ai');
     botMessageElement.innerHTML = message.replace(/\n/g, '<br>'); 
     const botMessageContainer = document.createElement('div');
     botMessageContainer.classList.add('chat-message-container');
@@ -135,41 +135,8 @@ async function sendMessage() {
             if (done) break;
             
             const chunk = decoder.decode(value);
-            
-            // Check if this is a thinking chunk
-            const isThinking = chunk.startsWith('<thinking>') && chunk.endsWith('</thinking>');
-            
-            // Remove previous container if it was thinking
-            if (lastThinkingContainer && !isThinking) {
-            // Add fade-out animation before removing
-            lastThinkingContainer.style.transition = 'opacity 0.3s ease-out';
-            lastThinkingContainer.style.opacity = '0';
-            setTimeout(() => lastThinkingContainer.parentElement.remove(), 300);
-            lastThinkingContainer = null;
-            }
-            
-            // // Create a new container for each chunk
             const botMessageContainer = createBotMessage(chunk);
-            // const chunkMessageElement = document.createElement('div');
-            // chunkMessageElement.classList.add('chat-message');
-            // // In case we want to stylize it differently
-            if (isThinking) {
-                botMessageContainer.firstElementChild.classList.add('ai-thinking');
-            } else {
-                botMessageContainer.firstElementChild.classList.add('ai-response');
-            };
-            // chunkMessageElement.innerHTML = chunk.replace(/\n/g, '<br>');
-            // const botMessageContainer = document.createElement('div');
-            // botMessageContainer.classList.add('chat-message-container');
-            // botMessageContainer.appendChild(chunkMessageElement);
-            // chatHistory.appendChild(botMessageContainer);
-            // chatHistory.scrollTop = chatHistory.scrollHeight;
-
-            // Track thinking containers
-            if (isThinking) {
-            lastThinkingContainer = botMessageContainer;
-            }
-            
+            botMessageContainer.firstElementChild.classList.add('ai');
         }
 
         } catch (error) {
