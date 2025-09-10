@@ -54,7 +54,7 @@ stand_alone_treatment_regimen:
 Treatment regimen data per patient, indexed by PUBLIC_ID. Each row details the treatment regiment administered to a patient in that step of treatment. 
 
 gene_annotation: 
-Gene annotation reference, indexed by Gene stable ID and Gene name. Contains gene metadata such as ensembl IDs, gene symbols, and genomic coordinates (chromosome e.g. chr17, start e.g. 9608793, end e.g., 9753407). This is useful for finding BAF/CNA probes overlapping a gene of interest.
+Gene annotation reference, indexed by Gene stable ID and Gene name. Contains gene metadata such as ensembl IDs, gene symbols, gene type (e.g. protein_coding, lncRNA, miRNA), and genomic coordinates (chromosome e.g. chr17, start e.g. 9608793, end e.g., 9753407). This is useful for finding BAF/CNA probes overlapping a gene of interest.
 
 hgnc_nomenclature: 
 Reference of aliases for gene symbols, indexed by Gene stable ID and Gene name. Contains the Ensembl stable ID, official HGNC-approved gene symbol, alias symbol, alias name, and HGNC ID.
