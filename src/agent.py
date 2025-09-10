@@ -9,6 +9,7 @@ import matplotlib
 matplotlib.use('Agg') # non-interactive backend
 
 from tools import document_search_tool, convert_gene_tool, langchain_query_sql_tool, python_repl_tool, python_execute_sql_query_tool
+from utils import format_text_message, format_tool_message
 
 # Create a system message for the agent
 # dynamic variables will be filled in at the start of each session
@@ -59,14 +60,29 @@ def query_agent(user_input: str):
                              """)
     user_message = HumanMessage(content=user_input)
     
-    for step in graph.stream({"messages": [preamble, user_message]}, config_ask, stream_mode="values"):
-        if step["messages"]:
-            step["messages"][-1].pretty_print()
-            if isinstance(step["messages"][-1], AIMessage):
-                chunk = step["messages"][-1].content
-                if isinstance(chunk, list):
-                    chunk = chunk[0]
-                if isinstance(chunk, dict) and "text" in chunk:
-                    chunk = chunk["text"][:-1]
-                if isinstance(chunk, str):
-                    yield chunk
+    for step in graph.stream({"messages": [preamble, user_message]}, config_ask, stream_mode="updates"):
+        print(step)
+        chunks = None
+        if "agent" in step:
+            chunks = step["agent"]["messages"][-1].content
+        elif "tools" in step:
+            chunks = step["tools"]["messages"][-1].content
+        else:
+            raise ValueError("Unexpected step format")
+
+        if isinstance(chunks, list):
+            for chunk in chunks:
+                    if chunk["type"]=="tool_use":
+                        chunk = format_tool_message(chunk)
+                    elif chunk["type"]=="text":
+                        chunk = format_text_message(chunk)
+                    yield str(chunk)
+        elif isinstance(chunks, dict):
+            if chunk["type"]=="tool_use":
+                chunk = format_tool_message(chunk)
+            elif chunk["type"]=="text":
+                chunk = format_text_message(chunk)
+            yield str(chunk)        
+        else:
+            if chunks!="":
+                yield format_text_message(chunks)
