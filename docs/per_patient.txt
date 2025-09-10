@@ -34,11 +34,11 @@ column_number | name | description
 43	D_PT_lvisitc	Last Visit Character from D_VISIT
 47	demog_height	Italy: Height
 48	demog_weight	Italy: Weight
-49	D_PT_iss	ISS Disease Stage. Preferred over mmstatus. The column to use for queries regarding cancer stage.
+49	D_PT_iss	ISS (International staging system), or cancer stage.
 51	DEMOG_HEIGHTUNITOFM	Italy: Height unit
 52	DEMOG_WEIGHTUNITOFM	Italy: Weight unit
-53	D_PT_issstage_char	ISS Stage (character).
-54	D_PT_issstage	Cancer stage based on the International Staging System. Preferred over mmstatus.
+53	D_PT_issstage_char
+54	D_PT_issstage	
 55	CREATININE	Creatinine level
 56	ecog	Baseline ECOG performance status
 57	sct_elig	Stem cell transplant (SCT) eligible flag
