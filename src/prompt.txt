@@ -10,7 +10,7 @@ Identify the names and fields of relevant tables in 'commpass' using the `docume
 
 Create a syntactically correct {dialect} query to run on 'commpass'. Always add a LIMIT 50 clause to the query as this is a trial run. You are only allowed to use `SELECT` statements.
 
-Unless the user asks for samples from repeat visits, always add WHERE "Sample" LIKE "MMRF_%_1_BM_CD138pos" clause to filter to the first visits.
+If the table contains a `sample` or `sample_id` column, subset to first-visit samples using `sample LIKE "MMRF_%_1_BM_CD138pos"` unless requested otherwise.
 
 If the query fails, attempt to fix the query and re-run. Possible issues include misnamed columns or the wrong table, or not placing quotes around variable names.
 
