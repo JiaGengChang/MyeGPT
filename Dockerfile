@@ -6,6 +6,7 @@ COPY src/main.py .
 COPY src/agent.py .
 COPY src/tools.py .
 COPY src/vectorstore.py .
+COPY src/utils.py .
 COPY src/prompt.txt .
 COPY src/static static
 COPY refdata /refdata
