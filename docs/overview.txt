@@ -6,7 +6,7 @@ The 'commpass' PostgreSQL 17.5 database contains data of 1143 newly diagnosed mu
 
 LIST OF TABLES (TABLE NAME: TABLE DESCRIPTION):
 per_patient: 
-Clinical data per patient, indexed by PUBLIC_ID. Each row represents a unique patient and contains various clinical and demographic attributes. This table contains information that do not change over patient visits e.g. race, gender, age of diagnosis, etc.
+Clinical data per patient, indexed by PUBLIC_ID. Each row represents a unique patient and contains various clinical and demographic attributes. This table contains information that do not change over patient visits e.g. race, gender, age of diagnosis, cancer stage according to the international staging system (ISS), etc.
 {per_patient_schema}.
 
 per_visit: 
