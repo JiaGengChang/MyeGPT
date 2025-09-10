@@ -1,41 +1,57 @@
-DESCRIPTION:
-An overview of the `commpass` database and a brief description of what each of the table stores. For a more detailed description of the fields of each table, refer to `{table_name}`.txt.
+PURPOSE OF THIS DOCUMENT:
+An overview of the `commpass` database and a brief description of what each of the table stores.
 
-MAIN TEXT:
-The 'commpass' PostgreSQL 17.5 database contains data of 1143 newly diagnosed multiple myeloma patients. All tables are based on CoMMpass Interim Analysis 22 (IA22), except for `canonical_ig` which is based on IA16 and `gene annotation` table which comes from Ensembl. The original data is downloaded from from https://research.themmrf.org/. 
+OVERVIEW OF COMMPASS DATABASE:
+The 'commpass' PostgreSQL 17.5 database contains data of 1143 newly diagnosed multiple myeloma patients from the Multiple Myeloma Research Foundation's CoMMpass study (Relating Clinical Outcomes in Multiple Myeloma to Personal Assessment of Genetic Profile; ClinicalTrials.gov ID NCT01454297). All tables are based on CoMMpass Interim Analysis 22 (IA22), except for `canonical_ig` which is based on IA16. The non-CoMMpass tables are: `gene annotation` table which is from Ensembl BioMart, and `hgnc_nomenclature` which is from HGNC BioMart. 
 
-- **per_patient**: Clinical data per patient, indexed by PUBLIC_ID. Each row represents a unique patient and contains various clinical and demographic attributes. This table contains information that do not change over patient visits e.g. race, gender, age of diagnosis, etc.
+LIST OF TABLES (TABLE NAME: TABLE DESCRIPTION):
+per_patient: 
+Clinical data per patient, indexed by PUBLIC_ID. Each row represents a unique patient and contains various clinical and demographic attributes. This table contains information that do not change over patient visits e.g. race, gender, age of diagnosis, etc.
 {per_patient_schema}.
 
-- **per_visit**: Clinical data per visit made by each patient, indexed by PUBLIC_ID. Each row represents a visit for a patient, with visit-specific clinical details. Each patient will have multiple visits and the data recorded by individual visits are stored here e.g., blood test results, bone marrow screening report, disease progression.
+per_visit: 
+Clinical data per visit made by each patient, indexed by PUBLIC_ID. Each row represents a visit for a patient, with visit-specific clinical details. Each patient will have multiple visits and the data recorded by individual visits are stored here e.g., blood test results, bone marrow screening report, disease progression.
 {per_visit_schema}
 
-- **stand_alone_survival**: Survival data per patient, indexed by PUBLIC_ID. Contains survival outcomes and related metrics for each patient. Progression-free survival (PFS) is stored as censpfs (event indicator) and pfscdy (time to event in days), while overall survival (OS) is stored as censos (event indicator) and oscdy (time to event in days). 
+stand_alone_survival: 
+Survival data per patient, indexed by PUBLIC_ID. Contains survival outcomes and related metrics for each patient. Progression-free survival (PFS) is stored as censpfs (event indicator) and pfscdy (time to event in days), while overall survival (OS) is stored as censos (event indicator) and oscdy (time to event in days). 
 
-- **canonical_ig**: Immunoglobulin gene translocations detected by Low coverage, Long insert Whole Genome Sequencing, indexed by PUBLIC_ID. Each column is a gene name which indicates whether the translocation event for the gene occured. Each value is either 0 (no translocation detected) or 1 (translocation detected). The columns are SeqWGS_WHSC1_CALL, SeqWGS_CCND1_CALL, SeqWGS_MAF_CALL, SeqWGS_MYC_CALL, SeqWGS_MAFA_CALL, SeqWGS_MAFB_CALL, SeqWGS_CCND2_CALL, and SeqWGS_CCND3_CALL.
+canonical_ig: 
+Immunoglobulin gene translocations detected by Low coverage, Long insert Whole Genome Sequencing, indexed by PUBLIC_ID. Each column is a gene name which indicates whether the translocation event for the gene occured. Each value is either 0 (no translocation detected) or 1 (translocation detected). The columns are SeqWGS_WHSC1_CALL, SeqWGS_CCND1_CALL, SeqWGS_MAF_CALL, SeqWGS_MYC_CALL, SeqWGS_MAFA_CALL, SeqWGS_MAFB_CALL, SeqWGS_CCND2_CALL, and SeqWGS_CCND3_CALL.
 
-- **wgs_fish**: WGS-reconstruction of FISH probe values, indexed by PUBLIC_ID. 
+wgs_fish: 
+WGS-reconstruction of FISH probe values, indexed by PUBLIC_ID. 
 
-- **salmon_gene_unstranded_counts**: Gene expression read counts, indexed by PUBLIC_ID and Gene GENCODE accession.
+salmon_gene_unstranded_counts: 
+Gene expression read counts, indexed by PUBLIC_ID and Gene GENCODE accession.
 
-- **salmon_gene_unstranded_tpm**: Gene expression transcripts per million (tpm), indexed by PUBLIC_ID and Gene GENCODE accession.
+salmon_gene_unstranded_tpm: 
+Gene expression transcripts per million (tpm), indexed by PUBLIC_ID and Gene GENCODE accession.
 
-- **genome_gatk_cna**: Copy number alteration segments from GATK, indexed by SAMPLE. Segment_Mean indicates raw mean log ratios of each probe. Segment_Copy_Number indicates the derived integer copy number status (-2, -1, 0, +1, or +2) for the probe. A CN status of 0 is normal, -1 and -2 indicate loss/deletion, +1 and +2 indicate gain/amplification.
+genome_gatk_cna: 
+Copy number alteration segments from GATK, indexed by SAMPLE. Segment_Mean indicates raw mean log ratios of each probe. Segment_Copy_Number indicates the derived integer copy number status (-2, -1, 0, +1, or +2) for the probe. A CN status of 0 is normal, -1 and -2 indicate loss/deletion, +1 and +2 indicate gain/amplification.
 
-- **gatk_baf**: Whole exome-sequencing B-allele frequencies from GATK, indexed by SAMPLE. The Segment_Mean column indicates the minor allele frequency (BAF) which ranges from 0-0.5. Unless stated otherwise, a BAF of <0.25 indicates loss of heterozygosity (LoH) of the genomic region surveyed by that probe. Chromosome contains 'chr' prefix, e.g. chr17.
+gatk_baf: 
+Whole exome-sequencing B-allele frequencies from GATK, indexed by SAMPLE. The Segment_Mean column indicates the minor allele frequency (BAF) which ranges from 0-0.5. Unless stated otherwise, a BAF of <0.25 indicates loss of heterozygosity (LoH) of the genomic region surveyed by that probe. Chromosome contains 'chr' prefix, e.g. chr17.
 
-- **exome_ns_variants**: Non-synonymous exome variants, indexed by Ensemble stable ID "GENEID" and patient identifier "PUBLIC_ID". 
+exome_ns_variants: 
+Non-synonymous exome variants, indexed by Ensemble stable ID "GENEID" and patient identifier "PUBLIC_ID". 
 
-- **chromothripsis**: Occurrence of chromothripsis events indexed by PUBLIC_ID. Events were detected using ShatterSeek algorithm run on copy number and structural variation data. 
+chromothripsis: 
+Occurrence of chromothripsis events indexed by PUBLIC_ID. Events were detected using ShatterSeek algorithm run on copy number and structural variation data. 
 
-- **gep_scores**: Gene expression profiling risk scores, also known as GEP risk indices or GEP signatures, indexed by PUBLIC_ID. 
+gep_scores: 
+Gene expression profiling risk scores, also known as GEP risk indices or GEP signatures, indexed by PUBLIC_ID. 
 
-- **mutsig_sbs**: Mutational signatures for Single Base Substitutions (SBS), indexed by PUBLIC_ID. Signatures were extracted using SigProfiler. 
+mutsig_sbs: 
+Mutational signatures for Single Base Substitutions (SBS), indexed by PUBLIC_ID. Signatures were extracted using SigProfiler. 
 
-- **stand_alone_trtresp**: Treatment response data per patient, indexed by PUBLIC_ID. Contains information about patient responses to treatments. 
+stand_alone_trtresp: 
+Treatment response data per patient, indexed by PUBLIC_ID. Contains information about patient responses to treatments. 
 {stand_alone_trtresp_schema}
 
-- **stand_alone_treatment_regimen**: Treatment regimen data per patient, indexed by PUBLIC_ID. Each row details the treatment regiment administered to a patient in that step of treatment. 
+stand_alone_treatment_regimen: 
+Treatment regimen data per patient, indexed by PUBLIC_ID. Each row details the treatment regiment administered to a patient in that step of treatment. 
 
 gene_annotation: 
 Gene annotation reference, indexed by Gene stable ID and Gene name. Contains gene metadata such as ensembl IDs, gene symbols, and genomic coordinates (chromosome e.g. chr17, start e.g. 9608793, end e.g., 9753407). This is useful for finding BAF/CNA probes overlapping a gene of interest.
