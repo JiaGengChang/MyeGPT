@@ -278,6 +278,26 @@ def upload_table_hgnc():
         df.to_sql('hgnc_nomenclature', con=conn, if_exists='replace', index=True, index_label=['Gene stable ID','Gene symbol'])
         print("Data uploaded successfully.")
 
+# run this last to change all fields to lowercase
+# allow cheaper models like claude 3 haiku to write SQL queries without case sensitivity issues
+def change_lowercase_column_names():
+    with engine.connect() as conn:
+        conn.execute(text("""DO $$
+            DECLARE row record;
+            BEGIN
+            FOR row IN SELECT table_schema,table_name,column_name
+                FROM information_schema.columns
+                WHERE table_schema = 'public' AND 
+                column_name<>lower(column_name)
+            LOOP
+            EXECUTE format('ALTER TABLE %I.%I RENAME COLUMN %I TO %I',
+            row.table_schema,row.table_name,row.column_name,lower(row.column_name));  
+            END LOOP;
+            END $$;
+            """))
+        conn.commit()
+        print("Column names changed to lowercase successfully.")
+
 if __name__ == "__main__":
     import os
     from dotenv import load_dotenv
@@ -307,5 +327,7 @@ if __name__ == "__main__":
         upload_table_gep_scores()
         upload_table_baf()
         upload_table_hgnc()
+        # rename all fields to lowercase
+        change_lowercase_column_names()
         exit()
 
