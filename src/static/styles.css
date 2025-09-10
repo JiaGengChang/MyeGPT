@@ -70,12 +70,20 @@ body {
   .chat-message.ai {
     background-color: rgb(230, 243, 254);
     border-radius: 20px 20px 20px 1px;
+    max-height: 130vh;
+    overflow-y: scroll;
   }
 
-  .chat-message.ai-thinking {
-    background-color: rgb(240, 246, 251);
+  .code {
+    font-family: monospace;
+    font-size: 14px;
   }
   
+  .scrollable_tool_result {
+    max-height: 20dvh;
+    overflow-y: scroll;
+  }
+
   .chat-input-container {
     width: 77dvw;
     max-width: calc(var(--max-width) - 2dvw);
