@@ -1,53 +1,53 @@
 Table Name: `per_patient`
 Description: Patient level clinical demographic information, obtained from the clinic. If column description is blank, avoid using it unless explicitly asked to.
 column_number | name | description
-1	PUBLIC_ID	Patient public identifier. Last 4 digits are unique. e.g. MMRF_1234
-2	D_PT_ic_day	
-3	D_PT_DIDPATIENTCOM	Did patient complete the study?
-4	D_PT_deathdy	Day of Death since enrollment
-5	D_PT_lastdy	Last day information was received regarding the patient
-6	D_PT_PRIMARYREASON	Primary reason of death
-7	D_PT_CAUSEOFDEATH	Cause of death
-8	D_PT_disc_com	Specify reason for not completing the study
-9	SE_SPECIFY2	
+1	public_id	Patient public identifier. Last 4 digits are unique. e.g. MMRF_1234
+2	d_pt_ic_day	
+3	d_pt_didpatientcom	Did patient complete the study?
+4	d_pt_deathdy	Day of Death since enrollment
+5	d_pt_lastdy	Last day information was received regarding the patient
+6	d_pt_primaryreason	Primary reason of death
+7	d_pt_causeofdeath	Cause of death
+8	d_pt_disc_com	Specify reason for not completing the study
+9	se_specify2	
 10	dth_specify	Specify other reasons for death
-11	D_PT_complete	Study complete flag
-12	D_PT_discont	Study discontinuation flag
-13	D_PT_DISCREAS	Reason for discontinuation
-14	D_PT_dthreas	Reason for death
+11	d_pt_complete	Study complete flag
+12	d_pt_discont	Study discontinuation flag
+13	d_pt_discreas	Reason for discontinuation
+14	d_pt_dthreas	Reason for death
 15	dthord	Order of death
-16	D_PT_raceoth	Specify minority race
-17	D_PT_race	Race
-18	D_PT_ethnic	Ethnicity
-19	D_PT_gender	Gender code (Male=1 Female=2)
-20	D_PT_DIDTHEPATIENT	Did the patient meet all eligibility requirements for this study?
-21	D_PT_screen	Screened Population
-22	D_PT_trtstdy	Treatment Start Date
-23	IMWG_RISK_CLASS Risk class based on the international myeloma working group. Do not use unless specifically requested Use ISS instead.
-24	PROLIF_INDEX	Proliferation index, a scalar value derived from RNASeq
-37	D_PT_lstalive	Last known alive
-38	D_PT_sdeathdy	Death Dt from Survival
-39	D_PT_age	Age at diagnosis
-40	D_PT_enr	Enrolled Population
-41	D_PT_lvisit	Last Visit from D_VISIT
-42	D_PT_lvisitdy	Last Visit Date from D_VISIT
-43	D_PT_lvisitc	Last Visit Character from D_VISIT
+16	d_pt_raceoth	Specify minority race
+17	d_pt_race	Race
+18	d_pt_ethnic	Ethnicity
+19	d_pt_gender	Gender code (Male=1 Female=2)
+20	d_pt_didthepatient	Did the patient meet all eligibility requirements for this study?
+21	d_pt_screen	Screened Population
+22	d_pt_trtstdy	Treatment Start Date
+23	imwg_risk_class Risk class based on the international myeloma working group. Do not use unless specifically requested Use ISS instead.
+24	prolif_index	Proliferation index, a scalar value derived from RNASeq
+37	d_pt_lstalive	Last known alive
+38	d_pt_sdeathdy	Death Dt from Survival
+39	d_pt_age	Age at diagnosis
+40	d_pt_enr	Enrolled Population
+41	d_pt_lvisit	Last Visit from D_VISIT
+42	d_pt_lvisitdy	Last Visit Date from D_VISIT
+43	d_pt_lvisitc	Last Visit Character from D_VISIT
 47	demog_height	Italy: Height
 48	demog_weight	Italy: Weight
-49	D_PT_iss	ISS (International staging system), or cancer stage.
-51	DEMOG_HEIGHTUNITOFM	Italy: Height unit
-52	DEMOG_WEIGHTUNITOFM	Italy: Weight unit
-53	D_PT_issstage_char
-54	D_PT_issstage	
-55	CREATININE	Creatinine level
+49	d_pt_iss	ISS (International staging system), or cancer stage. integer. Code: 1 = Stage I, 2 = Stage II, 3 = Stage III.
+51	demog_heightunitofm	Italy: Height unit
+52	demog_weightunitofm	Italy: Weight unit
+53	d_pt_issstage_char
+54	d_pt_issstage	
+55	creatinine	Creatinine level
 56	ecog	Baseline ECOG performance status
 57	sct_elig	Stem cell transplant (SCT) eligible flag
 58	thercat Therapy category
-59	D_PT_therclass	Therapy classification
-60	D_PT_therfstn	Therapy first treatment (coded)
-61	D_PT_therclassn	Therapy classification code
+59	d_pt_therclass	Therapy classification
+60	d_pt_therfstn	Therapy first treatment (coded)
+61	d_pt_therclassn	Therapy classification code
 62	thercatn	
-63	D_PT_maxline	Lines of therapy
+63	d_pt_maxline	Lines of therapy
 64	ftrttrpl	Triplet as first treatment regimen flag
 65	sct_bresp	SCT prior to overall best response flag
 66	line1sct	SCT during first line of therapy flag
@@ -65,30 +65,30 @@ column_number | name | description
 78	maintday	Duration of post-SCT maintenance treatment
 79	maintflag	Flag for subjects that were on maintenance at any time (1=Within 1 year, 2=after a year)
 80	maint1stf	Flag for subjects that were on maintenance during the first line of therapy (1=Within 1 year, 2=after a year)
-81	D_PT_pddy	date of PD
-82	D_PT_pdflag	Has at least one PD
-83	D_PT_ttfpdw	Time to first PD (weeks)
-84	D_PT_respdur	Duration of first response
-85	D_PT_mmstatus	MM status(derived)
-86	D_PT_mmstatus1	MM status(derived) Line 1
-87	D_PT_mmstatus2	MM status(derived) Line 2
-88	D_PT_mmstatus3	MM status(derived) Line 3
-89	D_PT_rapd	Rapid responder flag
-90	D_PT_dresp	Derived response assessment
+81	d_pt_pddy	date of PD
+82	d_pt_pdflag	Has at least one PD
+83	d_pt_ttfpdw	Time to first PD (weeks)
+84	d_pt_respdur	Duration of first response
+85	d_pt_mmstatus	MM status(derived)
+86	d_pt_mmstatus1	MM status(derived) Line 1
+87	d_pt_mmstatus2	MM status(derived) Line 2
+88	d_pt_mmstatus3	MM status(derived) Line 3
+89	d_pt_rapd	Rapid responder flag
+90	d_pt_dresp	Derived response assessment
 91	earlydth	
 92	fhr	Functional high risk flag
 93	demog_vj_interval	
 94	demog_visitdy	
-95	DEMOG_PATIENTAGE	Patient Age
-96	DEMOG_GENDER	Gender
-97	DEMOG_AMERICANINDIA	American Indian or Alaska Native
-98	DEMOG_ASIAN	Asian
-99	DEMOG_BLACKORAFRICA	Black or African American
-100	DEMOG_NATIVEHAWAIIA	Native Hawaiian or other Pacific Islander
-101	DEMOG_WHITE	White
-102	DEMOG_OTHER	Other
-103	DEMOG_SPECIFY	Specify race
-104	DEMOG_ETHNICITY	Ethnicity
-105	DEMOG_DAYOFVISIT	Date of visit
+95	demog_patientage	Patient Age
+96	demog_gender	Gender
+97	demog_americanindia	American Indian or Alaska Native
+98	demog_asian	Asian
+99	demog_blackorafrica	Black or African American
+100	demog_nativehawaiia	Native Hawaiian or other Pacific Islander
+101	demog_white	White
+102	demog_other	Other
+103	demog_specify	Specify race
+104	demog_ethnicity	Ethnicity
+105	demog_dayofvisit	Date of visit
 107	demog_visit	visit
 108	enr	Enrolled Population. Ignore as it is always 1 (constant column).

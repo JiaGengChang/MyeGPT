@@ -1,24 +1,24 @@
 Table name: `stand_alone_treatment_regimen`
 Description: Treatment records of each patient, including the drug name, date of therapy start, dose, and frequency. Ignored columns should not be used to answer queries. Fields specified as "varied and unsanitized" in their responses are open-ended and unstructured.
 column_number | name | description
-1	PUBLIC_ID	Patient public identifier. Last 4 digits are unique. e.g. MMRF_1234
-2	MMTX_TYPE	Treatment type e.g. First line of therapy, Seventh Line of Therapy (following 6th relapse)
-3	MMTX_THERAPY	Drug name, varied and unsanitized responses. e.g., Bortezomib, PEMBROLIZUMAB (KEYTRUDA), IPILIMUMAB
-4	MMTX_ENTERCLINICAL	Enter Clinical Trials Gov ID. Varied and unsanitized responses.
-5	MMTX_REASONFORTREA	Reason for treatment discontinued e.g. completed regimen
-6	MMTX_UNITS	Units for quantity administered e.g. mg
-7	MMTX_ROUTE	Route of administration e.g. IV
-8	VJ_INTERVAL	   Patient visit journey interval.
-9	MMTX_ISTHISLINEOFT  Is this line of treatment part of a broader therapy? e.g. Maintenance, Consolidation, Induction, Unknown, Other
-10	MMTX_SPECIFY6	Specify the Line of therapy. Varied, unsanitized responses here.
-11	MMTX_ONGOING	Flag for whether treatment is ongoing
-12	MMTX_DOSE	Drug dosage e.g., 215, 1800, 0, 154
-13	MMTX_FREQUENCY	Frequency of drug administration in shorthand. Unsanitized responses e.g. QD (D1, D8, D22, D29), Q week
-14	MMTX_SPECIFY3	Specify Frequency. Unsanitized responses e.g., MONDAY & TUESDAY FOR 3 WEEKS THEN 1 WEEK OFF, DAYS1,8,15
-15	MMTX_SPECIFY	Ignore
-16	MMTX_SPECIFY4	Specify reson for treatment discontinuation. Varied and unsanitized responses here.
-17	MMTX_SPECIFY2	Ignore
-18	MMTX_SPECIFY5	Ignore
+1	public_id	Patient public identifier. Last 4 digits are unique. e.g. MMRF_1234
+2	mmtx_type	Treatment type e.g. First line of therapy, Seventh Line of Therapy (following 6th relapse)
+3	mmtx_therapy	Drug name, varied and unsanitized responses. e.g., Bortezomib, PEMBROLIZUMAB (KEYTRUDA), IPILIMUMAB
+4	mmtx_enterclinical	Enter Clinical Trials Gov ID. Varied and unsanitized responses.
+5	mmtx_reasonfortrea	Reason for treatment discontinued e.g. completed regimen
+6	mmtx_units	Units for quantity administered e.g. mg
+7	mmtx_route	Route of administration e.g. IV
+8	vj_interval	   Patient visit journey interval.
+9	mmtx_isthislineoft  Is this line of treatment part of a broader therapy? e.g. Maintenance, Consolidation, Induction, Unknown, Other
+10	mmtx_specify6	Specify the Line of therapy. Varied, unsanitized responses here.
+11	mmtx_ongoing	Flag for whether treatment is ongoing
+12	mmtx_dose	Drug dosage e.g., 215, 1800, 0, 154
+13	mmtx_frequency	Frequency of drug administration in shorthand. Unsanitized responses e.g. QD (D1, D8, D22, D29), Q week
+14	mmtx_specify3	Specify Frequency. Unsanitized responses e.g., MONDAY & TUESDAY FOR 3 WEEKS THEN 1 WEEK OFF, DAYS1,8,15
+15	mmtx_specify	Ignore
+16	mmtx_specify4	Specify reson for treatment discontinuation. Varied and unsanitized responses here.
+17	mmtx_specify2	Ignore
+18	mmtx_specify5	Ignore
 19	startday	Start Date in days e.g. 540
 20	stopday	Stop Date in days e.g. 752
 21	enr	Enrolled Population. Ignore.

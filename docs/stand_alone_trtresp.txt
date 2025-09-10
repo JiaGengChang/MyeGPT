@@ -1,7 +1,7 @@
 Table name: `stand_alone_trtresp`
 Description: Treatment response data of each patient.
 column_number | name | description
-1	PUBLIC_ID	Patient public identifier. Last 4 digits are unique. e.g. MMRF_1234
+1	public_id	Patient public identifier. Last 4 digits are unique. e.g. MMRF_1234
 2	line	Line of therapy
 3	trtname	Treatment name (e.g. Dexamethasone, Bortezomib/Carfilzomib/Lenalidomide/Cyclophosphamide/Dexamethasone)
 4	trtshnm	Treatment (short name e.g., Dex, Bor-Ixa-Len-Cyc-Mel-Dex)
@@ -21,7 +21,7 @@ column_number | name | description
 18	bmtx_type	Transplant type
 19	bmtx_seq	Transplant sequence
 20	bmtx_rec	Did the patient receive a transplant in this line of therapy
-21	MMTX_REASONFORTREA	Reason for treatment discontinued
+21	mmtx_reasonfortrea	Reason for treatment discontinued
 22	trtrsn	Reason for treatment change
 23	pddy5	Date of disease progression (days from start) for treatment line 5
 24	pddy9	Date of disease progression (days from start) for treatment line 9

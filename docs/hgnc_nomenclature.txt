@@ -1,9 +1,9 @@
 Table name: `hgnc_complete_set`
 Description:    Gene Nomenclature from HGNC, for the complete set of human genome genes from chromosomes 1 through 22, X, and Y
 column_number   |   column_name  | column_description
-1   |   Gene stable ID  |   Index column. GENCODE accession/ENSEMBL Stable ID of the gene. string. example: ENSG00000227830.
-2   |   Gene symbol |   Index column. HGNC-approved symbol of the gene. string. example: TRIM60P3Y
-3   |   Gene name   |   Description of the full name of the gene e.g. "alpha-1-B glycoprotein" for the gene "A1BG"
-4   |   Alias symbol    |   One possible alias for the gene. NaN if it does not have an alias. e.g. "ACF" is an alias for gene "A1CF", "ADAR1" is an alias for "ADAR"
-5   |   Alias name  |   One possible alias name for the gene. e.g. "iGb3 synthase" is an alias name for "alpha 1,3-galactosyltransferase 2"
-6   |   HGNC ID |   HGNC accession of the format HGNC:[digits] e.g. HGNC:37133
+1   |   gene stable id  |   Index column. GENCODE accession/ENSEMBL Stable ID of the gene. string. example: ENSG00000227830.
+2   |   gene symbol |   Index column. HGNC-approved symbol of the gene. string. example: TRIM60P3Y
+3   |   gene name   |   Description of the full name of the gene e.g. "alpha-1-B glycoprotein" for the gene "A1BG"
+4   |   alias symbol    |   One possible alias for the gene. NaN if it does not have an alias. e.g. "ACF" is an alias for gene "A1CF", "ADAR1" is an alias for "ADAR"
+5   |   alias name  |   One possible alias name for the gene. e.g. "iGb3 synthase" is an alias name for "alpha 1,3-galactosyltransferase 2"
+6   |   hgnc id |   HGNC accession of the format HGNC:[digits] e.g. HGNC:37133

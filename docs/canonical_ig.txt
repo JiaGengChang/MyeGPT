@@ -2,12 +2,12 @@ Table Name: `canonical_ig`
 Description: Calls for canonical translocation events involving Immunoglobulin gene super-enhancer and the gene of interest. Events are detected by long insert, low-coverage whole genome sequencing.
 Below is a description of each field. If description is empty, do not use the column unless explicitly instructed to.
 column_number | name | description
-1	Patient public identifier. Last 4 digits are unique. e.g. MMRF_1234
-2	SeqWGS_WHSC1_CALL   The call for WHSC1 translocation, also known as the t(4;14)(p16.3;q32.3) subtype. Codes: 0 = negative, 1 = positive.
-3	SeqWGS_CCND3_CALL   The call for CCND3 translocation, also known as t(6;14)(p21;q32) subtype. Codes: 0 = negative, 1 = positive.
-4	SeqWGS_MYC_CALL The call for MYC translocation, also known as the t(8;14). Codes: 0 = negative, 1 = positive.
-5	SeqWGS_MAFA_CALL    The call for MAFA translocation, the MAF-A gene, also known as t(8;14). Codes: 0 = negative, 1 = positive.
-6	SeqWGS_CCND1_CALL   The call for CCND1 translocation, cyclin D1 gene, also known as t(11;14). Codes: 0 = negative, 1 = positive.
-7	SeqWGS_CCND2_CALL   The call for translocation of CCND2, cyclin D2 gene, located on the 12p13.32 band. Codes: 0 = negative, 1 = positive.
-8	SeqWGS_MAF_CALL     The call for MAF translocation or t(14;16)(q32;q23), which affects the MAF gene also referred to as c-MAF. Codes: 0 = negative, 1 = positive.
-9	SeqWGS_MAFB_CALL    The call for MAF-B translocation which leads to MAF-B overexpression. The most common event is t(14;20)(q32;q23). Codes: 0 = negative, 1 = positive.
+1	public_id   Patient public identifier. Last 4 digits are unique. e.g. MMRF_1234
+2	seqwgs_whsc1_call   The call for WHSC1 translocation, also known as the t(4;14)(p16.3;q32.3) subtype. Codes: 0 = negative, 1 = positive.
+3	seqwgs_ccnd3_call   The call for CCND3 translocation, also known as t(6;14)(p21;q32) subtype. Codes: 0 = negative, 1 = positive.
+4	seqwgs_myc_call The call for MYC translocation, also known as the t(8;14). Codes: 0 = negative, 1 = positive.
+5	seqwgs_mafa_call    The call for MAFA translocation, the MAF-A gene, also known as t(8;14). Codes: 0 = negative, 1 = positive.
+6	seqwgs_ccnd1_call   The call for CCND1 translocation, cyclin D1 gene, also known as t(11;14). Codes: 0 = negative, 1 = positive.
+7	seqwgs_ccnd2_call   The call for translocation of CCND2, cyclin D2 gene, located on the 12p13.32 band. Codes: 0 = negative, 1 = positive.
+8	seqwgs_maf_call     The call for MAF translocation or t(14;16)(q32;q23), which affects the MAF gene also referred to as c-MAF. Codes: 0 = negative, 1 = positive.
+9	seqwgs_mafb_call    The call for MAF-B translocation which leads to MAF-B overexpression. The most common event is t(14;20)(q32;q23). Codes: 0 = negative, 1 = positive.

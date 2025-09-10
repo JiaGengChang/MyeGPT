@@ -2,58 +2,58 @@ Table Name: `exome_ns_variants`
 Description: A table of non-synonymous variant calls from whole exome sequencing of bone marrow plasma cell samples.
 Below is a description of each field.
 column_number | name | description
-1       GENEID          Gene identifier, an Ensembl Gene stable ID (e.g., ENSG00000141510)
-2   	PUBLIC_ID	    Patient public identifier. Last 4 digits are unique. e.g. MMRF_1234
+1       geneid          Gene identifier, an Ensembl Gene stable ID (e.g., ENSG00000141510)
+2   	public_id	    Patient public identifier. Last 4 digits are unique. e.g. MMRF_1234
 3       chr             Chromosome where the mutation is located (chr2, chrX, chrY, chr10)
 4       start           Start position of the mutation (1-based)
 5       end             End position of the mutation
 6       sample          Sample identifier (e.g., MMRF_1030_3_BM_CD138pos, MMRF_1030_3_BM_CD138pos, MMRF_2605_2_PB_Plasma)
-7       EFFECT          Predicted effect of the mutation (e.g., missense_variant, stop_gained, stop_loss, splice_acceptor_variant, intron_variant)
-8       GENE            Gene symbol affected by the mutation (e.g. TP53, IGHD6-6, CLU, WIZ).
-9       ID              Variant identifier (e.g., rs782300741, rs202020672, NULL)
-10      REF             Reference allele (e.g. C, TCAG)
-11      ALT             Alternate allele (e.g. T, TCCATCATACAA)
-12      COSMIC_C        Presence in COSMIC coding mutation database (t/f)
-13      COSMIC_NC       Presence in COSMIC non-coding mutation database (t/f)
-14      DB              Presence in DrugBank database (t/f)
-15      GNOMAD_EXOME    Presence in gnomAD exome database (t/f)
-16      GNOMAD_GENOME   Presence in gnomAD genome database (t/f)
-17      CLINVAR         Presence in ClinVar database (t/f)
-18      CALLER_COUNT    Number of variant callers that detected this mutation (3, 4, or 5)
-19      MUTECT2         Presence from Mutect2 caller (t/f)
-20      STRELKA2        Presence from Strelka2 caller (t/f)
-21      VARDICT         Presence from VarDict caller (t/f)
-22      OCTOPUS         Presence from Octopus caller (t/f)
-23      LANCET          Presence from Lancet caller (t/f)
-24      RNA_REF_COUNT   RNA-seq reference allele read count
-25      RNA_ALT_COUNT   RNA-seq alternate allele read count
-26      RNA_ALT_FREQ    RNA-seq alternate allele frequency
-27      NORMAL_REF_AD   Reference allele depth in normal sample
-28      NORMAL_ALT_AD   Alternate allele depth in normal sample
-29      NORMAL_ALT_FREQ Alternate allele frequency in normal sample
-30      NORMAL_DP       Total read depth in normal sample
-31      TUMOR_REF_AD    Reference allele depth in tumor sample
-32      TUMOR_ALT_AD    Alternate allele depth in tumor sample
-33      TUMOR_ALT_FREQ  Alternate allele frequency in tumor sample
-34      TUMOR_DP        Total read depth in tumor sample
-35      ALLELE          Allele annotation (e.g., A, T, ACGGCGGCAG, GAGCGCGTCATGGCCGAGGAGCA)
-36      IMPACT          Predicted impact (either MODERATE or HIGH)
-37      FEATURE         Feature type. Constant value of "transcript".
-38      FEATUREID       Feature identifier. In this case all transcript IDs (e.g., ENST00000593612.1).
-39      BIOTYPE         The functional category of the variant e.g. nonsense-mediated decay, protein-coding, or retained intron
-40      RANK            The rank of the exon where the variant lies (ranges from 1 to 360).
-41      HGVS_C          HGVS cDNA notation (e.g., c.374delA)
-42      HGVS_P          HGVS protein notation (e.g., p.Thr827Ala)
-43      CDNA_POS        Position in cDNA
-44      CDNA_LEN        Length of cDNA
-45      CDS_POS         Position in coding sequence (CDS)
-46      CDS_LEN         Length of coding sequence (CDS)
-47      AA_POS          Amino acid position
-48      AA_LEN          Amino acid length
-49      DISTANCE        Distance to nearest feature (e.g., exon, splice site)
-50      ERRORS          Error or warning messages from the variant caller algorithm
-51      LOF_GENE        Gene symbol predicted to have loss-of-function (e.g., HACE1, IDH3B, TET3)
-52      LOF_GENEID      Gene ID for loss-of-function prediction (e.g., ENSG00000242366, ENSG00000153208, ENSG00000145495)
-53      LOF_NUMTR       Number of transcripts with loss-of-function. Unreliable column as either NULL or 1.
-54      LOF_PERC        Percentage of transcripts with loss-of-function Unreliable column as either NULL or 1.
-55      VISIT           The visit ID of the patient. An integer. e.g. 1 means first visit
+7       effect          Predicted effect of the mutation (e.g., missense_variant, stop_gained, stop_loss, splice_acceptor_variant, intron_variant)
+8       gene            Gene symbol affected by the mutation (e.g. TP53, IGHD6-6, CLU, WIZ).
+9       id              Variant identifier (e.g., rs782300741, rs202020672, NULL)
+10      ref             Reference allele (e.g. C, TCAG)
+11      alt             Alternate allele (e.g. T, TCCATCATACAA)
+12      cosmic_c        Presence in COSMIC coding mutation database (t/f)
+13      cosmic_nc       Presence in COSMIC non-coding mutation database (t/f)
+14      db              Presence in DrugBank database (t/f)
+15      gnomad_exome    Presence in gnomAD exome database (t/f)
+16      gnomad_genome   Presence in gnomAD genome database (t/f)
+17      clinvar         Presence in ClinVar database (t/f)
+18      caller_count    Number of variant callers that detected this mutation (3, 4, or 5)
+19      mutect2         Presence from Mutect2 caller (t/f)
+20      strelka2        Presence from Strelka2 caller (t/f)
+21      vardict         Presence from VarDict caller (t/f)
+22      octopus         Presence from Octopus caller (t/f)
+23      lancet          Presence from Lancet caller (t/f)
+24      rna_ref_count   RNA-seq reference allele read count
+25      rna_alt_count   RNA-seq alternate allele read count
+26      rna_alt_freq    RNA-seq alternate allele frequency
+27      normal_ref_ad   Reference allele depth in normal sample
+28      normal_alt_ad   Alternate allele depth in normal sample
+29      normal_alt_freq Alternate allele frequency in normal sample
+30      normal_dp       Total read depth in normal sample
+31      tumor_ref_ad    Reference allele depth in tumor sample
+32      tumor_alt_ad    Alternate allele depth in tumor sample
+33      tumor_alt_freq  Alternate allele frequency in tumor sample
+34      tumor_dp        Total read depth in tumor sample
+35      allele          Allele annotation (e.g., A, T, ACGGCGGCAG, GAGCGCGTCATGGCCGAGGAGCA)
+36      impact          Predicted impact (either MODERATE or HIGH)
+37      feature         Feature type. Constant value of "transcript".
+38      featureid       Feature identifier. In this case all transcript IDs (e.g., ENST00000593612.1).
+39      biotype         The functional category of the variant e.g. nonsense-mediated decay, protein-coding, or retained intron
+40      rank            The rank of the exon where the variant lies (ranges from 1 to 360).
+41      hgvs_c          HGVS cDNA notation (e.g., c.374delA)
+42      hgvs_p          HGVS protein notation (e.g., p.Thr827Ala)
+43      cdna_pos        Position in cDNA
+44      cdna_len        Length of cDNA
+45      cds_pos         Position in coding sequence (CDS)
+46      cds_len         Length of coding sequence (CDS)
+47      aa_pos          Amino acid position
+48      aa_len          Amino acid length
+49      distance        Distance to nearest feature (e.g., exon, splice site)
+50      errors          Error or warning messages from the variant caller algorithm
+51      lof_gene        Gene symbol predicted to have loss-of-function (e.g., HACE1, IDH3B, TET3)
+52      lof_geneid      Gene ID for loss-of-function prediction (e.g., ENSG00000242366, ENSG00000153208, ENSG00000145495)
+53      lof_numtr       Number of transcripts with loss-of-function. Unreliable column as either NULL or 1.
+54      lof_perc        Percentage of transcripts with loss-of-function Unreliable column as either NULL or 1.
+55      visit           The visit ID of the patient. An integer. e.g. 1 means first visit

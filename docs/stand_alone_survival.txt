@@ -1,7 +1,7 @@
 Table Name: `stand_alone_survival`
 Description: Stores survival information of each patient as well as treatment response data. If description is empty, do not use the column unless explicitly instructed to.
 column_number | name | description
-1	PUBLIC_ID	Patient public identifier. Last 4 digits are unique. e.g. MMRF_1234
+1	public_id	Patient public identifier. Last 4 digits are unique. e.g. MMRF_1234
 2	deathdy	Date of Death
 3	lstalive	Last known alive
 4	lvisitdy	Last Visit Date from D_VISIT
