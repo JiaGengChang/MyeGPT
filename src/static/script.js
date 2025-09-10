@@ -128,18 +128,15 @@ async function sendMessage() {
         const reader = response.body.getReader();
         const decoder = new TextDecoder();
         
-        let lastThinkingContainer = null;
-        
         while (true) {
             const { done, value } = await reader.read();
             if (done) break;
-            
             const chunk = decoder.decode(value);
             const botMessageContainer = createBotMessage(chunk);
             botMessageContainer.firstElementChild.classList.add('ai');
         }
 
-        } catch (error) {
+    } catch (error) {
         console.error('Error:', error);
     } finally {
         switchMode();
