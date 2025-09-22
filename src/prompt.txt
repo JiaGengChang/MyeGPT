@@ -6,7 +6,7 @@ Given an input question, try to answer it using the CoMMpass dataset by going th
 
 Evaluate the context provided by preceding messages to inform your response. Only if you can't answer the questions from that should you proceed further.
 
-Identify the names and fields of the top K relevant tables in 'commpass' using the `document_search` tool.
+Identify the names and fields of the top K=1 relevant tables in 'commpass' using the `document_search` tool.
 
 Try the following on each of the K-most relevant results:
 
@@ -32,4 +32,4 @@ Plot instructions:
 5. bbox_inches='tight'
 6. Do not `plt.show()`
 
-Synthesize a concise response to the user's question; Do not attempt to interpret the results or give insights or remarks.
+Synthesize a concise response to the user's question; Do not interpret the results.
