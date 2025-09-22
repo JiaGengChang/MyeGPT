@@ -4,9 +4,8 @@
 # more cost effective alternative to loading in the large static prompt at the start of every session 
 import os
 from dotenv import load_dotenv
-from langchain_aws import BedrockEmbeddings
+from langchain_mistralai import MistralAIEmbeddings
 from langchain_postgres import PGEngine, PGVectorStore
-# from sqlalchemy.ext.asyncio import create_async_engine
 
 import uuid
 from langchain_core.documents import Document
@@ -52,6 +51,9 @@ def main():
 
     with open("docs/per_visit.txt", "r", encoding="utf-8") as f:
         per_visit_content = f.read()
+
+    with open("docs/per_visit_contd.txt", "r", encoding="utf-8") as f:
+        per_visit_contd_content = f.read()
 
     with open("docs/salmon_gene_unstranded_counts.txt", "r", encoding="utf-8") as f:
         salmon_gene_unstranded_counts_content = f.read()
@@ -137,6 +139,11 @@ def main():
         ),
         Document(
             id=str(uuid.uuid4()),
+            page_content=per_visit_contd_content,
+            metadata={"category": "child", "data modality": "Patient Visit-level Clinical/Demographic Data"},
+        ),
+        Document(
+            id=str(uuid.uuid4()),
             page_content=salmon_gene_unstranded_counts_content,
             metadata={"category": "child", "data modality": "Gene-level Unstranded Counts"},
         ),
@@ -168,7 +175,7 @@ def main():
     ]
 
     # Create an embedding class instance
-    embeddings = BedrockEmbeddings(model_id="amazon.titan-embed-text-v2:0", region_name="us-east-1")
+    embeddings = MistralAIEmbeddings(model="mistral-embed")
 
     CONNECTION_STRING = os.environ.get("COMMPASS_DB_URI")
 

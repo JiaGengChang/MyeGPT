@@ -1,6 +1,6 @@
 import os 
 from langchain_postgres import PGEngine, PGVectorStore
-from langchain_aws import BedrockEmbeddings
+from langchain_mistralai import MistralAIEmbeddings
 
 # do not change, set in create_vectorstore.py
 TABLE_NAME = "vectorstore"  
@@ -10,8 +10,7 @@ SCHEMA_NAME = "commpass_schema"
 pg_engine = PGEngine.from_connection_string(os.environ.get("COMMPASS_DB_URI"))
 
 # embeddings provider
-# us-east-1 has the best availability
-embeddings = BedrockEmbeddings(model_id=os.environ.get("EMBEDDING_MODEL_ID"), region_name='us-east-1')
+embeddings = MistralAIEmbeddings(model="mistral-embed")
 
 # create connection to vector store
 def connect_store():
