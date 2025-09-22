@@ -6,6 +6,7 @@ langchain-core
 langchain-experimental
 langchain-aws
 langchain-postgres
+langchain-mistralai
 langgraph
 langgraph-checkpoint-postgres
 lifelines
