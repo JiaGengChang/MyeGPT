@@ -1,7 +1,7 @@
 import os
 from fastapi import FastAPI
 from langchain_community.utilities import SQLDatabase
-from langchain_aws import ChatBedrockConverse
+from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
 from langgraph.prebuilt import create_react_agent
 import uuid
@@ -23,8 +23,8 @@ def create_system_message() -> str:
         dialect=db.dialect,
         commpass_db_uri=db_uri
     )
-    return [HumanMessage(content='Hello, MyeGPT!'),
-            SystemMessage(content=system_message)]
+    stub_content = "Hello, MyeGPT."
+    return [SystemMessage(content=system_message), HumanMessage(content=stub_content)]
 
 async def send_init_prompt(app:FastAPI):
     global graph
@@ -33,9 +33,10 @@ async def send_init_prompt(app:FastAPI):
     config_ask = {"configurable": {"thread_id": app.state.thread_id}, "recursion_limit": 50} # ask configuration
     
     #  initialize the chat model
-    llm = ChatBedrockConverse(
-        model_id=os.environ.get("MODEL_ID"),
+    llm = ChatOpenAI(
+        model="gpt-5-mini",
         temperature=0.,
+        max_tokens=10_000,
     )
     graph = create_react_agent(
         model=llm,
