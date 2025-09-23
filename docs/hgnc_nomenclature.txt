@@ -1,4 +1,4 @@
-Table name: `hgnc_complete_set`
+Table name: `hgnc_nomenclature`
 Description:    Gene Nomenclature from HGNC, for the complete set of human genome genes from chromosomes 1 through 22, X, and Y
 column_number   |   column_name  | column_description
 1   |   gene stable id  |   Index column. GENCODE accession/ENSEMBL Stable ID of the gene. string. example: ENSG00000227830.
