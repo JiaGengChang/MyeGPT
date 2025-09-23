@@ -18,7 +18,7 @@ column_number | name | description
 15	trtclass	Treatment class
 16	thersub	Therapy sub classification
 17	bmtx_day	Date of transplant
-18	bmtx_type	Transplant type
+18	bmtx_type	Transplant type. Either missing, "Stem cell, Autologous", or "Stem cell, Allogenic".
 19	bmtx_seq	Transplant sequence
 20	bmtx_rec	Did the patient receive a transplant in this line of therapy
 21	mmtx_reasonfortrea	Reason for treatment discontinued
