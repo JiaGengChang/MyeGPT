@@ -33,6 +33,7 @@ def scorer(inputs: dict, outputs: dict, reference_outputs: dict):
     return eval_result
 
 async def main():
+    eval_dataset_name = input("Enter eval dataset (options: \"test\", \"myegpt\"):")
     async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False)) as session:
         async with await session.get(
             os.environ.get("APP_API_ENDPOINT"),
@@ -50,11 +51,11 @@ async def main():
 
             await client.aevaluate(
                 target,
-                data=os.environ.get("EVAL_DATASET_NAME"),
+                data=eval_dataset_name,
                 evaluators=[scorer],
                 max_concurrency=0,
                 num_repetitions=1,
-                experiment_prefix=os.environ.get("EVAL_DATASET_NAME"),
+                experiment_prefix=eval_dataset_name,
                 metadata={
                     'app_llm': os.environ.get("MODEL_ID"),
                     'eval_llm': os.environ.get("EVAL_MODEL_ID"),
