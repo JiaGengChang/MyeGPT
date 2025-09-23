@@ -3,6 +3,7 @@ src/result
 src/*.ipynb
 src/*.png
 rollback.py
+modify_database.py
 clindata
 omicdata
 src/static/.DS_Store
