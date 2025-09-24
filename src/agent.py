@@ -34,9 +34,8 @@ async def send_init_prompt(app:FastAPI):
     
     #  initialize the chat model
     llm = ChatOpenAI(
-        model="gpt-5-mini",
+        model=os.environ.get("MODEL_ID"),
         temperature=0.,
-        max_tokens=10_000,
     )
     graph = create_react_agent(
         model=llm,
