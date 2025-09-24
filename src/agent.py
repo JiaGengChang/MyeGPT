@@ -36,11 +36,13 @@ async def send_init_prompt(app:FastAPI):
     llm = ChatBedrockConverse(
         model_id=os.environ.get("MODEL_ID"),
         temperature=0.,
+        max_tokens=5000,
     )
+    from langgraph.checkpoint.memory import InMemorySaver
     graph = create_react_agent(
         model=llm,
         tools=[document_search_tool, convert_gene_tool, langchain_query_sql_tool, python_repl_tool, python_execute_sql_query_tool],
-        checkpointer=app.state.checkpointer,
+        checkpointer=InMemorySaver()#app.state.checkpointer,
     )
     system_message = create_system_message()
     init_response = await graph.ainvoke({"messages" :system_message}, config_init)
@@ -65,24 +67,15 @@ def query_agent(user_input: str):
         chunks = None
         if "agent" in step:
             chunks = step["agent"]["messages"][-1].content
-        elif "tools" in step:
-            chunks = step["tools"]["messages"][-1].content
-        else:
-            raise ValueError("Unexpected step format")
-
-        if isinstance(chunks, list):
-            for chunk in chunks:
-                    if chunk["type"]=="tool_use":
-                        chunk = format_tool_message(chunk)
-                    elif chunk["type"]=="text":
-                        chunk = format_text_message(chunk)
+            if isinstance(chunks, list):
+                for chunk in chunks:
+                        if chunk["type"]=="text":
+                            chunk = format_text_message(chunk)
+                            yield str(chunk)
+            elif isinstance(chunks, dict):
+                if chunk["type"]=="text":
+                    chunk = format_text_message(chunk)
                     yield str(chunk)
-        elif isinstance(chunks, dict):
-            if chunk["type"]=="tool_use":
-                chunk = format_tool_message(chunk)
-            elif chunk["type"]=="text":
-                chunk = format_text_message(chunk)
-            yield str(chunk)        
-        else:
-            if chunks!="":
-                yield format_text_message(chunks)
+            else:
+                if chunks!="":
+                    yield format_text_message(chunks)

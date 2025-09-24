@@ -122,6 +122,7 @@ async function sendMessage() {
             body: JSON.stringify({ user_input: message }),  
         });
 
+
         if (!response.ok) throw new Error('Failed to send message');
         
         // Read the streaming response
@@ -136,7 +137,7 @@ async function sendMessage() {
             botMessageContainer.firstElementChild.classList.add('ai');
         }
 
-    } catch (error) {
+        } catch (error) {
         console.error('Error:', error);
     } finally {
         switchMode();

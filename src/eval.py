@@ -5,16 +5,16 @@ assert load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 from langsmith import Client
 from openevals.llm import create_llm_as_judge
 from openevals.prompts import CORRECTNESS_PROMPT
-from langchain_aws import ChatBedrockConverse
+from langchain_openai import ChatOpenAI
 import aiohttp
 import asyncio
 
 # Define the input and reference output pairs that you'll use to evaluate your app
 client = Client()
 
-llm = ChatBedrockConverse(
-    model_id=os.environ.get("EVAL_MODEL_ID"),
-    temperature=0.
+llm = ChatOpenAI(
+    model=os.environ.get("EVAL_MODEL_ID"),
+    temperature=0.,
 )
 
 # a correctness score from 0 to 1, where 1 is the best
@@ -33,7 +33,7 @@ def scorer(inputs: dict, outputs: dict, reference_outputs: dict):
     return eval_result
 
 async def main():
-    eval_dataset_name = input("Enter eval dataset (options: \"test\", \"myegpt\"):")
+    eval_dataset_name = input("Enter eval dataset (options: \"test\", \"test-hard\",\"myegpt\"):")
     async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False)) as session:
         async with await session.get(
             os.environ.get("APP_API_ENDPOINT"),
