@@ -5,17 +5,16 @@ assert load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 from langsmith import Client
 from openevals.llm import create_llm_as_judge
 from openevals.prompts import CORRECTNESS_PROMPT
-from langchain_openai import ChatOpenAI
+from langchain_aws import ChatBedrockConverse
 import aiohttp
 import asyncio
 
 # Define the input and reference output pairs that you'll use to evaluate your app
 client = Client()
 
-llm = ChatOpenAI(
-    model='gpt-5-mini',
+llm = ChatBedrockConverse(
+    model_id=os.environ.get("EVAL_MODEL_ID"),
     temperature=0,
-    max_tokens=10_000,
 )
 
 # a correctness score from 0 to 1, where 1 is the best
@@ -58,7 +57,7 @@ async def main():
                 num_repetitions=1,
                 experiment_prefix=eval_dataset_name,
                 metadata={
-                    'app_llm': 'gpt-5-mini',
+                    'app_llm': os.environ.get("MODEL_ID"),
                     'eval_llm': os.environ.get("EVAL_MODEL_ID"),
                 }
             )
