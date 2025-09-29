@@ -68,7 +68,15 @@ async function initializeChat() {
         if (!initResponse.ok) throw new Error('Failed to initialize chat');
         const response = await initResponse.json();
         window.spinner.remove();
-        createBotMessage(`Session ID: ${response.thread_id}`);
+        const usernameDisplay = document.getElementById('username-display');
+        usernameDisplay.textContent = `👤${response.username}`;
+        const ipaddressDisplay = document.getElementById('ipaddress-display');
+        ipaddressDisplay.textContent = `🌐${response.client_ip}`;
+        const logoutButton = document.getElementById('logout-button');
+        logoutButton.addEventListener('click', () => {
+            document.cookie = 'access_token=; Max-Age=0; path=/;';
+            window.location.href = '/login';
+        });
         createBotMessage(response.message);
     } catch (error) {
         console.error('Error initializing chat:', error);

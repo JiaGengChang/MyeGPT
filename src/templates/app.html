@@ -12,8 +12,17 @@
 </head>
 <body>
   <header class="header">
-    <img src="/static/android-chrome-192x192.png" alt="favicon">
-    <h1>MyeGPT</h1>
+    <div class="logo-and-title">
+      <img src="/static/android-chrome-192x192.png" alt="favicon">
+      <h1>MyeGPT</h1>
+    </div>
+    <div class="session-info">
+      <div class="user-details">
+        <div id="username-display">[username]</div>
+        <div id="ipaddress-display">[ip_address]</div>
+        <button id="logout-button">Logout</button>
+      </div>
+    </div>
   </header>
   <div class="chat-history"></div>
   <div class="chat-input-container">

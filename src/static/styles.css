@@ -15,12 +15,28 @@ body {
   }
 
   .header {
-    width: 100%;
+    width: 80dvw;
     padding: 1rem 1rem 0rem 1rem;
-    margin: 0;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+
+  .logo-and-title {
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .session-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-left: auto;
   }
   
   .header img {

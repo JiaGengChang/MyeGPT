@@ -29,9 +29,9 @@ def create_system_message() -> str:
 async def send_init_prompt(app:FastAPI):
     global graph
     global config_ask
-    config_init = {"configurable": {"thread_id": app.state.thread_id}, "recursion_limit": 5} # init configuration
-    config_ask = {"configurable": {"thread_id": app.state.thread_id}, "recursion_limit": 50} # ask configuration
-    
+    config_init = {"configurable": {"thread_id": '_'.join([app.state.username, app.state.client_ip]), "recursion_limit": 5}} # init configuration
+    config_ask = {"configurable": {"thread_id": '_'.join([app.state.username, app.state.client_ip]), "recursion_limit": 50}} # ask configuration
+
     #  initialize the chat model
     model_id = os.environ.get("MODEL_ID")
     if not model_id:
