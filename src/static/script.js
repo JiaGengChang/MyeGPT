@@ -86,6 +86,12 @@ async function initializeChat() {
 // Call on page load
 document.addEventListener('DOMContentLoaded', initializeChat);
 
+function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+
 async function sendMessage() {
     // Check if window width is below 768px, then remove logo
     if (window.innerWidth < 768) {
@@ -126,6 +132,7 @@ async function sendMessage() {
             method: 'POST',
             headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${getCookie('access_token')}`,
             },
             body: JSON.stringify({ user_input: message }),  
         });

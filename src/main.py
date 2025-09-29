@@ -10,11 +10,14 @@ import asyncio
 from contextlib import asynccontextmanager
 from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
 import psycopg
+from typing import Annotated
 
 # src modules
 from agent import send_init_prompt, query_agent
-from models import Token, Query
-from security import authenticate_user, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES, ALGORITHM, SECRET_KEY
+from models import Token, Query, UserCreate, UserInDB
+from security import get_password_hash, authenticate_user, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES, ALGORITHM, SECRET_KEY
+from mail import send_verification_email
+from serialize import generate_verification_token, confirm_verification_token
 
 auth_db_conn = psycopg.connect(os.environ.get("COMMPASS_AUTH_DSN"))
 
@@ -55,14 +58,16 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 # Routes
 
+# serve landing page
 @app.get("/")
 async def root():
     return FileResponse("templates/index.html")
 
 
+# not triggered, here for OpenAPI compliance
 @app.post("/token")
 async def login_for_access_token(
-    form_data: OAuth2PasswordRequestForm = Depends(),
+    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
 ):
     user = authenticate_user(auth_db_conn, form_data.username, form_data.password)
     if not user:
@@ -79,9 +84,68 @@ async def login_for_access_token(
         return Token(access_token=access_token, token_type="bearer")
 
 
+# triggered by registration form submission
+@app.post("/register")
+async def register_with_form(request: Request):
+    form = await request.form()
+    username = form.get("username")
+    password = form.get("password")
+    confirm_password = form.get("confirm-password")
+    email = form.get("email", "").strip()
+    if password != confirm_password:
+        raise HTTPException(status_code=400, detail="Passwords do not match")
+    if not username or not password:
+        raise HTTPException(status_code=400, detail="Username and password are required")
+    new_user = UserCreate(username=username, password=password, email=email)
+    response = await register_user(new_user)
+    return response
+
+# not triggered directly
+# called by register_with_form
+# for use within swagger UI
+@app.post("/api/register")
+async def register_user(user: UserCreate):
+    hashed_password = get_password_hash(user.password)
+    with auth_db_conn.cursor() as cur:
+        try:
+            user_email = user.email if user.email.strip().__len__() > 0 else None
+            cur.execute(
+            "INSERT INTO auth.users (username, email, hashed_password) VALUES (%s, %s, %s)",
+            (user.username, user_email, hashed_password)
+            )
+            auth_db_conn.commit()
+        except psycopg.errors.UniqueViolation:
+            raise HTTPException(status_code=400, detail="Username already exists")
+        
+    token = generate_verification_token(user_email)
+    await send_verification_email(user_email, token)
+
+    return {"message": "Please check your email for verification link."}
+    
+
+# triggered by clicking the link in verification email
+@app.get("/verify")
+def verify_email(token: str):
+    email = confirm_verification_token(token)
+    if not email:
+        raise HTTPException(status_code=400, detail="Invalid or expired token")
+    with auth_db_conn.cursor() as cur:
+        cur.execute("SELECT username, email, hashed_password, is_verified FROM auth.users WHERE email = %s", (email,))
+        row = cur.fetchone()
+        if not row:
+            raise HTTPException(status_code=404, detail="User not found")
+        user = UserInDB(username=row[0], email=row[1], hashed_password=row[2], is_verified=row[3])
+        if user.is_verified:
+            return {"msg": "Account already verified."}
+        cur.execute("UPDATE auth.users SET is_verified = TRUE WHERE email = %s", (email,))
+        auth_db_conn.commit()
+
+    return {"msg": "Email verified successfully. You can now log in."}
+
+
 # triggered by login form submission
-@app.post("/redirect")
-async def serve_homepage(request: Request, token: Token = Depends(login_for_access_token)):
+@app.post("/app")
+async def serve_homepage(request: Request, token: Annotated[Token, Depends(login_for_access_token)]):
     response = FileResponse("templates/app.html")
     response.set_cookie(
     key="access_token",
@@ -99,7 +163,7 @@ async def serve_homepage(request: Request, token: Token = Depends(login_for_acce
     return response
 
 
-# retrieve response to init prompt
+# triggered by /app
 @app.post("/api/init")
 async def get_init_response():
     await app.state.init_prompt_done.wait()
@@ -110,9 +174,9 @@ async def get_init_response():
     })
 
 
-# handle chat requests
+# triggered by submission of query
 @app.post("/api/ask")
-async def ask(query: Query, token: Token = Depends(oauth2_scheme)):
+async def ask(query: Query, token: Annotated[str, Depends(oauth2_scheme)]):
     await app.state.init_prompt_done.wait()
     def generate_response():
         for chunk in query_agent(query.user_input):

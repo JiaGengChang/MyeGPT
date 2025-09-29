@@ -1,13 +1,15 @@
-from datetime import datetime, timedelta, timezone
+import os
 import jwt
+from dotenv import load_dotenv
+assert load_dotenv(os.path.join(os.path.dirname(__file__),'.env'))
 from psycopg import sql
 from models import UserInDB
-import os
 from pwdlib import PasswordHash
+from datetime import datetime, timedelta, timezone
 
 
-SECRET_KEY = os.getenv("SECRET_KEY")
-ALGORITHM = "HS256"
+SECRET_KEY = os.environ.get("SECRET_KEY")
+ALGORITHM = os.environ.get("ALGORITHM")
 ACCESS_TOKEN_EXPIRE_MINUTES = 120
 
 password_hash = PasswordHash.recommended()

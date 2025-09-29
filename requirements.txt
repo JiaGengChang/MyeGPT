@@ -1,5 +1,7 @@
 dotenv
-fastapi
+fastapi[standard]
+fastapi-mail
+itsdangerous
 langchain
 langchain-community
 langchain-core
@@ -15,7 +17,7 @@ pandas
 psycopg[binary,pool]
 pydantic
 python-dotenv
-pwdlib
+pwdlib[argon2]
 pyjwt[crypto]
 requests
 scipy
