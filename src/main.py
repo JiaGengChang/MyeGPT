@@ -1,8 +1,9 @@
 import os
 import jwt
+import json
 from datetime import timedelta
 from fastapi import Depends, FastAPI, Request, HTTPException, status
-from fastapi.responses import FileResponse, StreamingResponse, JSONResponse, RedirectResponse
+from fastapi.responses import FileResponse, StreamingResponse, JSONResponse, HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi.middleware.cors import CORSMiddleware
@@ -120,7 +121,29 @@ async def register_user(user: UserCreate):
     token = generate_verification_token(user_email)
     await send_verification_email(user_email, token)
 
-    return {"message": "Please check your email for verification link."}
+    # return {"message": "A verification link has been sent to your email. Please check your spam folder."}
+    # return RedirectResponse(url="/redirect", headers={"X-Message": "A verification link has been sent to your email. Please check your spam folder."}, status_code=303)
+
+    template_path = os.path.join(app_dir, "templates", "redirect.html")
+    with open(template_path, encoding="utf-8") as template_file:
+        html = template_file.read()
+        script = f"""
+            <script>
+            document.addEventListener("DOMContentLoaded", () => {{
+            const legend = document.querySelector("legend");
+            if (legend) {{
+                legend.textContent = {json.dumps("Pending verification")};
+            }}
+            const message = document.querySelector("p#redirect-message");
+            if (message) {{
+                message.textContent = {json.dumps(f"A verification link has been sent to {user_email}. Please check your spam folder.")};
+            }}
+            }});
+            </script>
+        """
+    response = HTMLResponse(html + script)
+    return response
+
     
 
 # triggered by clicking the link in verification email
@@ -140,7 +163,28 @@ def verify_email(token: str):
         cur.execute("UPDATE auth.users SET is_verified = TRUE WHERE email = %s", (email,))
         auth_db_conn.commit()
 
-    return {"msg": "Email verified successfully. You can now log in."}
+    # return {"msg": "Email verified successfully. You can now log in."}
+    # return RedirectResponse(url="/redirect", headers={"X-Message": "Email verified successfully. You can now log in."}, status_code=303)
+    template_path = os.path.join(app_dir, "templates", "redirect.html")
+    with open(template_path, encoding="utf-8") as template_file:
+        html = template_file.read()
+        script = f"""
+            <script>
+            document.addEventListener("DOMContentLoaded", () => {{
+            const legend = document.querySelector("legend");
+            if (legend) {{
+                legend.textContent = {json.dumps("Verification successful")};
+            }}
+            const message = document.querySelector("p#redirect-message");
+            if (message) {{
+                message.textContent = {json.dumps(f"Email verified successfully. Redirecting to login page in 5 seconds or upon page refresh...")};
+            }}
+            }});
+            </script>
+        """
+    response = HTMLResponse(html + script)
+    response.headers["Refresh"] = "5; url=/"
+    return response
 
 
 # triggered by login form submission

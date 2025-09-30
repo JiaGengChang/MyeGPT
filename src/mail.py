@@ -14,7 +14,7 @@ conf = ConnectionConfig(
     USE_CREDENTIALS=True,
 )
 
-async def send_verification_email(email: str, token: str, http_prefix: str = "http://localhost:8000"):
+async def send_verification_email(email: str, token: str, http_prefix: str = "http://localhost:8080"):
     link = f"{http_prefix}/verify?token={token}"
     message = MessageSchema(
         subject="Verify your email",

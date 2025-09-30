@@ -7,8 +7,9 @@ langchain-community
 langchain-core
 langchain-experimental
 langchain-aws
-langchain-postgres
 langchain-mistralai
+langchain-openai
+langchain-postgres
 langgraph
 langgraph-checkpoint-postgres
 lifelines
