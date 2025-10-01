@@ -1,7 +1,7 @@
 from itsdangerous import URLSafeTimedSerializer
 import os
 from dotenv import load_dotenv
-assert load_dotenv(os.path.join(os.path.dirname(__file__),'.env'))
+load_dotenv(os.path.join(os.path.dirname(__file__),'.env'))
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
 SECURITY_SALT = os.environ.get("SECURITY_SALT")

@@ -1,0 +1,13 @@
+<script>
+    document.addEventListener("DOMContentLoaded", () => {{
+    const usr_eml = document.querySelector('meta[name="X-User-Email"]')?.content || 'your email';
+    const legend = document.querySelector("legend");
+    if (legend) {{
+        legend.innerHTML = `<strong>Check your inbox</strong>`;
+    }}
+    const message = document.querySelector("label");
+    if (message) {{
+        message.innerHTML = `A verification link has been sent to ${usr_eml}.<br>Please check your spam folder.`;
+    }}
+    }});
+</script>

@@ -16,10 +16,12 @@ body {
 
   .header {
     width: 80dvw;
+    max-width: var(--max-width);
     padding: 1rem 1rem 0rem 1rem;
     margin: 0 auto;
     display: flex;
-    align-items: center;
+    flex-direction: row;
+    align-items: flex-start;
     position: relative;
   }
 
@@ -28,32 +30,47 @@ body {
     flex-direction: column;
     align-items: center;
     position: relative;
-    left: 50%;
-    transform: translateX(-50%);
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .session-info {
+    position: absolute;
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
-    margin-left: auto;
+    align-items: flex-start;
   }
 
-  button[type="submit"] {
-    height: 100%;
+  .user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-left: 5px;
+  }
+
+  .command-buttons {
+    display: grid;
+  }
+
+  .command-buttons > button {
+    text-align: left;
+    height: 2em;
+  }
+
+  button {
     width: 100%;
     cursor: pointer;
-    font-size: 20px;
+    font-size: 12px;
   }
 
-  button[type="submit"]:hover {
+  button:hover {
     background-color: #333;
     color: white;
-    transform: translateY(-1px);
+    transform: translateY(-2px);
   }
 
-  button[type="submit"]:active {
-    transform: translateY(0);
+  button:active {
+    transform: translateY(0px);
   }
 
   .index {

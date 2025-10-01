@@ -95,8 +95,8 @@ async def register_with_form(request: Request):
     email = form.get("email", "").strip()
     if password != confirm_password:
         raise HTTPException(status_code=400, detail="Passwords do not match")
-    if not username or not password:
-        raise HTTPException(status_code=400, detail="Username and password are required")
+    if not (username and email and password):
+        raise HTTPException(status_code=400, detail="All fields are required")
     new_user = UserCreate(username=username, password=password, email=email)
     response = await register_user(new_user)
     return response
@@ -106,42 +106,31 @@ async def register_with_form(request: Request):
 # for use within swagger UI
 @app.post("/api/register")
 async def register_user(user: UserCreate):
+    assert os.environ.get("SERVER_BASE_URL"), "Env. variable SERVER_BASE_URL is missing"
     hashed_password = get_password_hash(user.password)
     with auth_db_conn.cursor() as cur:
         try:
             user_email = user.email if user.email.strip().__len__() > 0 else None
+            # FIXME - do not allow delete if account was created within X minutes
+            cur.execute("DELETE FROM auth.users WHERE email = %s AND is_verified = FALSE", (user_email,))
+            auth_db_conn.commit()
             cur.execute(
             "INSERT INTO auth.users (username, email, hashed_password) VALUES (%s, %s, %s)",
             (user.username, user_email, hashed_password)
             )
             auth_db_conn.commit()
         except psycopg.errors.UniqueViolation:
-            raise HTTPException(status_code=400, detail="Username already exists")
-        
+            raise HTTPException(status_code=400, detail="Username-email combination already exists")
+    
     token = generate_verification_token(user_email)
-    await send_verification_email(user_email, token)
+    await send_verification_email(user_email, token, os.environ.get("SERVER_BASE_URL"))
 
-    # return {"message": "A verification link has been sent to your email. Please check your spam folder."}
-    # return RedirectResponse(url="/redirect", headers={"X-Message": "A verification link has been sent to your email. Please check your spam folder."}, status_code=303)
+    with open("templates/redirect.html") as html_file, open("templates/pending.html") as script_file:
+        html = html_file.read()
+        script = script_file.read()
+        response = HTMLResponse(html + script)
+        response.headers["X-User-Email"] = user_email
 
-    template_path = os.path.join(app_dir, "templates", "redirect.html")
-    with open(template_path, encoding="utf-8") as template_file:
-        html = template_file.read()
-        script = f"""
-            <script>
-            document.addEventListener("DOMContentLoaded", () => {{
-            const legend = document.querySelector("legend");
-            if (legend) {{
-                legend.textContent = {json.dumps("Pending verification")};
-            }}
-            const message = document.querySelector("p#redirect-message");
-            if (message) {{
-                message.textContent = {json.dumps(f"A verification link has been sent to {user_email}. Please check your spam folder.")};
-            }}
-            }});
-            </script>
-        """
-    response = HTMLResponse(html + script)
     return response
 
     
@@ -159,31 +148,16 @@ def verify_email(token: str):
             raise HTTPException(status_code=404, detail="User not found")
         user = UserInDB(username=row[0], email=row[1], hashed_password=row[2], is_verified=row[3])
         if user.is_verified:
-            return {"msg": "Account already verified."}
+            raise HTTPException(status_code=400, detail="Account already verified.")
         cur.execute("UPDATE auth.users SET is_verified = TRUE WHERE email = %s", (email,))
         auth_db_conn.commit()
 
-    # return {"msg": "Email verified successfully. You can now log in."}
-    # return RedirectResponse(url="/redirect", headers={"X-Message": "Email verified successfully. You can now log in."}, status_code=303)
-    template_path = os.path.join(app_dir, "templates", "redirect.html")
-    with open(template_path, encoding="utf-8") as template_file:
-        html = template_file.read()
-        script = f"""
-            <script>
-            document.addEventListener("DOMContentLoaded", () => {{
-            const legend = document.querySelector("legend");
-            if (legend) {{
-                legend.textContent = {json.dumps("Verification successful")};
-            }}
-            const message = document.querySelector("p#redirect-message");
-            if (message) {{
-                message.textContent = {json.dumps(f"Email verified successfully. Redirecting to login page in 5 seconds or upon page refresh...")};
-            }}
-            }});
-            </script>
-        """
-    response = HTMLResponse(html + script)
-    response.headers["Refresh"] = "5; url=/"
+    with open("templates/redirect.html") as html_file, open("templates/verified.html") as script_file:
+        html = html_file.read()
+        script = script_file.read()
+        response = HTMLResponse(html + script)
+        response.headers["Refresh"] = "4; url=/"
+
     return response
 
 

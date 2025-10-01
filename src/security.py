@@ -1,7 +1,7 @@
 import os
 import jwt
 from dotenv import load_dotenv
-assert load_dotenv(os.path.join(os.path.dirname(__file__),'.env'))
+load_dotenv(os.path.join(os.path.dirname(__file__),'.env'))
 from psycopg import sql
 from models import UserInDB
 from pwdlib import PasswordHash
@@ -22,7 +22,6 @@ def get_password_hash(password):
     return password_hash.hash(password)
 
 
-# CREATE TABLE auth.users (username VARCHAR(12) UNIQUE NOT NULL, email VARCHAR(255), hashed_password VARCHAR(255) NOT NULL);
 def get_user(dbconn, username: str):
     with dbconn.cursor() as cur:
         query = sql.Composed([sql.SQL("SELECT username, email, hashed_password FROM auth.users WHERE username = "), sql.Literal(username)])

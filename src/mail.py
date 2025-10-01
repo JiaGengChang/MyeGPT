@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-assert load_dotenv(os.path.join(os.path.dirname(__file__),'.env'))
+load_dotenv(os.path.join(os.path.dirname(__file__),'.env'))
 from fastapi_mail import FastMail, MessageSchema, ConnectionConfig
 
 conf = ConnectionConfig(
@@ -14,8 +14,8 @@ conf = ConnectionConfig(
     USE_CREDENTIALS=True,
 )
 
-async def send_verification_email(email: str, token: str, http_prefix: str = "http://localhost:8080"):
-    link = f"{http_prefix}/verify?token={token}"
+async def send_verification_email(email: str, token: str, app_url: str = "http://localhost:8080"):
+    link = f"{app_url}/verify?token={token}"
     message = MessageSchema(
         subject="Verify your email",
         recipients=[email],

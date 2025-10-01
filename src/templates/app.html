@@ -12,16 +12,20 @@
 </head>
 <body>
   <header class="header">
+    <div class="session-info">
+      <div class="client-info">
+        <div id="username-display">👤 [username]</div>
+        <div id="ipaddress-display">🌐 [ip_address]</div>
+      </div>
+      <div class="command-buttons">
+        <button id="clear-history-button" onclick="alert('Not implemented yet')">🗑️ Erase memory ⚠️⚠️</button>
+        <button id="clear-history-button" onclick="alert('Not implemented yet')">🗑️ Clear convo ⚠️</button>
+        <button id="logout-button" onclick="if(confirm('Are you sure you want to log out?\nChat history will be cleared, although memory of the conversations will remain.')) { document.cookie = 'access_token=; Max-Age=0; path=/;'; window.location.href = '/'; }">🚪 Log Out</button>
+      </div>
+    </div>
     <div class="logo-and-title">
       <img src="/static/android-chrome-192x192.png" alt="favicon">
       <h1>MyeGPT</h1>
-    </div>
-    <div class="session-info">
-      <div class="user-details">
-        <div id="username-display">[username]</div>
-        <div id="ipaddress-display">[ip_address]</div>
-        <button id="logout-button">Logout</button>
-      </div>
     </div>
   </header>
   <div class="chat-history"></div>
@@ -31,6 +35,6 @@
       <span class="icon">↑</span>
     </button>
   </div>
-  <script src="/static/script.js"></script>
+  <script src="/static/app.js"></script>
 </body>
 </html>
