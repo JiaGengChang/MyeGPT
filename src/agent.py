@@ -1,15 +1,14 @@
 import os
 from fastapi import FastAPI
 from langchain_community.utilities import SQLDatabase
-from langgraph.checkpoint.memory import InMemorySaver
-from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
+from langchain_core.messages import HumanMessage, SystemMessage
 from langgraph.prebuilt import create_react_agent
 import uuid
 import matplotlib
 matplotlib.use('Agg') # non-interactive backend
 
 from tools import document_search_tool, convert_gene_tool, langchain_query_sql_tool, python_repl_tool, python_execute_sql_query_tool
-from utils import format_text_message, format_tool_message
+from utils import format_text_message
 
 # Create a system message for the agent
 # dynamic variables will be filled in at the start of each session
