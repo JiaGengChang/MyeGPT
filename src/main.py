@@ -101,6 +101,7 @@ async def register_with_form(request: Request):
     response = await register_user(new_user)
     return response
 
+
 # not triggered directly
 # called by register_with_form
 # for use within swagger UI
@@ -133,7 +134,6 @@ async def register_user(user: UserCreate):
 
     return response
 
-    
 
 # triggered by clicking the link in verification email
 @app.get("/verify")
