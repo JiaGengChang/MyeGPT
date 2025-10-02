@@ -1,4 +1,6 @@
 import os
+from dotenv import load_dotenv
+assert load_dotenv(os.path.join(os.path.dirname(__file__),'.env'))
 import jwt
 from datetime import timedelta
 from fastapi import Depends, FastAPI, Request, HTTPException, status
@@ -51,9 +53,6 @@ app.mount("/graph", StaticFiles(directory=graph_folder), name="graph") # serve p
 app.mount("/static", StaticFiles(directory=static_dir), name="static") # serve css/js files
 app.mount("/templates", StaticFiles(directory=templates_dir), name="templates") # serve html files
 
-# "gate" to ensure model first receives init prompt
-app.state.init_prompt_done = asyncio.Event()
-
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 # Routes
@@ -61,7 +60,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 # serve landing page
 @app.get("/")
 async def root():
-    return FileResponse("templates/index.html")
+    return FileResponse(f"{app_dir}/templates/index.html")
 
 
 # not triggered, here for OpenAPI compliance
@@ -120,12 +119,12 @@ async def register_user(user: UserCreate):
             )
             auth_db_conn.commit()
         except psycopg.errors.UniqueViolation:
-            raise HTTPException(status_code=400, detail="Username-email combination already exists")
+            raise HTTPException(status_code=400, detail="Username or email is already taken.")
     
     token = generate_verification_token(user_email)
     await send_verification_email(user_email, token, os.environ.get("SERVER_BASE_URL"))
 
-    with open("templates/redirect.html") as html_file, open("templates/pending.html") as script_file:
+    with open(f"{app_dir}/templates/redirect.html") as html_file, open(f"{app_dir}/templates/pending.html") as script_file:
         html = html_file.read()
         script = script_file.read()
         response = HTMLResponse(html + script)
@@ -151,7 +150,7 @@ def verify_email(token: str):
         cur.execute("UPDATE auth.users SET is_verified = TRUE WHERE email = %s", (email,))
         auth_db_conn.commit()
 
-    with open("templates/redirect.html") as html_file, open("templates/verified.html") as script_file:
+    with open(f"{app_dir}/templates/redirect.html") as html_file, open(f"{app_dir}/templates/verified.html") as script_file:
         html = html_file.read()
         script = script_file.read()
         response = HTMLResponse(html + script)
@@ -160,21 +159,44 @@ def verify_email(token: str):
     return response
 
 
+# triggered by clicking delete account button
+# this will remove user from auth.users and the conversation history
+@app.post("/api/delete_account")
+async def delete_account(token: Annotated[Token, Depends(login_for_access_token)]):
+    username = jwt.decode(token.access_token, SECRET_KEY, algorithms=[ALGORITHM]).get("sub")
+    with auth_db_conn.cursor() as cur:
+        try:
+            cur.execute("DELETE FROM auth.users WHERE username = %s", (username,))
+            cur.execute("DELETE FROM commpass_schema.checkpoints WHERE thread_id = %s", (username,))
+            cur.execute("DELETE FROM commpass_schema.checkpoint_writes WHERE thread_id = %s", (username,))
+            cur.execute("DELETE FROM commpass_schema.checkpoint_blobs WHERE thread_id = %s", (username,))
+            auth_db_conn.commit()
+        except:
+            raise HTTPException(status_code=500, detail="Failed to delete account")
+    return JSONResponse({"message": "Account deleted successfully."})
+
+
 # triggered by login form submission
 @app.post("/app")
 async def serve_homepage(request: Request, token: Annotated[Token, Depends(login_for_access_token)]):
-    response = FileResponse("templates/app.html")
+    # "gate" to ensure model first receives init prompt
+    app.state.init_prompt_done = asyncio.Event()
+    response = FileResponse(f"{app_dir}/templates/app.html")
     response.set_cookie(
-    key="access_token",
-    value=token.access_token,
-    httponly=False,
-    secure=False,
-    samesite="strict",
-    max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60
+        key="access_token",
+        value=token.access_token,
+        httponly=False,
+        secure=False,
+        samesite="strict",
+        max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60
     )
     username = jwt.decode(token.access_token, SECRET_KEY, algorithms=[ALGORITHM]).get("sub")
     app.state.username = username
     app.state.client_ip = request.client.host
+    with auth_db_conn.cursor() as cur:
+        cur.execute("SELECT email FROM auth.users WHERE username = %s", (username,))
+        row = cur.fetchone()
+        app.state.email = row[0] if row and row[0] else None
     if not app.state.init_prompt_done.is_set():
         asyncio.create_task(send_init_prompt(app))
     return response
@@ -187,6 +209,7 @@ async def get_init_response():
     return JSONResponse({
         "message": app.state.init_response,
         "username": app.state.username,
+        "email": app.state.email,
         "client_ip": app.state.client_ip
     })
 
@@ -200,11 +223,8 @@ async def ask(query: Query, token: Annotated[str, Depends(oauth2_scheme)]):
             yield chunk
     return StreamingResponse(generate_response(), media_type="text/plain")
 
-
 if __name__ == "__main__":
     import uvicorn
-    from dotenv import load_dotenv
-    assert load_dotenv(os.path.join(os.path.dirname(__file__),'.env'))
     uvicorn.run(
         app, 
         host="0.0.0.0", 

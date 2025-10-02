@@ -5,15 +5,15 @@ import psycopg
 
 if __name__ == "__main__":
     conn = psycopg.connect(os.environ.get("COMMPASS_DSN"))
-    address = input("Enter the IP address to clear: ")
+    thread_id = input("Enter the thread_id to clear: ")
     with conn.cursor() as curs:
-        curs.execute("DELETE FROM commpass_schema.checkpoints WHERE thread_id=%s;", (address,))
+        curs.execute("DELETE FROM commpass_schema.checkpoints WHERE thread_id=%s;", (thread_id,))
         print(curs.rowcount)
         print(curs.pgresult)
-        curs.execute("DELETE FROM commpass_schema.checkpoint_writes WHERE thread_id=%s;", (address,))
+        curs.execute("DELETE FROM commpass_schema.checkpoint_writes WHERE thread_id=%s;", (thread_id,))
         print(curs.rowcount)
         print(curs.pgresult)
-        curs.execute("DELETE FROM commpass_schema.checkpoint_blobs WHERE thread_id=%s;", (address,))
+        curs.execute("DELETE FROM commpass_schema.checkpoint_blobs WHERE thread_id=%s;", (thread_id,))
         print(curs.rowcount)
         print(curs.pgresult)
     commit = input("Commit changes? (y/n): ")

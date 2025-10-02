@@ -12,22 +12,25 @@
 </head>
 <body>
   <header class="header">
-    <div class="session-info">
-      <div class="client-info">
-        <div id="username-display">👤 [username]</div>
-        <div id="ipaddress-display">🌐 [ip_address]</div>
-      </div>
-      <div class="command-buttons">
-        <button id="clear-history-button" onclick="alert('Not implemented yet')">🗑️ Erase memory ⚠️⚠️</button>
-        <button id="clear-history-button" onclick="alert('Not implemented yet')">🗑️ Clear convo ⚠️</button>
-        <button id="logout-button" onclick="if(confirm('Are you sure you want to log out?\nChat history will be cleared, although memory of the conversations will remain.')) { document.cookie = 'access_token=; Max-Age=0; path=/;'; window.location.href = '/'; }">🚪 Log Out</button>
-      </div>
-    </div>
-    <div class="logo-and-title">
-      <img src="/static/android-chrome-192x192.png" alt="favicon">
-      <h1>MyeGPT</h1>
-    </div>
+    <h1>MyeGPT</h1>
   </header>
+  <div class="command-tray">
+    <div class="client-info">
+      <div id="username-display">👤 [username]</div>
+      <div id="email-display" hidden="true">📤 [email]</div>
+      <div id="ipaddress-display" hidden="true"">🌐 [ip_address]</div>
+    </div>
+    <div class="command-buttons">
+      <button id="erase-memory-button" onclick="alert('Coming soon')">🧠 Erase memory</button>
+      <button id="clear-convo-button" onclick="alert('Coming soon')">💬 Clear chat</button>
+      <button id="notifications-button">🔔 Disabled</button>
+      <button id="logout-button" onclick="if(confirm('Are you sure you want to log out?\nChat history will be cleared, although memory of the conversations will remain.')) { document.cookie = 'access_token=; Max-Age=0; path=/;'; window.location.href = '/'; }">🚪 Log Out</button>
+      <button id="toggle-trace" hidden="true" onclick="toggleTracePanel()">📜 Fine-grained</button>
+    </div>
+  </div>
+  <div id="trace-container">
+    <div id="trace-contents" hidden="true">Contents of trace</div>
+  </div>
   <div class="chat-history"></div>
   <div class="chat-input-container">
     <textarea class="chat-input" placeholder="Ask anything related to the CoMMpass dataset"></textarea>
@@ -36,5 +39,8 @@
     </button>
   </div>
   <script src="/static/app.js"></script>
+  <script src="/static/trace.js"></script>
+  <script src="/static/notifications.js"></script>
+  <script src="/static/ipaddress.js"></script>
 </body>
 </html>

@@ -1,11 +1,15 @@
 import os
-from fastapi import FastAPI
+import json
+from pprint import pformat
+from fastapi import FastAPI, HTTPException
 from langchain_community.utilities import SQLDatabase
-from langchain_core.messages import HumanMessage, SystemMessage
+from langchain_core.messages import HumanMessage, SystemMessage, ChatMessage, ToolMessage
 from langgraph.prebuilt import create_react_agent
 import uuid
 import matplotlib
+import psycopg
 matplotlib.use('Agg') # non-interactive backend
+import logging
 
 from tools import document_search_tool, convert_gene_tool, langchain_query_sql_tool, python_repl_tool, python_execute_sql_query_tool
 from utils import format_text_message
@@ -16,7 +20,7 @@ from utils import format_text_message
 def create_system_message() -> str:
     db_uri = os.environ.get("COMMPASS_DB_URI")
     db = SQLDatabase.from_uri(db_uri)
-    with open('prompt.txt', 'r') as f:
+    with open(f'{os.path.dirname(__file__)}/prompt.txt', 'r') as f:
         latent_system_message = f.read()
     system_message = latent_system_message.format(
         dialect=db.dialect,
@@ -55,7 +59,10 @@ async def send_init_prompt(app:FastAPI):
         checkpointer=app.state.checkpointer,
     )
     system_message = create_system_message()
-    init_response = await graph.ainvoke({"messages" :system_message}, config_init)
+    try:
+        init_response = await graph.ainvoke({"messages" :system_message}, config_init)
+    except Exception as e:
+        await handle_invalid_chat_history(app, e)
 
     # Store the init response for injection into HTML
     app.state.init_response = init_response["messages"][-1].content
@@ -74,6 +81,8 @@ def query_agent(user_input: str):
     
     for step in graph.stream({"messages": [preamble, user_message]}, config_ask, stream_mode="updates"):
         print(step)
+        pretty = json.dumps(step, indent=2, ensure_ascii=False, default=str)
+        yield pretty
         chunks = None
         if "agent" in step:
             chunks = step["agent"]["messages"][-1].content
@@ -89,3 +98,41 @@ def query_agent(user_input: str):
             else:
                 if chunks!="":
                     yield format_text_message(chunks)
+
+async def handle_invalid_chat_history(app: FastAPI, e: Exception):
+        global graph
+        global config_init
+        if "Found AIMessages with tool_calls that do not have a corresponding ToolMessage" in str(e):
+            # get the list of most recent messages from the graph state with graph.getState(config)
+            state = await graph.aget_state(config_init)
+            # modify the list of messages remove unanswered tool calls from AIMessages
+            for step in range(len(state[0]["messages"]) - 1, -1, -1):
+                msg = state[0]["messages"][step]
+                # support both dict-like and object-like messages
+                msg_type = msg.get("type") if isinstance(msg, dict) else getattr(msg, "type", None)
+                additional_kwargs = msg.get("additional_kwargs") if isinstance(msg, dict) else getattr(msg, "additional_kwargs", None)
+                if msg_type == "ai" and isinstance(additional_kwargs, dict) and "tool_calls" in additional_kwargs:
+                    logging.warning(f"Removing potential AIMessage without accompanying ToolMessage: {pformat(msg)}")
+                    break
+
+            # delete all checkpoints after offending message to attempt to reload
+            auth_db_conn = psycopg.connect(os.environ.get("COMMPASS_AUTH_DSN"))
+            with auth_db_conn.cursor() as cur:
+                cur.execute(
+                    """
+                    DELETE FROM commpass_schema.checkpoints
+                    WHERE thread_id = %s
+                        AND (metadata->>'step') IS NOT NULL
+                        AND (metadata->>'step')::int >= %s
+                    """,
+                    (app.state.username, step),
+                )
+                auth_db_conn.commit()
+            
+            state[0]["messages"] = state[0]["messages"][:step]
+            await graph.aupdate_state(config_init, state)
+
+            # resume the graph
+            await graph.ainvoke(None, config_init)
+        else:
+            raise e

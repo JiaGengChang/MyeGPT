@@ -12,7 +12,9 @@ from vectorstore import connect_store
 
 __all__ = ['convert_gene_tool', 'document_search_tool', 'langchain_query_sql_tool', 'python_repl_tool', 'python_execute_sql_query_tool']
 
-gene_annot = pd.read_csv(f'../refdata/gene_annotation.tsv', sep='\t', dtype={'Chromosome/scaffold name':'str'})
+filedir = os.path.dirname(os.path.abspath(__file__))
+
+gene_annot = pd.read_csv(f'{filedir}/../refdata/gene_annotation.tsv', sep='\t', dtype={'Chromosome/scaffold name':'str'})
 
 def convert_gene(gene_name: str):
     if gene_name.startswith("ENSG"):

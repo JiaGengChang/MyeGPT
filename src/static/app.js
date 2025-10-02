@@ -21,7 +21,7 @@ function switchMode() {
         isResponding = true;
     }
 }
-
+var intervalId;
 function create_spinner() {
     const spinnerContainer = document.createElement('div');
     spinnerContainer.classList.add('init-spinner-container');
@@ -32,12 +32,16 @@ function create_spinner() {
     spinnerMessage.classList.add('init-spinner-message');    
     
     // Timer
-    let seconds = 0;
-    setInterval(() => {
-        seconds++;
-        spinnerMessage.innerHTML = `<p>Loading chat history... (${seconds}s)<br>Please refresh if it takes over 10 seconds</p>`;
+    let seconds = 30;
+    intervalId = setInterval(() => {
+        seconds--;
+        spinnerMessage.innerHTML = `<p>Resuming session... (${seconds}s)</p>`;
+        if (seconds <= 0) {
+            clearInterval(intervalId);
+            spinnerMessage.innerHTML = `<p>Time limit exceeded<br>Consider clearing chat history<br>Please refresh page...</p>`;
+        }
     }, 1000);
-    
+
     spinnerContainer.appendChild(spinnerMessage);
     chatHistory.appendChild(spinnerContainer);
     window.spinner = spinnerContainer; // enable global access
@@ -56,7 +60,25 @@ function createBotMessage(message) {
     return botMessageContainer;
 }
 
-async function initializeChat() {
+// insert a message into trace
+function createTraceMessage(message) {
+    // first reveal the trace button if its hidden
+    const traceButton = document.getElementById('toggle-trace');
+    if (traceButton && traceButton.hidden) {
+        traceButton.hidden = false;
+    }
+    const tracePanel = document.getElementById('trace-contents');
+    if (!tracePanel) return;
+
+    const traceMessageElement = document.createElement('div');
+    traceMessageElement.classList.add('trace-message');
+    traceMessageElement.innerHTML = message.replace(/\n/g, '<br>'); 
+    tracePanel.appendChild(traceMessageElement);
+    tracePanel.scrollTop = tracePanel.scrollHeight;
+    return traceMessageElement;
+}
+
+async function initializeChat() {    
     try {
         create_spinner()
         const initResponse = await fetch('/api/init', {
@@ -67,12 +89,16 @@ async function initializeChat() {
         });
         if (!initResponse.ok) throw new Error('Failed to initialize chat');
         const response = await initResponse.json();
-        window.spinner.remove();
+        clearInterval(intervalId); // remove the countdown till refresh
+        window.spinner.remove(); // remove the loading icon
         const usernameDisplay = document.getElementById('username-display');
         usernameDisplay.textContent = `👤 ${response.username}`;
+        const emailDisplay = document.getElementById('email-display');
+        emailDisplay.textContent = `📤 ${response.email}`;
         const ipaddressDisplay = document.getElementById('ipaddress-display');
         ipaddressDisplay.textContent = `🌐 ${response.client_ip}`;
         createBotMessage(response.message);
+        new Notification("New message from MyeGPT");
     } catch (error) {
         console.error('Error initializing chat:', error);
     }
@@ -142,9 +168,20 @@ async function sendMessage() {
         while (true) {
             const { done, value } = await reader.read();
             if (done) break;
-            const chunk = decoder.decode(value);
-            const botMessageContainer = createBotMessage(chunk);
-            botMessageContainer.firstElementChild.classList.add('ai');
+            var chunk = decoder.decode(value);
+            console.log('Received chunk: ' + chunk);
+            if (chunk.includes('💬')) {
+                const lastIdx = chunk.lastIndexOf('💬');
+                if (lastIdx !== -1) {
+                    chunk = chunk.slice(start=lastIdx);
+                }
+                const botMessageContainer = createBotMessage(chunk);
+                botMessageContainer.firstElementChild.classList.add('ai');
+                // send an alert to desktop 
+                new Notification("New message from MyeGPT");
+            } else {
+                createTraceMessage(chunk);
+            }
         }
 
         } catch (error) {
