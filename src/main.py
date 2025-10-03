@@ -1,6 +1,4 @@
 import os
-from dotenv import load_dotenv
-assert load_dotenv(os.path.join(os.path.dirname(__file__),'.env'))
 import jwt
 from datetime import timedelta
 from fastapi import Depends, FastAPI, Request, HTTPException, status
@@ -225,6 +223,8 @@ async def ask(query: Query, token: Annotated[str, Depends(oauth2_scheme)]):
 
 if __name__ == "__main__":
     import uvicorn
+    from dotenv import load_dotenv
+    assert load_dotenv(os.path.join(os.path.dirname(__file__),'.env'))
     uvicorn.run(
         app, 
         host="0.0.0.0", 
