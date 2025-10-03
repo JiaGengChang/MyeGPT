@@ -34,7 +34,7 @@ body {
     margin-right: auto;
   }
 
-  .logo-and-title > h1 {
+  .header > h1 {
     margin-left: auto;
     margin-right: auto;
   }
@@ -55,7 +55,7 @@ body {
 
   .command-buttons > button {
     text-align: center;
-    height: 2em;
+    /* height: 2em; */
   }
 
   #trace-container {
@@ -107,17 +107,21 @@ body {
     transform: translateX(-30%);
     width: 30dvw;
   }
+  .login-container > h2 {
+    text-align: center;
+  }
   
   .register-container {
     transform: translateX(30%);
     width: 30dvw;
   }
+  .register-container > h2 {
+    text-align: center;
+  }
   
   @media (max-width: 767.98px) {
     .index-main-container {
       grid-template-columns: 1fr;
-      grid-template-rows: auto;
-      max-height: 60dvh;
     }
     .login-container, .register-container {
       transform: translateX(0%);

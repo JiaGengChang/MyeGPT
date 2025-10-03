@@ -21,6 +21,8 @@ function switchMode() {
         isResponding = true;
     }
 }
+
+
 var intervalId;
 function create_spinner() {
     const spinnerContainer = document.createElement('div');
@@ -63,7 +65,7 @@ function createBotMessage(message) {
 // insert a message into trace
 function createTraceMessage(message) {
     // first reveal the trace button if its hidden
-    const traceButton = document.getElementById('toggle-trace');
+    const traceButton = document.getElementById('toggle-trace-button');
     if (traceButton && traceButton.hidden) {
         traceButton.hidden = false;
     }
@@ -114,19 +116,6 @@ function getCookie(name) {
     }
 
 async function sendMessage() {
-    // Check if window width is below 768px, then remove logo
-    if (window.innerWidth < 768) {
-        //remove logo if exists
-        const headerImg = document.querySelector('.header img');
-        if (headerImg) {
-            headerImg.remove();
-        }
-        //reduce h1 font size
-        const headerH1 = document.querySelector('.header h1');
-        if (headerH1) {
-            headerH1.style.fontSize = '1.2em';
-        }
-    }
     const message = chatInput.value.trim();
     if (!message) return;
     switchMode();
