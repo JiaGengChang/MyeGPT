@@ -19,5 +19,5 @@ if (mobile) {
     const notificationBtn = document.getElementById('notifications-button');
     if (notificationBtn) notificationBtn.textContent = '🔕 Off';
     const traceBtn = document.getElementById('toggle-trace-button');
-    if (traceBtn) traceBtn.textContent = '📜';
+    if (traceBtn) traceBtn.textContent = '🔎📜';
 }
