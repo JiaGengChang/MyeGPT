@@ -24,17 +24,17 @@ body {
     align-items: flex-start;
     position: relative;
   }
+  
+  .header > h1 {
+    margin-left: auto;
+    margin-right: auto;
+  }
 
   .logo-and-title {
     display: flex;
     flex-direction: column;
     align-items: center;
     position: relative;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .header > h1 {
     margin-left: auto;
     margin-right: auto;
   }

@@ -8,6 +8,8 @@ if (mobile) {
     const headerH1 = document.querySelector('.header h1');
     if (headerH1) {
         headerH1.style.fontSize = '1.2em';
+        headerH1.style.marginLeft = 'auto';
+        headerH1.style.marginRight = 'auto';
     }
     //remove text content in command buttons
     const eraseMemBtn = document.getElementById('erase-memory-button');
