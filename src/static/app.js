@@ -34,13 +34,19 @@ function create_spinner() {
     spinnerMessage.classList.add('init-spinner-message');    
     
     // Timer
-    let seconds = 30;
+    let seconds = 0;
     intervalId = setInterval(() => {
-        seconds--;
+        seconds++;
         spinnerMessage.innerHTML = `<p>Resuming session... (${seconds}s)</p>`;
-        if (seconds <= 0) {
+        if (seconds >= 15) {
+            spinnerMessage.innerHTML = `<p>Resuming session... (${seconds}s)<br>Loading takes longer as chat history expands...</p>`;
+        }
+        if (seconds >= 30) {
+            spinnerMessage.innerHTML = `<p>Resuming session... (${seconds}s)<br>It is possible the app previously crashed.<br>Please wait as recovery is attempted...</p>`;
+        }
+        if (seconds >= 100) {
             clearInterval(intervalId);
-            spinnerMessage.innerHTML = `<p>Time limit exceeded<br>Consider clearing chat history<br>Please refresh page...</p>`;
+            spinnerMessage.innerHTML = `<p>Resuming session... (${seconds}s)<br>Time limit exceeded<br>Consider clearing chat history</p>`;
         }
     }, 1000);
 

@@ -1,9 +1,9 @@
 import os
 import json
 from pprint import pformat
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from langchain_community.utilities import SQLDatabase
-from langchain_core.messages import HumanMessage, SystemMessage, ChatMessage, ToolMessage
+from langchain_core.messages import HumanMessage, SystemMessage
 from langgraph.prebuilt import create_react_agent
 import uuid
 import matplotlib
@@ -61,11 +61,12 @@ async def send_init_prompt(app:FastAPI):
     system_message = create_system_message()
     try:
         init_response = await graph.ainvoke({"messages" :system_message}, config_init)
+        # Store the init response for injection into HTML
+        app.state.init_response = init_response["messages"][-1].content
     except Exception as e:
         await handle_invalid_chat_history(app, e)
+        app.state.init_response = "Crash recovery succeeded."
 
-    # Store the init response for injection into HTML
-    app.state.init_response = init_response["messages"][-1].content
     
     # Open the gate for queries
     app.state.init_prompt_done.set()
@@ -101,10 +102,10 @@ def query_agent(user_input: str):
 
 async def handle_invalid_chat_history(app: FastAPI, e: Exception):
         global graph
-        global config_init
+        global config_ask
         if "Found AIMessages with tool_calls that do not have a corresponding ToolMessage" in str(e):
             # get the list of most recent messages from the graph state with graph.getState(config)
-            state = await graph.aget_state(config_init)
+            state = await graph.aget_state(config_ask)
             # modify the list of messages remove unanswered tool calls from AIMessages
             for step in range(len(state[0]["messages"]) - 1, -1, -1):
                 msg = state[0]["messages"][step]
@@ -130,9 +131,9 @@ async def handle_invalid_chat_history(app: FastAPI, e: Exception):
                 auth_db_conn.commit()
             
             state[0]["messages"] = state[0]["messages"][:step]
-            await graph.aupdate_state(config_init, state)
+            await graph.aupdate_state(config_ask, state)
 
             # resume the graph
-            await graph.ainvoke(None, config_init)
+            await graph.ainvoke(None, config_ask)
         else:
             raise e
