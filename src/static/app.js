@@ -5,8 +5,6 @@ const sendButtonIcon = sendButton.querySelector('.icon');
 
 let isResponding = false;
 
-const controller = new AbortController();
-const timeoutId = setTimeout(() => controller.abort(), 30000);
 const loading_spinner_html = `<div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>`;
 
 function switchMode() {
@@ -41,12 +39,12 @@ function create_spinner() {
         if (seconds >= 15) {
             spinnerMessage.innerHTML = `<p>Resuming session... (${seconds}s)<br>Loading takes longer as chat history expands...</p>`;
         }
-        if (seconds >= 30) {
-            spinnerMessage.innerHTML = `<p>Resuming session... (${seconds}s)<br>It is possible the app previously crashed.<br>Please wait as recovery is attempted...</p>`;
+        if (seconds >= 45) {
+            spinnerMessage.innerHTML = `<p>Resuming session... (${seconds}s)<br>Taking longer than usual.<br>It is possible the app previously crashed.<br>Recovery is being attempted...</p>`;
         }
-        if (seconds >= 100) {
+        if (seconds >= 90) {
             clearInterval(intervalId);
-            spinnerMessage.innerHTML = `<p>Resuming session... (${seconds}s)<br>Time limit exceeded<br>Consider clearing chat history</p>`;
+            spinnerMessage.innerHTML = `<p>Resuming session... (${seconds}s)<br>Taking longer than usual<br>App is possibly unresponsive. Contact us or consider clearing chat history</p>`;
         }
     }, 1000);
 
