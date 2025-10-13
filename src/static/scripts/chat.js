@@ -1,7 +1,10 @@
-const sendButton = document.querySelector('.send-button');
-const chatInput = document.querySelector('.chat-input');
-const chatHistory = document.querySelector('.chat-history');
-const sendButtonIcon = sendButton.querySelector('.icon'); 
+import { getCookie } from './utils.js';
+
+
+const sendButton = document.querySelector('#send-button');
+const chatInput = document.querySelector('#chat-input');
+const chatHistory = document.querySelector('#chat-history');
+const sendButtonIcon = sendButton.querySelector('#send-icon'); 
 
 let isResponding = false;
 
@@ -112,12 +115,6 @@ async function initializeChat() {
 
 // Call on page load
 document.addEventListener('DOMContentLoaded', initializeChat);
-
-function getCookie(name) {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop().split(';').shift();
-    }
 
 async function sendMessage() {
     const message = chatInput.value.trim();

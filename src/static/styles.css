@@ -143,7 +143,7 @@ body {
     font-size: 1.5em;
   }
 
-  .chat-history {
+  #chat-history {
     width: 80dvw;
     max-width: var(--max-width);
     overflow-y: auto;
@@ -154,7 +154,7 @@ body {
     padding-bottom: 1.5dvh;
   }
 
-  .chat-message-container {
+  #chat-message-container {
     display: flex;
     width: 100%;
     margin-bottom: 10px;
@@ -194,7 +194,7 @@ body {
     overflow-y: scroll;
   }
 
-  .chat-input-container {
+  #chat-input-container {
     width: 77dvw;
     max-width: calc(var(--max-width) - 2dvw);
     display: flex;
@@ -210,7 +210,7 @@ body {
     max-height: 300px; 
   }
   
-  .chat-input {
+  #chat-input {
     background-color: #ffffff;
     border: none;
     width: 100%;
@@ -222,11 +222,11 @@ body {
     margin-bottom: 30px;
   }
 
-  .chat-input:focus {
+  #chat-input:focus {
     outline: none; 
   }
   
-  .send-button {
+  #send-button {
     width: 100%;
     position: absolute;
     right: 12px;
@@ -243,25 +243,25 @@ body {
     cursor: pointer;
   }
   
-  .send-button:hover {
+  #send-button:hover {
     background-color: #333;
   }
   
-  .send-button .icon {
+  #send-button .icon {
     font-size: 20px;
     transition: transform 0.3s ease;
   }
 
-  .chat-history::-webkit-scrollbar {
+  #chat-history::-webkit-scrollbar {
     width: 6px;
   }
   
-  .chat-history::-webkit-scrollbar-thumb {
+  #chat-history::-webkit-scrollbar-thumb {
     background-color: rgba(0, 0, 0, 0.3);
     border-radius: 3px;
   }
   
-  .chat-history::-webkit-scrollbar-track {
+  #chat-history::-webkit-scrollbar-track {
     background: transparent;
   }
 

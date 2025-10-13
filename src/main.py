@@ -42,6 +42,7 @@ app_dir = os.path.dirname(os.path.abspath(__file__))
 graph_folder = os.path.join(app_dir, 'graph')
 os.makedirs(graph_folder, exist_ok=True)
 static_dir = os.path.join(app_dir, 'static')
+scripts_dir = os.path.join(app_dir, 'static', 'scripts')
 templates_dir = os.path.join(app_dir, 'templates')
 result_folder = os.path.join(app_dir, 'result')
 os.makedirs(result_folder, exist_ok=True)
@@ -49,6 +50,7 @@ os.makedirs(result_folder, exist_ok=True)
 app.mount("/result", StaticFiles(directory=result_folder), name="result") # serve csv files
 app.mount("/graph", StaticFiles(directory=graph_folder), name="graph") # serve plotted graphs
 app.mount("/static", StaticFiles(directory=static_dir), name="static") # serve css/js files
+app.mount("/scripts", StaticFiles(directory=scripts_dir), name="scripts") # serve css/js files
 app.mount("/templates", StaticFiles(directory=templates_dir), name="templates") # serve html files
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
@@ -162,42 +164,70 @@ def verify_email(token: str):
 
 # triggered by clicking delete account button
 # this will remove user from auth.users and the conversation history
-@app.post("/api/delete_account")
-async def delete_account(token: Annotated[Token, Depends(login_for_access_token)]):
-    username = jwt.decode(token.access_token, SECRET_KEY, algorithms=[ALGORITHM]).get("sub")
+@app.delete("/api/delete_account")
+async def delete_account(token: Annotated[str, Depends(oauth2_scheme)]):
+    try:
+        await erase_memory(token)
+    except Exception as e:
+        raise e
+    username = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM]).get("sub")
     with auth_db_conn.cursor() as cur:
         try:
             cur.execute("DELETE FROM auth.users WHERE username = %s", (username,))
-            cur.execute("DELETE FROM commpass_schema.checkpoints WHERE thread_id = %s", (username,))
-            cur.execute("DELETE FROM commpass_schema.checkpoint_writes WHERE thread_id = %s", (username,))
-            cur.execute("DELETE FROM commpass_schema.checkpoint_blobs WHERE thread_id = %s", (username,))
             auth_db_conn.commit()
         except:
             raise HTTPException(status_code=500, detail="Failed to delete account")
     return JSONResponse({"message": "Account deleted successfully."})
 
 
+# triggered by clicking erase memory button
+# this will remove conversation history
+@app.delete("/api/erase_memory")
+async def erase_memory(token: Annotated[str, Depends(oauth2_scheme)]):
+    username = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM]).get("sub")
+    with auth_db_conn.cursor() as cur:
+        try:
+            cur.execute("DELETE FROM commpass_schema.checkpoints WHERE thread_id = %s", (username,))
+            cur.execute("DELETE FROM commpass_schema.checkpoint_writes WHERE thread_id = %s", (username,))
+            cur.execute("DELETE FROM commpass_schema.checkpoint_blobs WHERE thread_id = %s", (username,))
+            auth_db_conn.commit()
+        except:
+            raise HTTPException(status_code=500, detail="Failed to erase memory")
+    return JSONResponse({"message": "Memory erased successfully."})
+
+
+
 # triggered by login form submission
 @app.post("/app")
 async def serve_homepage(request: Request, token: Annotated[Token, Depends(login_for_access_token)]):
-    # "gate" to ensure model first receives init prompt
     app.state.init_prompt_done = asyncio.Event()
     response = FileResponse(f"{app_dir}/templates/app.html")
-    response.set_cookie(
-        key="access_token",
-        value=token.access_token,
-        httponly=False,
-        secure=False,
-        samesite="strict",
-        max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60
-    )
-    username = jwt.decode(token.access_token, SECRET_KEY, algorithms=[ALGORITHM]).get("sub")
-    app.state.username = username
-    app.state.client_ip = request.client.host
+    try:
+        response.set_cookie(
+            key="access_token",
+            value=token.access_token,
+            httponly=False,
+            secure=False,
+            samesite="strict",
+            max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Failed to set cookie. Error: " + str(e))
+    try:
+        # "gate" to ensure model first receives init prompt
+        username = jwt.decode(token.access_token, SECRET_KEY, algorithms=[ALGORITHM]).get("sub")
+        app.state.username = username
+        app.state.client_ip = request.client.host
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Failed to decode token. Error: " + str(e))
     with auth_db_conn.cursor() as cur:
-        cur.execute("SELECT email FROM auth.users WHERE username = %s", (username,))
-        row = cur.fetchone()
-        app.state.email = row[0] if row and row[0] else None
+        try:
+            cur.execute("SELECT email FROM auth.users WHERE username = %s", (username,))
+            row = cur.fetchone()
+            app.state.email = row[0] if row and row[0] else None
+        except Exception as e:
+            raise HTTPException(status_code=500, detail="Failed to fetch user email. Error: " + str(e))
+    
     if not app.state.init_prompt_done.is_set():
         asyncio.create_task(send_init_prompt(app))
     return response

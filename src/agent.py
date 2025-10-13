@@ -64,8 +64,12 @@ async def send_init_prompt(app:FastAPI):
         # Store the init response for injection into HTML
         app.state.init_response = init_response["messages"][-1].content
     except Exception as e:
-        await handle_invalid_chat_history(app, e)
-        app.state.init_response = "Crash recovery succeeded."
+        try:
+            await handle_invalid_chat_history(app, e)
+            app.state.init_response = "Crash recovery succeeded."
+        except Exception as e2:
+            # likely input length exceeded
+            app.state.init_response = f"Error during initialization: {e2}"
 
     
     # Open the gate for queries

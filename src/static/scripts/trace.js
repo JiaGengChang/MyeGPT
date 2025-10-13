@@ -34,3 +34,5 @@ function toggleTracePanel() {
         }
     }
 }
+
+export {toggleTracePanel};

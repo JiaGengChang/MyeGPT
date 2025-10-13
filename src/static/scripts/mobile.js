@@ -12,6 +12,8 @@ if (mobile) {
         headerH1.style.marginRight = 'auto';
     }
     //remove text content in command buttons
+    const deleteAccBtn = document.getElementById('delete-account-button');
+    if (deleteAccBtn) deleteAccBtn.textContent = '🗑️🔐';
     const eraseMemBtn = document.getElementById('erase-memory-button');
     if (eraseMemBtn) eraseMemBtn.textContent = '🗑️🧠';
     const clearConvoBtn = document.getElementById('clear-convo-button');
