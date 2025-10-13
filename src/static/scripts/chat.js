@@ -1,10 +1,10 @@
 import { getCookie } from './utils.js';
 
 
-const sendButton = document.querySelector('#send-button');
-const chatInput = document.querySelector('#chat-input');
-const chatHistory = document.querySelector('#chat-history');
-const sendButtonIcon = sendButton.querySelector('#send-icon'); 
+const sendButton = document.querySelector('button#send-button');
+const chatInput = document.querySelector('textarea#chat-input');
+const chatHistory = document.querySelector('div#chat-history');
+const sendButtonIcon = sendButton.querySelector('span#send-icon');
 
 let isResponding = false;
 
@@ -162,7 +162,8 @@ async function sendMessage() {
             console.log('Received chunk: ' + chunk);
             if (chunk.includes('💬')) {
                 const lastIdx = chunk.lastIndexOf('💬');
-                if (lastIdx !== -1) {
+                console.log('Last idx: ' + lastIdx);
+                if (lastIdx && lastIdx !== -1) {
                     chunk = chunk.slice(start=lastIdx);
                 }
                 const botMessageContainer = createBotMessage(chunk);
