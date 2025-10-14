@@ -107,7 +107,7 @@ async function initializeChat() {
         const ipaddressDisplay = document.getElementById('ipaddress-display');
         ipaddressDisplay.textContent = `🌐 ${response.client_ip}`;
         createBotMessage(response.message);
-        new Notification("New message from MyeGPT");
+        return new Notification("New message from MyeGPT");
     } catch (error) {
         console.error('Error initializing chat:', error);
     }
@@ -169,7 +169,7 @@ async function sendMessage() {
                 const botMessageContainer = createBotMessage(chunk);
                 botMessageContainer.firstElementChild.classList.add('ai');
                 // send an alert to desktop 
-                new Notification("New message from MyeGPT");
+                return new Notification("New message from MyeGPT");
             } else {
                 createTraceMessage(chunk);
             }

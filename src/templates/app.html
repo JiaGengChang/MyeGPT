@@ -19,14 +19,14 @@
       <div id="username-display">👤 [username]</div>
       <div id="email-display" hidden="true">📤 [email]</div>
       <div id="ipaddress-display" hidden="true">🌐 [ip_address]</div>
-      <button id="delete-account" hidden="true" onclick="window.appControls.deleteAccount()">🗑️ Delete account</button>
     </div>
     <div class="command-buttons">
-      <button id="delete-account-button" onclick="window.appControls.deleteAccount();">🗑️🔐 Delete account</button>
+      <button id="delete-account-button" onclick="window.appControls.deleteAccount();">🔐 Delete account</button>
       <button id="erase-memory-button" onclick="window.appControls.eraseMemory();">🧠 Erase memory</button>
       <button id="clear-convo-button" onclick="window.appControls.clearChat();">💬 Clear chat</button>
-      <button id="logout-button" onclick="window.appControls.logOut();">🚪 Log Out</button>
+      <button id="notifications-button" onclick="window.appControls.toggleNotificationBtn();">🔕 Disabled</button>
       <button id="toggle-trace-button" hidden="true" onclick="window.appControls.toggleTracePanel();">📜 Fine-grained</button>
+      <button id="logout-button" onclick="window.appControls.logOut();">🚪 Log Out</button>
     </div>
   </div>
   <div id="trace-container">

@@ -70,24 +70,24 @@ async function deleteAccount() {
     }
 }
 
-function toggleNotificationBtn () {
+function toggleNotificationBtn() {
     const notificationBtn = document.getElementById("notifications-button");
     Notification.requestPermission().then((permission) => {
         if (permission === "granted") {
             if (window.innerWidth < 768) {
-            notificationBtn.textContent = "🔔 On";
+                notificationBtn.textContent = "🔔 On";
             } else {
-            notificationBtn.textContent = "🔔 Enabled";
+                notificationBtn.textContent = "🔔 Enabled";
             }
-            new Notification("Example Notification from MyeGPT");
+            return new Notification("Example Notification from MyeGPT");
         } else {
             if (window.innerWidth < 768) {
-            notificationBtn.textContent = "🔕 Off";
+                notificationBtn.textContent = "🔕 Off";
             } else {
-            notificationBtn.textContent = "🔕 Disabled";
+                notificationBtn.textContent = "🔕 Disabled";
             }
         }
-    })
+    });
 }
 
 function toggleTracePanel() {
