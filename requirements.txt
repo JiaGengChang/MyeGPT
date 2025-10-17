@@ -1,5 +1,5 @@
 dotenv
-fastapi[standard]
+fastapi[standard-no-fastapi-cloud-cli]
 fastapi-mail
 itsdangerous
 langchain

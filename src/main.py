@@ -120,12 +120,12 @@ async def register_user(user: UserCreate):
             auth_db_conn.commit()
         except psycopg.errors.UniqueViolation:
             raise HTTPException(status_code=400, detail="Username or email is already taken.")
-    
-    try:
-        token = generate_verification_token(user_email)
-        await send_verification_email(user_email, token, os.environ.get("SERVER_BASE_URL"))
-    except Exception as e:
-        raise HTTPException(status_code=500, detail="Failed to send verification email. Error: " + str(e))
+
+    # try:
+    token = generate_verification_token(user_email)
+    await send_verification_email(user_email, token, os.environ.get("SERVER_BASE_URL"))
+    # except Exception as e:
+    #     raise HTTPException(status_code=500, detail="Failed to send verification email. Error: " + str(e))
 
     with open(f"{app_dir}/templates/redirect.html") as html_file, open(f"{app_dir}/templates/pending.html") as script_file:
         html = html_file.read()
