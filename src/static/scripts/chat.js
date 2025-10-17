@@ -164,7 +164,7 @@ async function sendMessage() {
                 const lastIdx = chunk.lastIndexOf('💬');
                 console.log('Last idx: ' + lastIdx);
                 if (lastIdx && lastIdx !== -1) {
-                    chunk = chunk.slice(start=lastIdx);
+                    chunk = chunk.slice(lastIdx);
                 }
                 const botMessageContainer = createBotMessage(chunk);
                 botMessageContainer.firstElementChild.classList.add('ai');
