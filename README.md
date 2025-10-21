@@ -22,33 +22,13 @@ https://github.com/user-attachments/assets/7a5aca54-c233-4831-8ace-6de29e6df061
 https://github.com/user-attachments/assets/fa7cb2aa-dbcc-454f-9492-5d4df8242db9
 
 
-## Project structure
+## Conferences
 
-```
-myegpt/
-├── README.md
-├── src/
-│   ├── main.py (entry point for python)
-│   ├── agent.py (function to query the agent)
-│   ├── prompt.py (system prompt)
-│   ├── dbdesc.py (database description)
-│   ├── eval.py (Langsmith evaluator)
-│   └── static/
-│       ├── index.html
-│       ├── styles.css
-│       ├── [favicon files]
-│       └── script.js
-├── refdata/
-│   └── gene_annotation.tsv
-├── schema/
-│   └── descriptions of flatfile tables
-├── Dockerfile
-├── requirements.txt
-├── create_database.py
-└── .gitignore
-```
+1. Best oral presentation in the Youth Forum for ICBBS 2025 at Xiamen, 18 October.
+[![Presentation](https://img.youtube.com/vi/pcfDr0uDm3o/hqdefault.jpg)](https://youtu.be/pcfDr0uDm3o)
+
 
 ## Acknowledgements
-- Multiple Myeloma Research Foundation (MMRF) CoMMpass (Relating Clinical Outcomes in MM to Personal Assessment of Genetic Profile) trial (NCT01454297)
-- Patients and family members who contributed to the study
-- All members of the Chng Wee Joo lab for their inputs
+- Multiple Myeloma Research Foundation (MMRF) 
+- Participants of the CoMMpass trial (NCT01454297)
+- Members of the Chng Wee Joo lab
