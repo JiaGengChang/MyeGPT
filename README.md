@@ -6,9 +6,10 @@ Designed towards smartphone browsers, it aims to accelerate hypothesis generatio
 
 <img height="800" width="536" alt="Phone site demonstration screenshot" src="https://github.com/user-attachments/assets/8ecc60f5-4d9d-4f6e-8685-0f9b557500be" />
 
-Scan the code to access it on mobile browser:
+Live version of the app can be accessed below:
 
-![qrchimpX512](https://github.com/user-attachments/assets/f45a344b-4813-4c57-9664-2e0e8bbb86fe)
+<img width="300" alt="Live app" src="https://github.com/user-attachments/assets/18c775ad-8e51-4105-a410-df310ae76f2a">
+
 
 ## Demo
 
