@@ -11,7 +11,7 @@ import psycopg
 matplotlib.use('Agg') # non-interactive backend
 import logging
 
-from tools import document_search_tool, convert_gene_tool, langchain_query_sql_tool, python_repl_tool, python_execute_sql_query_tool
+from tools import document_search_tool, convert_gene_tool, langchain_query_sql_tool, python_repl_tool, python_execute_sql_query_tool, display_plot_tool, generate_graph_filepath_tool
 from utils import format_text_message
 
 # Create a system message for the agent
@@ -55,7 +55,7 @@ async def send_init_prompt(app:FastAPI):
         )
     graph = create_react_agent(
         model=llm,
-        tools=[document_search_tool, convert_gene_tool, langchain_query_sql_tool, python_repl_tool, python_execute_sql_query_tool],
+        tools=[document_search_tool, convert_gene_tool, langchain_query_sql_tool, python_repl_tool, python_execute_sql_query_tool, generate_graph_filepath_tool, display_plot_tool],
         checkpointer=app.state.checkpointer,
     )
     system_message = create_system_message()
@@ -78,13 +78,9 @@ async def send_init_prompt(app:FastAPI):
 def query_agent(user_input: str):
     global graph
     global config_ask
-    graph_png_filename = f"graph/graph_{uuid.uuid4().hex[:8]}.png"
-    preamble = SystemMessage(f"""
-                             If a graph is created, save it as {graph_png_filename} and display with `<img src={graph_png_filename} width=100% height=auto>`.
-                             """)
     user_message = HumanMessage(content=user_input)
     
-    for step in graph.stream({"messages": [preamble, user_message]}, config_ask, stream_mode="updates"):
+    for step in graph.stream({"messages": [user_message]}, config_ask, stream_mode="updates"):
         print(step)
         pretty = json.dumps(step, indent=2, ensure_ascii=False, default=str)
         yield pretty

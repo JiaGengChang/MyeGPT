@@ -1,5 +1,5 @@
 import { getCookie } from './utils.js';
-
+import { loading_spinner_html } from './assets.js';
 
 const sendButton = document.querySelector('button#send-button');
 const chatInput = document.querySelector('textarea#chat-input');
@@ -7,8 +7,6 @@ const chatHistory = document.querySelector('div#chat-history');
 const sendButtonIcon = sendButton.querySelector('span#send-icon');
 
 let isResponding = false;
-
-const loading_spinner_html = `<div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>`;
 
 function switchMode() {
     if (isResponding) {
@@ -171,6 +169,13 @@ async function sendMessage() {
                 // send an alert to desktop 
                 return new Notification("New message from MyeGPT");
             } else {
+                const imgTagPattern = /<img([\s\S]*?)>/g;
+                const imgMatches = chunk.match(imgTagPattern);
+                if (imgMatches) {
+                    imgMatches.forEach(imgTag => {
+                        createBotMessage(imgTag);
+                    });
+                }
                 createTraceMessage(chunk);
             }
         }

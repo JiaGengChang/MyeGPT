@@ -10,7 +10,7 @@ from langchain_community.tools import QuerySQLDatabaseTool
 
 from vectorstore import connect_store
 
-__all__ = ['convert_gene_tool', 'document_search_tool', 'langchain_query_sql_tool', 'python_repl_tool', 'python_execute_sql_query_tool']
+__all__ = ['convert_gene_tool', 'document_search_tool', 'langchain_query_sql_tool', 'python_repl_tool', 'python_execute_sql_query_tool', 'generate_graph_filepath_tool', 'display_plot_html_tool']
 
 filedir = os.path.dirname(os.path.abspath(__file__))
 
@@ -76,4 +76,25 @@ document_search_tool = StructuredTool.from_function(
     func=document_search,
     name="document_search",
     description="Returns the reference manual of top K tables most relevant to the query. The query should only involve one subject, such as survival data, gene expression data, or copy number data - do not mix multiple concepts at once."
+)
+
+def generate_graph_filepath() -> str:
+    plot_file_path = f"graph/graph_{uuid.uuid4().hex[:8]}.png"
+    return plot_file_path
+
+generate_graph_filepath_tool = StructuredTool.from_function(
+    func=generate_graph_filepath,
+    name="generate_graph_filepath",
+    description="Generates a unique file path to save the plot image in PNG format."
+)
+
+def display_plot_html(file_path: str) -> str:
+    html = f"<img src={file_path} width=100% height=auto>"
+    return html
+
+# tool to plot image
+display_plot_tool = StructuredTool.from_function(
+    func=display_plot_html,
+    name="display_plot_html",
+    description="Display the plot image saved at the given file path as HTML output."
 )
