@@ -184,6 +184,11 @@ body {
     overflow-y: scroll;
   }
 
+  .chat-message.ai.image-container.links-container > a {
+    margin-right: 1em;
+    font-size: 12px;
+  }
+
   .code {
     font-family: monospace;
     font-size: 14px;

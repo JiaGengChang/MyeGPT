@@ -89,8 +89,16 @@ generate_graph_filepath_tool = StructuredTool.from_function(
 )
 
 def display_plot_html(file_path: str) -> str:
-    html = f"<img src={file_path} width=100% height=auto>"
-    return html
+    html = f"""
+    <div class=image-container>
+        <img src={file_path} width=100% height=auto>
+        <div class=links-container>
+            <a href={file_path} download>Download</a>
+            <a href={file_path} target=_blank rel=noopener noreferrer>New tab</a>
+        </div>
+    </div>
+    """
+    return html.replace('\n', '')
 
 # tool to plot image
 display_plot_tool = StructuredTool.from_function(

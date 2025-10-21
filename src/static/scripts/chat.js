@@ -16,7 +16,7 @@ function switchMode() {
     } 
     else {
         sendButtonIcon.innerHTML = loading_spinner_html;
-        sendButton.disabled = false;
+        sendButton.disabled = true;
         isResponding = true;
     }
 }
@@ -169,7 +169,7 @@ async function sendMessage() {
                 // send an alert to desktop 
                 return new Notification("New message from MyeGPT");
             } else {
-                const imgTagPattern = /<img([\s\S]*?)>/g;
+                const imgTagPattern = /<div class=image-container>([\s\S]*?)<\/div>/g;
                 const imgMatches = chunk.match(imgTagPattern);
                 if (imgMatches) {
                     imgMatches.forEach(imgTag => {
