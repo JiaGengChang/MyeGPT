@@ -4,21 +4,25 @@
 # more cost effective alternative to loading in the large static prompt at the start of every session 
 import os
 from dotenv import load_dotenv
-from langchain_mistralai import MistralAIEmbeddings
+assert load_dotenv(os.path.join(os.path.dirname(__file__),'src','.env')), "Failed to load .env file"
 from langchain_postgres import PGEngine, PGVectorStore
-
 import uuid
 from langchain_core.documents import Document
+from argparse import ArgumentParser
+from src.vectorstore import create_embedding_service
 
 # parameters
-TABLE_NAME = "vectorstore" # string
-SCHEMA_NAME = "commpass_schema" # string
-VECTOR_SIZE = 1024  # int
+SCHEMA_NAME = "document_embeddings" # previously was commpass_schema
+parser = ArgumentParser()
+parser.add_argument('--model_provider', type=str, required=True, choices=['mistral','openai','amazon'], help='Embedding model provider to use.')
+# vector length: mistral-embed: 1024, amazon titan text embed v1: 1536, openai text-embed-large: 3072
+parser.add_argument('--vector_size', type=int, required=True, help='Dimension of the embedding vectors.') 
+args = parser.parse_args(['--model_provider=amazon', '--vector_size=1536'])
+TABLE_NAME = args.model_provider
+VECTOR_SIZE = args.vector_size
 
 def main():
-    assert load_dotenv('src/.env')
     # Load the various documents
-
     with open("docs/overview.txt", "r", encoding="utf-8") as f:
         overview_content = f.read()
 
@@ -175,7 +179,7 @@ def main():
     ]
 
     # Create an embedding class instance
-    embeddings = MistralAIEmbeddings(model="mistral-embed")
+    embeddings = create_embedding_service(args.model_provider)
 
     CONNECTION_STRING = os.environ.get("COMMPASS_DB_URI")
 
