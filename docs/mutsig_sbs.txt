@@ -1,4 +1,4 @@
-Table Name: `mutsig_sbs`
+Table name: `mutsig_sbs`
 Description: Activities of Single Base Substitution (SBS) mutational signatures, derived from Whole Exome Sequencing variant calls of bone marrow plasma cell samples. SBS signatures with unknown aetiology have empty description. Fields with `SBS` names are signature activities, which are integer counts of the number of occurrences of this signature.
 column_number | name | description
 1	public_id	Patient public identifier. Last 4 digits are unique. e.g. MMRF_1234

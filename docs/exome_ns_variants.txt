@@ -1,4 +1,4 @@
-Table Name: `exome_ns_variants`
+Table name: `exome_ns_variants`
 Description: A table of non-synonymous variant calls from whole exome sequencing of bone marrow plasma cell samples.
 Below is a description of each field.
 column_number | name | description

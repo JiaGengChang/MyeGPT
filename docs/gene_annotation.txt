@@ -1,4 +1,4 @@
-Table Name: `gene_annotation`
+Table name: `gene_annotation`
 Description: Metadata of genes like their accession/identifier, their canonical name/gene symbol, and genomic coordinates (chromosome, start, and end).
 column_number | name | description
 1       gene stable id	            Index column. GENCODE accession/ENSEMBL Stable ID of the gene. string. example: ENSG00000227830.

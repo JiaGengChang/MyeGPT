@@ -1,4 +1,4 @@
-Table Name: `gatk_baf`
+Table name: `gatk_baf`
 Description: B-allele frequencies of exome segments from whole exome sequencing of bone marrow plasma cell samples. Values range from 0 (homozygous) to 0.5 (fully heterozygous). To estimate the BAF of a certain gene, the copy number of the probe with largest overlap with that gene can be used, providing there are probes with sufficient overlap with the gene (>50% of the gene's length). BAF of <0.25 can be assumed to be loss of heterozygosity (LoH).
 column_number | name | description
 1	sample	Patient sample identifier. Follows the format [PUBLIC_ID]_[VISIT_ID]_[BM=Bone Marrow/PB=Peripheral Blood]_CD138pos e.g. MMRF_1234_1_BM_CD138pos. PUBLIC_ID is MMRF_ followed by 4 random digits.

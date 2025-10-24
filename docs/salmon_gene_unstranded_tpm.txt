@@ -1,4 +1,4 @@
-Table Name: `salmon_gene_unstranded_tpm`
+Table name: `salmon_gene_unstranded_tpm`
 Description: This is a gene expression matrix that has been melted to long format. Gene expression is quantified from RNA-Sequencing data using the Salmon algorithm.
 Each row details the integer read count (`Count`) for a particular gene GENCODE accession/Ensembl stable identifier (`Gene`), patient identifier (`PUBLIC_ID`), and sample identifier (`Sample`). 
 column_number | name | description

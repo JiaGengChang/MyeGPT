@@ -1,4 +1,4 @@
-Table Name: `genome_gatk_cna`
+Table name: `genome_gatk_cna`
 Description: Copy number values of genomic segments by whole genome sequencing. To estimate the copy number of a certain gene, the copy number of the probe with largest overlap with that gene can be used, providing there are probes with sufficient overlap with the gene (>50% of the gene's length).
 column_number | name | description
 1	sample	Patient sample identifier. Follows the format [PUBLIC_ID]_[VISIT_ID]_[BM=Bone Marrow/PB=Peripheral Blood]_CD138pos e.g. MMRF_1234_1_BM_CD138pos. PUBLIC_ID is MMRF_ followed by 4 random digits.

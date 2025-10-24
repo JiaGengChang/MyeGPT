@@ -1,4 +1,4 @@
-Table Name: `canonical_ig`
+Table name: `canonical_ig`
 Description: Calls for canonical translocation events involving Immunoglobulin gene super-enhancer and the gene of interest. Events are detected by long insert, low-coverage whole genome sequencing.
 Below is a description of each field. If description is empty, do not use the column unless explicitly instructed to.
 column_number | name | description
