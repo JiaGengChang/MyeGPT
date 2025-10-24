@@ -4,6 +4,8 @@ src/*.ipynb
 src/*.png
 src/responses.json
 responses
+tuning
+embed_*.py
 eval_results.json
 rollback.py
 modify_database.py
