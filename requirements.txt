@@ -22,6 +22,7 @@ pwdlib[argon2]
 pyjwt[crypto]
 requests
 scipy
+scikit-learn
 seaborn
 statsmodels
 sqlalchemy
