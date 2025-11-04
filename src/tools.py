@@ -10,7 +10,7 @@ from langchain_community.tools import QuerySQLDatabaseTool
 
 from vectorstore import connect_store
 
-__all__ = ['convert_gene_tool', 'document_search_tool', 'langchain_query_sql_tool', 'python_repl_tool', 'python_execute_sql_query_tool', 'generate_graph_filepath_tool', 'display_plot_html_tool']
+__all__ = ['convert_gene_tool', 'gene_metadata_tool', 'document_search_tool', 'langchain_query_sql_tool', 'python_repl_tool', 'python_execute_sql_query_tool', 'generate_graph_filepath_tool', 'display_plot_html_tool']
 
 filedir = os.path.dirname(os.path.abspath(__file__))
 
@@ -29,6 +29,22 @@ convert_gene_tool = StructuredTool.from_function(
     func=convert_gene,
     name="convert_gene_name_to_accession",
     description="Convert a gene name to its corresponding GENCODE accession aka Ensembl Gene stable ID (e.g. from NSD2 to ENSG00000109685). Returns an error message if the gene name is not found or if it is not a gene name."
+)
+
+def gene_metadata(gene_id: str):
+    if not gene_id.startswith("ENSG"):
+        return f"Error: '{gene_id}' does not appear to be a valid Gene stable ID."
+    gene_info = gene_annot[gene_annot['Gene stable ID'] == gene_id]
+    if not gene_info.empty:
+        info_dict = gene_info.iloc[0].to_dict()
+        return f"Gene Metadata for {gene_id}:\n" + "\n".join([f"{key}: {value}" for key, value in info_dict.items()])
+    else:
+        return f"Error: '{gene_id}' not found in the gene annotation database."
+    
+gene_metadata_tool = StructuredTool.from_function(
+    func=gene_metadata,
+    name="get_gene_metadata",
+    description="Retrieve the metadata for a given GENCODE accession aka Ensembl Gene stable ID (e.g. ENSG00000109685). Returns an error message if the gene ID is not found or invalid. The fields returned are: Chromosome/scaffold name, Gene start (bp), Gene end (bp), Strand, Gene description, Gene name, Gene type"
 )
 
 def execute_sql_query_with_python(query: str):

@@ -11,7 +11,7 @@ import psycopg
 matplotlib.use('Agg') # non-interactive backend
 import logging
 
-from tools import document_search_tool, convert_gene_tool, langchain_query_sql_tool, python_repl_tool, python_execute_sql_query_tool, display_plot_tool, generate_graph_filepath_tool
+from tools import document_search_tool, convert_gene_tool, gene_metadata_tool, langchain_query_sql_tool, python_repl_tool, python_execute_sql_query_tool, display_plot_tool, generate_graph_filepath_tool
 from utils import format_text_message
 
 # Create a system message for the agent
@@ -55,7 +55,7 @@ async def send_init_prompt(app:FastAPI):
         )
     graph = create_react_agent(
         model=llm,
-        tools=[document_search_tool, convert_gene_tool, langchain_query_sql_tool, python_repl_tool, python_execute_sql_query_tool, generate_graph_filepath_tool, display_plot_tool],
+        tools=[document_search_tool, convert_gene_tool, gene_metadata_tool, langchain_query_sql_tool, python_repl_tool, python_execute_sql_query_tool, generate_graph_filepath_tool, display_plot_tool],
         checkpointer=app.state.checkpointer,
     )
     system_message = create_system_message()
