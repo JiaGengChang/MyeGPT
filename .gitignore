@@ -6,6 +6,7 @@ src/responses.json
 responses
 tuning
 embed_*.py
+*.sql
 eval_results.json
 rollback.py
 modify_database.py
