@@ -46,6 +46,13 @@ async def send_init_prompt(app:FastAPI):
             temperature=0.,
             max_tokens=5000, # 4096 for gpt-3.5-turbo, 10_000 for the rest
         )
+    elif model_id.startswith("claude"):
+        from langchain_anthropic import ChatAnthropic
+        llm = ChatAnthropic(
+            model=model_id,
+            temperature=0,
+            max_tokens=5000,
+        )
     else:
         from langchain_aws import ChatBedrockConverse
         llm = ChatBedrockConverse(
@@ -60,12 +67,12 @@ async def send_init_prompt(app:FastAPI):
     )
     system_message = create_system_message()
     try:
-        init_response = await graph.ainvoke({"messages" :system_message}, config_init)
+        init_response = await graph.ainvoke({"messages" : system_message}, config_init)
         # Store the init response for injection into HTML
         app.state.init_response = init_response["messages"][-1].content
-    except Exception as e:
+    except Exception as e1:
         try:
-            await handle_invalid_chat_history(app, e)
+            await handle_invalid_chat_history(app, e1)
             app.state.init_response = "Crash recovery succeeded."
         except Exception as e2:
             # likely input length exceeded
