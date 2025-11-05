@@ -217,7 +217,8 @@ async def serve_homepage(request: Request, token: Annotated[Token, Depends(login
         # "gate" to ensure model first receives init prompt
         username = jwt.decode(token.access_token, SECRET_KEY, algorithms=[ALGORITHM]).get("sub")
         app.state.username = username
-        app.state.client_ip = request.client.host
+        app.state.model_id = os.environ.get("MODEL_ID")
+        app.state.embed_model_id = os.environ.get("EMBEDDINGS_PROVIDER")
     except Exception as e:
         raise HTTPException(status_code=500, detail="Failed to decode token. Error: " + str(e))
     with auth_db_conn.cursor() as cur:
@@ -241,7 +242,8 @@ async def get_init_response():
         "message": app.state.init_response,
         "username": app.state.username,
         "email": app.state.email,
-        "client_ip": app.state.client_ip
+        "model_id": app.state.model_id,
+        "embed_model_id": app.state.embed_model_id,
     })
 
 

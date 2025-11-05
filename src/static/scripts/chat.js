@@ -102,8 +102,10 @@ async function initializeChat() {
         usernameDisplay.textContent = `👤 ${response.username}`;
         const emailDisplay = document.getElementById('email-display');
         emailDisplay.textContent = `📤 ${response.email}`;
-        const ipaddressDisplay = document.getElementById('ipaddress-display');
-        ipaddressDisplay.textContent = `🌐 ${response.client_ip}`;
+        const modelIdDisplay = document.getElementById('model-id-display');
+        modelIdDisplay.textContent = `🌐 ${response.model_id}`;
+        const embedModelProviderDisplay = document.getElementById('embed-model-provider-display');
+        embedModelProviderDisplay.textContent = `🌐 ${response.embed_model_provider}`;
         createBotMessage(response.message);
         return new Notification("New message from MyeGPT");
     } catch (error) {
@@ -167,7 +169,7 @@ async function sendMessage() {
                 const botMessageContainer = createBotMessage(chunk);
                 botMessageContainer.firstElementChild.classList.add('ai');
                 // send an alert to desktop 
-                return new Notification("New message from MyeGPT");
+                // return new Notification("New message from MyeGPT");
             } else {
                 const imgTagPattern = /<div class=image-container>([\s\S]*?)<\/div>/g;
                 const imgMatches = chunk.match(imgTagPattern);
