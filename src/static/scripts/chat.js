@@ -104,8 +104,8 @@ async function initializeChat() {
         emailDisplay.textContent = `📤 ${response.email}`;
         const modelIdDisplay = document.getElementById('model-id-display');
         modelIdDisplay.textContent = `🌐 ${response.model_id}`;
-        const embeddingsProviderDisplay = document.getElementById('embeddings-provider-display');
-        embeddingsProviderDisplay.textContent = `🌐 ${response.embeddings_provider}`;
+        const embeddingsModelIdDisplay = document.getElementById('embeddings-model-id-display');
+        embeddingsModelIdDisplay.textContent = `🌐 ${response.embeddings_model_id}`;
         createBotMessage(response.message);
         return new Notification("New message from MyeGPT");
     } catch (error) {

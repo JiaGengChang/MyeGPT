@@ -14,10 +14,10 @@ from src.vectorstore import create_embedding_service
 # parameters
 SCHEMA_NAME = "document_embeddings" # previously was commpass_schema
 parser = ArgumentParser()
-parser.add_argument('--model_provider', type=str, required=True, choices=['mistral','openai','amazon'], help='Embedding model provider to use.')
-# vector length: mistral-embed: 1024, amazon titan text embed v1: 1536, openai text-embed-large: 3072
+parser.add_argument('--model_provider', type=str, required=True, choices=['mistral','openai','gemini','amazon'], help='Embedding model provider to use.')
+# vector length: mistral-embed: 1024, amazon titan text embed v1: 1536, openai text-embed-large: 3072, gemini-embedding-001
 parser.add_argument('--vector_size', type=int, required=True, help='Dimension of the embedding vectors.') 
-args = parser.parse_args(['--model_provider=amazon', '--vector_size=1536'])
+args = parser.parse_args(['--model_provider=gemini', '--vector_size=3072'])
 TABLE_NAME = args.model_provider
 VECTOR_SIZE = args.vector_size
 
