@@ -47,14 +47,14 @@ async def main():
     eval_dataset_name = input("Enter eval dataset (options: \"test\", \"test-hard\",\"myegpt\"):")
     async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False)) as session:
         async with await session.get(
-            os.environ.get("APP_API_ENDPOINT"),
+            os.environ.get("SERVER_BASE_URL"),
         ) as _:
 
             results = []
 
             async def target(inputs: dict) -> dict:
                 async with session.post(
-                    os.path.join(os.environ.get("APP_API_ENDPOINT"),'api', 'ask'),
+                    os.path.join(os.environ.get("SERVER_BASE_URL"),'api', 'ask'),
                     headers={"Content-Type": "application/json"},
                     json={"user_input": str(inputs)},
                 ) as response:
