@@ -2,7 +2,7 @@ dotenv
 fastapi[standard-no-fastapi-cloud-cli]
 fastapi-mail
 itsdangerous
-langchain
+langchain==0.3.27
 langchain-community
 langchain-core
 langchain-experimental
