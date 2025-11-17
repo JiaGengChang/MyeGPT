@@ -16,6 +16,7 @@ langgraph
 langgraph-checkpoint-postgres
 lifelines
 matplotlib
+openevals
 pandas
 psycopg[binary,pool]
 pydantic
