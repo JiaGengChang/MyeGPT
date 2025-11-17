@@ -233,6 +233,30 @@ async def serve_homepage(request: Request, token: Annotated[Token, Depends(login
         asyncio.create_task(send_init_prompt(app))
     return response
 
+# similar to /app, triggered by eval script
+# does not require login form submission, uses string access token
+@app.post("/eval")
+async def serve_homepage(access_token: Annotated[str, Depends(oauth2_scheme)]):
+    app.state.init_prompt_done = asyncio.Event()
+    try:
+        # "gate" to ensure model first receives init prompt
+        username = jwt.decode(access_token, SECRET_KEY, algorithms=[ALGORITHM]).get("sub")
+        app.state.username = username
+        app.state.model_id = os.environ.get("MODEL_ID")
+        app.state.embeddings_model_id = os.environ.get("EMBEDDINGS_MODEL_ID")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Failed to decode token. Error: " + str(e))
+    with auth_db_conn.cursor() as cur:
+        try:
+            cur.execute("SELECT email FROM auth.users WHERE username = %s", (username,))
+            row = cur.fetchone()
+            app.state.email = row[0] if row and row[0] else None
+        except Exception as e:
+            raise HTTPException(status_code=500, detail="Failed to fetch user email. Error: " + str(e))
+    
+    if not app.state.init_prompt_done.is_set():
+        asyncio.create_task(send_init_prompt(app))
+    return
 
 # triggered by /app
 @app.post("/api/init")
