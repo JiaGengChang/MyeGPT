@@ -43,43 +43,65 @@ def scorer(inputs: dict, outputs: dict, reference_outputs: dict):
     )
     return eval_result
 
+def get_tmp_token()-> str:
+    from datetime import timedelta
+    from security import create_access_token
+    from uuid import uuid4
+    access_token_expires = timedelta(minutes=15)
+    access_token = create_access_token(
+        data={"sub": "admin"}, expires_delta=access_token_expires
+    )
+    return access_token
+
 async def main():
-    eval_dataset_name = input("Enter eval dataset (options: \"test\", \"test-hard\",\"myegpt\"):")
+    access_token = get_tmp_token()
+    eval_dataset_name = input("Enter eval dataset (options: \"test\", \"test-hard\", \"myegpt\", \"myegpt-16nov25\"):")
     async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False)) as session:
-        async with await session.get(
-            os.environ.get("SERVER_BASE_URL"),
-        ) as _:
+        try:
+            async with await session.post(
+                os.path.join(os.environ.get("SERVER_BASE_URL"),"eval"),
+                headers={
+                    "Content-Type": "application/json",
+                    "Authorization": f"Bearer {access_token}"
+                },
+            ) as _:
+            
+                results = []
 
-            results = []
+                async def target(inputs: dict) -> dict:
+                    async with session.post(
+                        os.path.join(os.environ.get("SERVER_BASE_URL"),'api', 'ask'),
+                        headers={
+                            "Content-Type": "application/json",
+                            "Authorization": f"Bearer {access_token}"
+                        },
+                        json={"user_input": str(inputs)},
+                    ) as response:
+                        html_answer = await response.text()
+                        plaintext_answer = re.sub(r'<.*?>', '', html_answer)
+                        output = {"answer": plaintext_answer}
+                        results.append({"input": inputs,
+                                        "output": output})
+                        return output
 
-            async def target(inputs: dict) -> dict:
-                async with session.post(
-                    os.path.join(os.environ.get("SERVER_BASE_URL"),'api', 'ask'),
-                    headers={"Content-Type": "application/json"},
-                    json={"user_input": str(inputs)},
-                ) as response:
-                    html_answer = await response.text()
-                    plaintext_answer = re.sub(r'<.*?>', '', html_answer)
-                    output = {"answer": plaintext_answer}
-                    results.append({"input": inputs,
-                                    "output": output})
-                    return output
-
-            await client.aevaluate(
-                target,
-                data=eval_dataset_name,
-                evaluators=[scorer],
-                max_concurrency=0,
-                num_repetitions=1,
-                experiment_prefix=eval_dataset_name,
-                metadata={
-                    'app_llm': os.environ.get("MODEL_ID"),
-                    'eval_llm': os.environ.get("EVAL_MODEL_ID"),
-                }
-            )
-
+                await client.aevaluate(
+                    target,
+                    data=eval_dataset_name,
+                    evaluators=[scorer],
+                    max_concurrency=0,
+                    num_repetitions=1,
+                    experiment_prefix=eval_dataset_name,
+                    metadata={
+                        'app_llm': os.environ.get("MODEL_ID"),
+                        'eval_llm': os.environ.get("EVAL_MODEL_ID"),
+                    }
+                )
             with open(f"../responses/{os.environ.get('LANGSMITH_PROJECT')}.json", "w") as f:
                 json.dump(results, f, indent=2)
+
+        except Exception as e:
+            print(f"Error during evaluation: {e}")
+
 
 if __name__ == "__main__":
     asyncio.run(main())
