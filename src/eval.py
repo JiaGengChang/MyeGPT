@@ -1,7 +1,7 @@
 import os
 import re
 from dotenv import load_dotenv
-assert load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
+assert load_dotenv(os.path.join(os.path.dirname(__file__), '.env_eval'))
 from langsmith import Client
 from openevals.llm import create_llm_as_judge
 from prompts import CORRECTNESS_PROMPT
