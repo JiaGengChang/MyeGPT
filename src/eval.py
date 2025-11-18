@@ -77,9 +77,9 @@ async def main():
                         },
                         json={"user_input": str(inputs)},
                     ) as response:
-                        html_answer = await response.text()
-                        plaintext_answer = re.sub(r'<.*?>', '', html_answer)
-                        output = {"answer": plaintext_answer}
+                        raw_answer = await response.text()
+                        processed_answer = re.sub(r'(?s).*?(?=💬)', '', raw_answer)
+                        output = {"answer": processed_answer}
                         results.append({"input": inputs,
                                         "output": output})
                         return output
