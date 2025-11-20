@@ -49,13 +49,17 @@ def get_tmp_token()-> str:
     from uuid import uuid4
     access_token_expires = timedelta(minutes=15)
     access_token = create_access_token(
-        data={"sub": "admin"}, expires_delta=access_token_expires
+        data={"sub": os.environ.get("EVAL_USERNAME")}, expires_delta=access_token_expires
     )
     return access_token
 
 async def main():
     access_token = get_tmp_token()
-    eval_dataset_name = input("Enter eval dataset (options: \"test\", \"test-hard\", \"myegpt\", \"myegpt-16nov25\"):")
+    eval_dataset_name = os.environ.get("EVAL_DATASET_NAME")
+    if eval_dataset_name:
+        print(f"Using eval dataset: {eval_dataset_name}")
+    else:
+        eval_dataset_name = input("Select eval dataset (options: \"test\", \"test-hard\", \"myegpt\", \"myegpt-16nov25\"):")
     async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False)) as session:
         try:
             async with await session.post(
@@ -86,7 +90,7 @@ async def main():
 
                 await client.aevaluate(
                     target,
-                    data=eval_dataset_name,
+                    data=client.list_examples(dataset_name=eval_dataset_name, splits=["medium"]),
                     evaluators=[scorer],
                     max_concurrency=0,
                     num_repetitions=1,
