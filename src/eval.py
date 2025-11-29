@@ -46,7 +46,6 @@ def scorer(inputs: dict, outputs: dict, reference_outputs: dict):
 def get_tmp_token()-> str:
     from datetime import timedelta
     from security import create_access_token
-    from uuid import uuid4
     access_token_expires = timedelta(minutes=15)
     access_token = create_access_token(
         data={"sub": os.environ.get("EVAL_USERNAME")}, expires_delta=access_token_expires
