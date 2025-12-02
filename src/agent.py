@@ -37,29 +37,38 @@ async def send_init_prompt(app:FastAPI):
 
     #  initialize the chat model
     model_id = os.environ.get("MODEL_ID")
+    
     if not model_id:
         raise ValueError("MODEL_ID environment variable is not set")
     elif model_id.startswith("gpt-"):
-        from langchain_openai import ChatOpenAI
-        llm = ChatOpenAI(
+        from langchain_openai import ChatOpenAI as ChatModel
+    elif model_id.startswith("claude"):
+        from langchain_anthropic import ChatAnthropic as ChatModel
+    elif model_id.startswith("gemini"):
+        from langchain_google_genai import ChatGoogleGenerativeAI as ChatModel
+    elif model_id.startswith("apac."):
+        from langchain_aws import ChatBedrockConverse as ChatModel
+    else:
+        raise ValueError(f"Unsupported MODEL_ID prefix in {model_id}")
+    
+    try:
+        # Google, Claude, OpenAI use "model" parameter
+        llm = ChatModel(
             model=model_id,
             temperature=0.,
-            max_tokens=5000, # 4096 for gpt-3.5-turbo, 10_000 for the rest
-        )
-    elif model_id.startswith("claude"):
-        from langchain_anthropic import ChatAnthropic
-        llm = ChatAnthropic(
-            model=model_id,
-            temperature=0,
             max_tokens=5000,
         )
-    else:
-        from langchain_aws import ChatBedrockConverse
-        llm = ChatBedrockConverse(
-            model_id=os.environ.get("MODEL_ID"),
-            temperature=0.,
-            max_tokens=5000, # 4096 for claude-3-haiku, 10_000 for the rest
-        )
+    except Exception as e:
+        # AWS Bedrock uses "model_id" parameter
+        try: 
+            llm = ChatModel(
+                model_id=model_id,
+                temperature=0.,
+                max_tokens=5000,
+            )
+        except Exception as e:
+            raise ValueError(f"Failed to initialize chat model with MODEL_ID {model_id}: {e}")
+    
     graph = create_react_agent(
         model=llm,
         tools=[document_search_tool, convert_gene_tool, gene_metadata_tool, langchain_query_sql_tool, python_repl_tool, python_execute_sql_query_tool, generate_graph_filepath_tool, display_plot_tool],

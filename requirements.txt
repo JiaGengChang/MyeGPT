@@ -11,10 +11,12 @@ langchain-anthropic
 langchain-mistralai
 langchain-openai
 langchain-postgres
+langchain-google-genai
 langgraph
 langgraph-checkpoint-postgres
 lifelines
 matplotlib
+openevals
 pandas
 psycopg[binary,pool]
 pydantic
