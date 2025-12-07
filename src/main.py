@@ -1,9 +1,8 @@
 import os
 from fastapi import FastAPI
-from fastapi.responses import StreamingResponse, JSONResponse
+from fastapi.responses import StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
-import asyncio 
 import psycopg
 import uuid
 
