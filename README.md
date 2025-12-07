@@ -7,7 +7,7 @@ Designed towards smartphone browsers, it aims to accelerate hypothesis generatio
 <img height="800" width="536" alt="Phone site demonstration screenshot" src="https://github.com/user-attachments/assets/8ecc60f5-4d9d-4f6e-8685-0f9b557500be" />
 
 
-## Demo
+# Demo
 
 1. Text-based query
 
@@ -21,14 +21,82 @@ https://github.com/user-attachments/assets/7a5aca54-c233-4831-8ace-6de29e6df061
 
 https://github.com/user-attachments/assets/fa7cb2aa-dbcc-454f-9492-5d4df8242db9
 
+# Setup
+## Pre-requisite 1. Database
 
-## Conferences
+1. Server with PostgreSQL 17.5, with firewall disabled for port `5432`
+
+2. A publicly accessible IPv4 address or domain name
+
+3. Python 3.13 installed on local machine
+
+4. Email repo maintainer for the data folders, namely `refdata`, `omicdata` and `clindata`. These contain flatfiles that will be used to build the database.
+
+Instructions
+
+1. Install requirements.txt e.g., `pip install -r requirements.txt`
+
+1. Populate `.env` file with the `COMMPASS_DB_URI` variable and place it in the `src` folder
+
+2. Run database creation utility
+
+    `cd [MYEGPT-HOME-DIRECTORY]`
+
+    `python create_database.py`
+
+    This script takes ~2 hours due to the large number of entries for gene expression matrix.
+
+3. This will create a database named `commpass`.
+
+## Pre-requisite 2. Mail server
+
+1. Create an email server which the application can use to send emails with. 
+
+    This is needed for email verification as part of account registration. 
+
+    I use Ionos mail because my domain is registered with them. 
+
+2. Provide the following variables in the `.env` file
+    ```
+    MAIL_USERNAME=[admin@your-domain-or-ip-address.com]
+    MAIL_PASSWORD=[your-mail-server-password]
+    MAIL_FROM=[admin@your-domain-or-ip-address.com]
+    MAIL_PORT=587
+    MAIL_SERVER=[your.mail.server.provider.com]
+    ```
+
+## Build and deploy
+
+The following terminal commands have only been tested on MacOS Sequioa 15.5
+
+1. Install docker desktop (https://docs.docker.com/desktop/)
+
+2. Build the application
+
+    `docker build -t [your-container-name]:[your-tag-name]` 
+
+    Example `docker build -t myegpt:latest`.
+
+3. Populate `.env` file with your API keys/secrets and place it in the `src` folder
+
+5. Launch the application
+
+    `cd [MYEGPT-HOME-DIRECTORY]`
+    
+    `docker run --env-file src/.env -p 8080:8080 [your-container-name]:[your-tag-name]`
+
+6. Navigate browser to application address
+    
+    Either http://localhost:8000 or http://127.0.0.1:8080
+
+
+# Publicity
 
 1. Best oral presentation in the Youth Forum for ICBBS 2025 at Xiamen, 18 October.
 [![Presentation](https://img.youtube.com/vi/pcfDr0uDm3o/hqdefault.jpg)](https://youtu.be/pcfDr0uDm3o)
 
 
-## Acknowledgements
+# Acknowledgements
 - Multiple Myeloma Research Foundation (MMRF) 
 - Participants of the CoMMpass trial (NCT01454297)
 - Members of the Chng Wee Joo lab
