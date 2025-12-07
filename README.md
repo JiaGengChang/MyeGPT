@@ -65,6 +65,30 @@ Instructions
     MAIL_SERVER=[your.mail.server.provider.com]
     ```
 
+## Pre-requisite 3. LLM/Embedding provider
+
+1. Create and fund a developer account with the following supported LLM providers
+
+    1. OpenAI
+
+    2. Anthropic Claude
+
+    3. Google Gemini AI
+
+    4. AWS (need to enable the Bedrock service)
+
+2. Create a developer account with following embedding service providers
+
+    1. OpenAI
+
+    2. MistralAI
+
+    3. AWS (need to enable the Bedrock service)
+
+    4. Google Gemini AI
+
+3. For path of least resistance, opt for OpenAI for both LLM and text embedding
+
 ## Build and deploy
 
 The following terminal commands have only been tested on MacOS Sequioa 15.5
