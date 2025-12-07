@@ -4,8 +4,8 @@ from pprint import pformat
 from fastapi import FastAPI
 from langchain_community.utilities import SQLDatabase
 from langchain_core.messages import HumanMessage, SystemMessage
+from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.prebuilt import create_react_agent
-import uuid
 import matplotlib
 import psycopg
 matplotlib.use('Agg') # non-interactive backend
@@ -72,7 +72,7 @@ async def send_init_prompt(app:FastAPI):
     graph = create_react_agent(
         model=llm,
         tools=[document_search_tool, convert_gene_tool, gene_metadata_tool, langchain_query_sql_tool, python_repl_tool, python_execute_sql_query_tool, generate_graph_filepath_tool, display_plot_tool],
-        checkpointer=app.state.checkpointer,
+        checkpointer=InMemorySaver(),
     )
     system_message = create_system_message()
     try:
@@ -86,10 +86,7 @@ async def send_init_prompt(app:FastAPI):
         except Exception as e2:
             # likely input length exceeded
             app.state.init_response = f"Error during initialization: {e2}"
-
     
-    # Open the gate for queries
-    app.state.init_prompt_done.set()
 
 def query_agent(user_input: str):
     global graph

@@ -21,13 +21,4 @@ def format_text_message(message) -> str:
         content = message.get('text', '')
     else:
         content = str(message)
-    
-    # Detect if the content contains tool results (e.g., text within [ ])
-    if re.search(r"\[\(.*?\)\]", content) or re.search(r"The top \d+ table\(s\) with best match:", content):
-        # scrollable div to reduce clutter
-        content = f'<div class="scrollable_tool_result">{content}</div>'
-        formatted = f"🛠️ Tool result: {content}"
-    else:
-        formatted = f"💬 {content}"
-
-    return formatted
+    return content

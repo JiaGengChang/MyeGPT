@@ -43,31 +43,7 @@ def scorer(inputs: dict, outputs: dict, reference_outputs: dict):
     )
     return eval_result
 
-async def clear_eval_memory(session, access_token: str):
-    try:
-        print('Attempting to clear user memory of eval user:',os.environ.get("EVAL_USERNAME"))
-        await session.delete(
-            os.path.join(os.environ.get("SERVER_BASE_URL"), "api", "erase_memory"),
-            headers={
-                "Content-Type": "application/json",
-                "Authorization": f"Bearer {access_token}"
-            }
-        )
-    except Exception as e:
-        print(f"Unable to erase memory of eval user: {e}")
-    print("Successfully cleared eval user memory.")
-
-def get_tmp_token()-> str:
-    from datetime import timedelta
-    from security import create_access_token
-    access_token_expires = timedelta(minutes=15)
-    access_token = create_access_token(
-        data={"sub": os.environ.get("EVAL_USERNAME")}, expires_delta=access_token_expires
-    )
-    return access_token
-
 async def main():
-    access_token = get_tmp_token()
     eval_dataset_name = os.environ.get("EVAL_DATASET_NAME")
     if eval_dataset_name:
         print(f"Using eval dataset: {eval_dataset_name}")
@@ -75,48 +51,35 @@ async def main():
         eval_dataset_name = input("Select eval dataset (options: \"test\", \"test-hard\", \"myegpt\", \"myegpt-16nov25\"):")
     async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False)) as session:
         try:
-            if os.environ.get("CLEAR_EVAL_MEMORY") == "true":
-                await clear_eval_memory(session, access_token)
-            else:
-                print("Skipping eval user memory clearance.")
-            async with await session.post(
-                os.path.join(os.environ.get("SERVER_BASE_URL"),"eval"),
-                headers={
-                    "Content-Type": "application/json",
-                    "Authorization": f"Bearer {access_token}"
-                },
-            ) as _:
-            
-                results = []
+            results = []
 
-                async def target(inputs: dict) -> dict:
-                    async with session.post(
-                        os.path.join(os.environ.get("SERVER_BASE_URL"),'api', 'ask'),
-                        headers={
-                            "Content-Type": "application/json",
-                            "Authorization": f"Bearer {access_token}"
-                        },
-                        json={"user_input": str(inputs)},
-                    ) as response:
-                        raw_answer = await response.text()
-                        processed_answer = re.sub(r'(?s).*?(?=💬)', '', raw_answer)
-                        output = {"answer": processed_answer}
-                        results.append({"input": inputs,
-                                        "output": output})
-                        return output
+            async def target(inputs: dict) -> dict:
+                async with session.post(
+                    os.path.join(os.environ.get("SERVER_BASE_URL"),'api', 'ask'),
+                    headers={
+                        "Content-Type": "application/json",
+                    },
+                    json={"user_input": str(inputs)},
+                ) as response:
+                    raw_answer = await response.text()
+                    processed_answer = re.sub(r'(?s).*?(?=💬)', '', raw_answer)
+                    output = {"answer": processed_answer}
+                    results.append({"input": inputs,
+                                    "output": output})
+                    return output
 
-                await client.aevaluate(
-                    target,
-                    data=client.list_examples(dataset_name=eval_dataset_name, splits=[os.environ.get("EVAL_SPLIT")]),
-                    evaluators=[scorer],
-                    max_concurrency=0,
-                    num_repetitions=1,
-                    experiment_prefix=os.environ.get("LANGSMITH_PROJECT"),
-                    metadata={
-                        'app_llm': os.environ.get("MODEL_ID"),
-                        'eval_llm': os.environ.get("EVAL_MODEL_ID"),
-                    }
-                )
+            await client.aevaluate(
+                target,
+                data=client.list_examples(dataset_name=eval_dataset_name, splits=[os.environ.get("EVAL_SPLIT")]),
+                evaluators=[scorer],
+                max_concurrency=0,
+                num_repetitions=1,
+                experiment_prefix=os.environ.get("LANGSMITH_PROJECT"),
+                metadata={
+                    'app_llm': os.environ.get("MODEL_ID"),
+                    'eval_llm': os.environ.get("EVAL_MODEL_ID"),
+                }
+            )
             with open(f"../responses/{os.environ.get('LANGSMITH_PROJECT')}.json", "w") as f:
                 json.dump(results, f, indent=2)
 
