@@ -15,7 +15,7 @@ conf = ConnectionConfig(
 )
 
 async def send_verification_email(email: str, token: str, app_url: str = "http://localhost:8080"):
-    link = f"{app_url}/verify?token={token}"
+    link = os.path.join(app_url, f"verify?token={token}")
     message = MessageSchema(
         subject="Verify your email",
         recipients=[email],
