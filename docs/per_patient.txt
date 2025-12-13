@@ -37,8 +37,8 @@ column_number | name | description
 49	d_pt_iss	ISS (International staging system), or cancer stage. integer. Code: 1 = Stage I, 2 = Stage II, 3 = Stage III.
 51	demog_heightunitofm	Italy: Height unit
 52	demog_weightunitofm	Italy: Weight unit
-53	d_pt_issstage_char
-54	d_pt_issstage	
+53	d_pt_issstage_char  Do not use for ISS.
+54	d_pt_issstage	Do not use for ISS.
 55	creatinine	Creatinine level
 56	ecog	Baseline ECOG performance status
 57	sct_elig	Stem cell transplant (SCT) eligible flag
