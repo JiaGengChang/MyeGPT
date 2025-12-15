@@ -126,6 +126,8 @@ def upload_table_genome_gatk_cna():
     df = df.set_index('SAMPLE')
 
     df['Segment_Copy_Number_Status'] = df['Segment_Mean'].apply(segment_copy_number)
+    # rename End to End_bp to avoid conflict with SQL reserved word
+    df = df.rename(columns={'Start': 'Start_bp', 'End': 'End_bp'})
 
     print(df.head())
     # Upload to the database
@@ -298,11 +300,17 @@ def change_lowercase_column_names():
         conn.commit()
         print("Column names changed to lowercase successfully.")
 
+def grant_select_privileges_to_client():
+    with engine.connect() as conn:
+        conn.execute(text("GRANT SELECT ON ALL TABLES IN SCHEMA public TO client;"))
+        conn.commit()
+        print("Granted SELECT privileges to client successfully.")
+
 if __name__ == "__main__":
     import os
     from dotenv import load_dotenv
     assert load_dotenv('src/.env')
-    db_uri = os.environ.get("COMMPASS_DB_URI")
+    db_uri = os.environ.get("COMMPASS_DB_URI_DEV")
     engine = create_engine(db_uri)
 
     with engine.connect() as conn:
@@ -310,24 +318,25 @@ if __name__ == "__main__":
         result = conn.execute(text("SELECT version();"))
         print(result.fetchone())
         # upload tables
-        upload_table_per_patient()
-        upload_table_per_patient_visit()
-        upload_table_stand_alone_survival()
-        upload_table_stand_alone_treatment_regimen()
-        upload_table_stand_alone_trtresp()
-        upload_table_salmon_gene_unstranded_counts()
-        upload_table_salmon_gene_unstranded_tpm()
+        # upload_table_per_patient()
+        # upload_table_per_patient_visit()
+        # upload_table_stand_alone_survival()
+        # upload_table_stand_alone_treatment_regimen()
+        # upload_table_stand_alone_trtresp()
+        # upload_table_salmon_gene_unstranded_counts()
+        # upload_table_salmon_gene_unstranded_tpm()
         upload_table_genome_gatk_cna()
-        upload_table_gene_annotation()
-        upload_table_exome_NS_variants()
-        upload_table_canonical_ig()
-        upload_table_wgs_fish()
-        upload_table_sbs()
-        upload_table_chromothripsis()
-        upload_table_gep_scores()
-        upload_table_baf()
-        upload_table_hgnc()
+        # upload_table_gene_annotation()
+        # upload_table_exome_NS_variants()
+        # upload_table_canonical_ig()
+        # upload_table_wgs_fish()
+        # upload_table_sbs()
+        # upload_table_chromothripsis()
+        # upload_table_gep_scores()
+        # upload_table_baf()
+        # upload_table_hgnc()
         # rename all fields to lowercase
         change_lowercase_column_names()
+        grant_select_privileges_to_client()
         exit()
 
