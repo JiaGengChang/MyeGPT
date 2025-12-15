@@ -141,7 +141,7 @@ def max_overlapping_segment(gene_stable_id):
     # sort by overlap length between probe and gene
     #  PROBE =====1    |     =====2 |  =====3         |           ====4  |     ===5       |  ==========6
     #  GENES   =====1  |  =====2    |          ====3  |  =====4          |  ===========5. |.    ====6
-    conn = psycopg.connect(os.environ.get("COMMPASS_DSN","dbname=commpass user=client password=ilovecommpass host=db.myegpt.com port=5432"))
+    conn = psycopg.connect(os.environ.get("COMMPASS_DSN"))
     with conn.cursor() as curs:
         curs.execute('SELECT * FROM genome_gatk_cna WHERE chromosome = %s', (gc,))
         result = curs.fetchall()
