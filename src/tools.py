@@ -226,6 +226,7 @@ def get_cox_regression_base_data(endpoint='os'):
         df_clin['D_PT_iss'] = df_clin['D_PT_iss'].map({1: 'I',2: 'II', 3: 'III'})
         df_clin['D_PT_gender'] = df_clin['D_PT_gender'].astype(pd.CategoricalDtype())
         df_clin['D_PT_iss'] = df_clin['D_PT_iss'].astype(pd.CategoricalDtype())
+        df_clin = pd.get_dummies(df_clin, columns=['D_PT_gender','D_PT_iss'], drop_first=True)
         df_cph_template = df_surv.merge(df_clin, on='PUBLIC_ID')
         df_cph_template.to_csv(f'result/cox_dataset_template_{endpoint}.csv', index=False)
 
