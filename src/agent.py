@@ -5,13 +5,12 @@ from fastapi import FastAPI
 from langchain_community.utilities import SQLDatabase
 from langchain_core.messages import HumanMessage, SystemMessage
 from langgraph.prebuilt import create_react_agent
-import uuid
 import matplotlib
 import psycopg
 matplotlib.use('Agg') # non-interactive backend
 import logging
 
-from tools import document_search_tool, convert_gene_tool, gene_metadata_tool, gene_level_copy_number_tool, langchain_query_sql_tool, python_repl_tool, python_execute_sql_query_tool, display_plot_tool, generate_graph_filepath_tool
+from tools import document_search_tool, convert_gene_tool, gene_metadata_tool, gene_level_copy_number_tool, cox_regression_base_data_tool, langchain_query_sql_tool, python_repl_tool, python_execute_sql_query_tool, display_plot_tool, generate_graph_filepath_tool
 from utils import format_text_message
 
 # Create a system message for the agent
@@ -32,8 +31,8 @@ def create_system_message() -> str:
 async def send_init_prompt(app:FastAPI):
     global graph
     global config_ask
-    config_init = {"configurable": {"thread_id": app.state.username, "recursion_limit": 5}} # init configuration
-    config_ask = {"configurable": {"thread_id": app.state.username, "recursion_limit": 50}} # ask configuration
+    config_init = {"thread_id": app.state.username, "recursion_limit": 5} # init configuration
+    config_ask = {"thread_id": app.state.username, "recursion_limit": 50} # ask configuration
 
     #  initialize the chat model
     model_id = os.environ.get("MODEL_ID")
@@ -71,7 +70,7 @@ async def send_init_prompt(app:FastAPI):
     
     graph = create_react_agent(
         model=llm,
-        tools=[document_search_tool, convert_gene_tool, gene_metadata_tool, gene_level_copy_number_tool, langchain_query_sql_tool, python_repl_tool, python_execute_sql_query_tool, generate_graph_filepath_tool, display_plot_tool],
+        tools=[document_search_tool, convert_gene_tool, gene_metadata_tool, gene_level_copy_number_tool, cox_regression_base_data_tool, langchain_query_sql_tool, python_repl_tool, python_execute_sql_query_tool, generate_graph_filepath_tool, display_plot_tool],
         checkpointer=app.state.checkpointer,
     )
     system_message = create_system_message()

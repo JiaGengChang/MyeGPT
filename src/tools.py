@@ -10,8 +10,6 @@ from langchain_community.tools import QuerySQLDatabaseTool
 
 from vectorstore import connect_store
 
-__all__ = ['convert_gene_tool', 'gene_metadata_tool', 'document_search_tool', 'langchain_query_sql_tool', 'python_repl_tool', 'python_execute_sql_query_tool', 'generate_graph_filepath_tool', 'display_plot_html_tool']
-
 filedir = os.path.dirname(os.path.abspath(__file__))
 
 gene_annot = pd.read_csv(f'{filedir}/../refdata/gene_annotation.tsv', sep='\t', dtype={'Chromosome/scaffold name':'str'})
@@ -198,4 +196,47 @@ gene_level_copy_number_tool = StructuredTool.from_function(
     func=max_overlapping_segment,
     name="get_gene_level_copy_number_data",
     description="Retrieve the gene-level copy number data for a given GENCODE accession aka Ensembl Gene stable ID. Returns the path to a csv file of a pandas dataframe with index as public_id, columns as sample, chromosome, start_bp, end_bp, num_probes, segment_mean, visit, segment_copy_number_status, and overlap_len. The variables related to copy number are 1. segment_mean, which is the log2 fold-change of the probe, and 2. segment_copy_number_status, which is the categorical copy number status (-2, -1, 0, +1, or +2). Example input: ENSG00000143621, example output: public_id=MMRF_1016, sample=MMRF_1016_1_BM_CD138pos, chromosome=chr1, start_bp=149053976, end_bp=155975058, num_probes=700, segment_mean=0.499688, visit=1, segment_copy_number_status=1, overlap_len=46319."
+)
+
+def get_cox_regression_base_data(endpoint='os'):
+    # input: endpoint: 'os' or 'pfs' 
+    # output: None except printed statement
+    # behavior: 
+    # saves a template dataset for Cox PH regression analysis to result/cox_dataset_template_{endpoint}.csv
+    # this csv file contains PUBLIC ID, survival time, censoring status, age, ISS (I, II, III), and gender (Male, Female)
+    # ... which are the common covariates used in Cox PH regression with variable of interest
+    import os
+    import psycopg
+    import pandas as pd
+    conn = psycopg.connect(os.environ.get("COMMPASS_DSN"))
+    with conn.cursor() as curs:
+        if endpoint == 'os':
+            curs.execute(f'SELECT PUBLIC_ID, oscdy, censos FROM stand_alone_survival WHERE censos is not null')
+        elif endpoint == 'pfs':
+            curs.execute(f'SELECT PUBLIC_ID, pfscdy, censpfs FROM stand_alone_survival WHERE censpfs is not null')
+
+        else:
+            raise ValueError('endpoint must be os or pfs')
+        result = curs.fetchall()
+        df_surv = pd.DataFrame(result, columns=['PUBLIC_ID', endpoint+'cdy', 'cens'+endpoint])
+        curs.execute('SELECT PUBLIC_ID, D_PT_age, D_PT_gender, D_PT_iss FROM per_patient')
+        result = curs.fetchall()
+        df_clin = pd.DataFrame(result, columns=['PUBLIC_ID', 'D_PT_age', 'D_PT_gender', 'D_PT_iss'])
+        df_clin['D_PT_gender'] = df_clin['D_PT_gender'].map({1: 'Male',2: 'Female'})
+        df_clin['D_PT_iss'] = df_clin['D_PT_iss'].map({1: 'I',2: 'II', 3: 'III'})
+        df_clin['D_PT_gender'] = df_clin['D_PT_gender'].astype(pd.CategoricalDtype())
+        df_clin['D_PT_iss'] = df_clin['D_PT_iss'].astype(pd.CategoricalDtype())
+        df_cph_template = df_surv.merge(df_clin, on='PUBLIC_ID')
+        df_cph_template.to_csv(f'result/cox_dataset_template_{endpoint}.csv', index=False)
+
+    print(f'Saved template dataset containing PUBLIC ID, {endpoint}, age, ISS, gender columns to result/cox_dataset_template_{endpoint}.csv')
+
+cox_regression_base_data_tool = StructuredTool.from_function(
+    func=get_cox_regression_base_data,
+    name="get_cox_regression_base_data",
+    description="""
+    Retrieve a template dataset for Cox PH regression analysis for a given endpoint ('os' or 'pfs'). Returns the path to a csv file containing PUBLIC ID, survival time, censoring status, age, ISS, and gender columns. 
+    Example input: os
+    Example output: result/cox_dataset_template_os.csv
+    Use scenario: When the user requests for survival regression of their feature of interest alongside common covariates like age, sex, and ISS, call this function to obtain the table for age, sex, ISS, and the right-censored survival data. You can then merge their feature(s) of interest with this table."""
 )
