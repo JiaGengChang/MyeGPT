@@ -1,0 +1,17 @@
+Table name: `stand_alone_survival`
+Description: Right-censored survival information of each patient (overall survival; OS, progression free survival; PFS) as well as various treatment lines and treatment responses (disease progression). PFS by treatment line is also available.
+Format: column_number | field_name | description
+# Identifier columns
+1|public_id|Index column. Patient public identifier. MMRF_ followed by 4 unique digits. e.g. MMRF_1234
+# Miscellaneous data columns
+2|deathdy|Date of Death
+3|lstalive|Last known alive
+4|lvisitdy|Last Visit Date from D_VISIT
+50|vis6mo|Has at least 6 mo of visit data
+51|vis12mo|Has at least 12 mo of visit data
+52|comp1|Completed at least one assessment
+80|lastdy|Last date on study
+214|mmstatus|MM status (derived)
+215|mmstatus1|Line 1 MM status (derived)
+216|mmstatus2|Line 2 MM status (derived)
+217|mmstatus3|Line 3 MM status (derived)

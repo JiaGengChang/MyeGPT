@@ -19,7 +19,7 @@ parser.add_argument('--model_provider', type=str, required=True, choices=['mistr
 # vector length: mistral-embed: 1024, amazon titan text embed v1: 1536, openai text-embed-large: 3072, gemini-embedding-001
 parser.add_argument('--vector_size', type=int, required=True, help='Dimension of the embedding vectors.')
 parser.add_argument('--table_suffix', type=str, default=None, help='Suffix to append to the table names.')
-args = parser.parse_args(['--model_provider=openai', '--vector_size=3072', '--table_suffix=v21.12.25']) # example args for testing
+args = parser.parse_args(['--model_provider=mistral', '--vector_size=1024', '--table_suffix=v21.12.25']) # example args for testing
 TABLE_NAME = args.model_provider + (args.table_suffix if args.table_suffix else "")
 VECTOR_SIZE = args.vector_size
 

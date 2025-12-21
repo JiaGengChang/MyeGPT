@@ -1,0 +1,26 @@
+Table name: `stand_alone_survival`
+Description: Right-censored survival information of each patient (overall survival; OS, progression free survival; PFS) as well as various treatment lines and treatment responses (disease progression). PFS by treatment line is also available.
+Format: column_number | field_name | description
+# Identifier columns
+1|public_id|Index column. Patient public identifier. MMRF_ followed by 4 unique digits. e.g. MMRF_1234
+# Data columns related to start and end dates of treatment lines
+5|maxline|Lines of therapy
+6|linesdy1|Start date of line 1
+7|linesdy2|Start date of line 2
+8|linesdy3|Start date of line 3
+9|linesdy4|Start date of line 4
+10|linesdy5|Start date of line 5
+11|lineedy1|End date of line 1
+12|lineedy2|End date of line 2
+13|lineedy3|End date of line 3
+14|lineedy4|End date of line 4
+15|lineedy5|End date of line 5
+16|trtedy1|Last date of treatment line 1
+17|trtedy2|Last date of treatment line 2
+18|trtedy3|Last date of treatment line 3
+19|trtedy4|Last date of treatment line 4
+20|trtedy5|Last date of treatment line 5
+81|trtsdy|First date of treatment
+82|trtedy|Last date of treatment
+218|trtstdy|First trt start date
+219|fltendy|First Line of Therapy End date

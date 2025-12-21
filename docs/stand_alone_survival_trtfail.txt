@@ -1,0 +1,28 @@
+Table name: `stand_alone_survival`
+Description: Right-censored survival information of each patient (overall survival; OS, progression free survival; PFS) as well as various treatment lines and treatment responses (disease progression). PFS by treatment line is also available.
+Format: column_number | field_name | description
+# Identifier columns
+1|public_id|Index column. Patient public identifier. MMRF_ followed by 4 unique digits. e.g. MMRF_1234
+# Fields related to treatment failure, data only available for first 3 lines of treatment
+149|trtfdy1|Line 1 treatment failure date
+150|tttf1|Line 1 time to treatment failure
+151|censtf1|Line 1 censor flag: time to treatment failure
+152|tf1cdy|Line 1 treatment failure censored date
+153|ttctf1|Line 1 time to treatment failure (censored)
+154|tttf1w|Line 1 time to treatment failure (wk)
+155|ttctf1w|Line 1 time to treatment failure (censored) (wk)
+156|trtfdy2|Line 2 treatment failure date
+157|tttf2|Line 2 time to treatment failure
+158|censtf2|Line 2 censor flag: time to treatment failure
+159|tf2cdy|Line 2 treatment failure censored date
+160|ttctf2|Line 2 time to treatment failure (censored)
+161|tttf2w|Line 2 time to treatment failure (wk)
+162|ttctf2w|Line 2 time to treatment failure (censored) (wk)
+163|trtfdy3|Line 3 treatment failure date
+164|tttf3|Line 3 time to treatment failure
+165|censtf3|Line 3 censor flag: time to treatment failure
+166|tf3cdy|Line 3 treatment failure censored date
+167|ttctf3|Line 3 time to treatment failure (censored)
+168|tttf3w|Line 3 time to treatment failure (wk)
+169|ttctf3w|Line 3 time to treatment failure (censored) (wk)
+223|ttfendy|Time to treatment fail Event or Censor Date

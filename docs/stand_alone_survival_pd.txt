@@ -1,0 +1,41 @@
+Table name: `stand_alone_survival`
+Description: Right-censored survival information of each patient (overall survival; OS, progression free survival; PFS) as well as various treatment lines and treatment responses (disease progression). PFS by treatment line is also available.
+Format: column_number | field_name | description
+# Identifier columns
+1|public_id|Index column. Patient public identifier. MMRF_ followed by 4 unique digits. e.g. MMRF_1234
+# Data columns related to disease progression (PD) that occurs in each treatment line, if any, and PD across all lines
+53|pdflag1|Flag if patient had a PD line 1
+54|pdflag2|Flag if patient had a PD line 2
+55|pdflag3|Flag if patient had a PD line 3
+56|pdflag4|Flag if patient had a PD line 4
+57|pdflag5|Flag if patient had a PD line 5
+58|pdflag9|Flag if patient had a PD line 9
+59|lastdy1|last date on line 1
+60|lastdy2|last date on line 2
+61|lastdy3|last date on line 3
+62|lastdy4|last date on line 4
+63|lastdy5|last date on line 5
+64|lastdy9|last date on line 9
+65|pddy1|Date of PD line 1
+66|pddy2|Date of PD line 2
+67|pddy3|Date of PD line 3
+68|pddy4|Date of PD line 4
+69|pddy5|Date of PD line 5
+70|pddy9|Date of PD line 9
+71|lpddy1|Line 1 last PD date
+72|lpddy2|Line 2 last PD date
+73|lpddy3|Line 3 last PD date
+74|lpddy4|Line 4 last PD date
+75|lpddy5|Line 5 last PD date
+76|lpddy9|Line 9 last PD date
+78|lpddy|Last PD date
+77|pddy|First PD date
+79|pdflag|Flag if patient had a PD
+83|ttfpd|Time to first PD
+84|ttfpdw|Time to first PD (wk)
+85|ttfpd1|Time to first PD line 1
+86|ttfpd1w|Time to first PD (wk) line 1
+87|ttfpd2|Time to first PD line 2
+88|ttfpd2w|Time to first PD (wk) line 2
+89|ttfpd3|Time to first PD line 3
+90|ttfpd3w|Time to first PD (wk) line 3

@@ -1,0 +1,48 @@
+Table name: `stand_alone_survival`
+Description: Right-censored survival information of each patient (overall survival; OS, progression free survival; PFS) as well as various treatment lines and treatment responses (disease progression). PFS by treatment line is also available.
+Format: column_number | field_name | description
+# Identifier columns
+1|public_id|Index column. Patient public identifier. MMRF_ followed by 4 unique digits. e.g. MMRF_1234
+# Data columns related to treatment response or failure
+21|bestresp|Best overall response
+22|brespdy|Date of best overall response
+# Fields related to first response (FR) to the line.  A score from 1 (poorest response) to 6 (best response).
+23|fresp|First response
+24|lineresp|Line of FR
+25|frespdy|Date of FR
+26|fstresp1|Line 1 FR
+27|fstresp2|Line 2 FR
+28|fstresp3|Line 3 FR
+29|fstresp4|Line 4 FR
+30|fstresp5|Line 5 FR
+31|fstresp9|Line 9 FR
+32|frespdy1|Line 1 date of FR
+33|frespdy2|Line 2 date of FR
+34|frespdy3|Line 3 date of FR
+35|frespdy4|Line 4 date of FR
+36|frespdy5|Line 5 date of FR
+37|frespdy9|Line 9 date of FR
+125|ttfrsp|Time to first response
+126|censfrsp|Censor flag: first response
+127|frspcdy|First response date (censored)
+128|ttcfrsp|Time to first response (censored)
+129|ttfrspw|Time to first response (wk)
+130|ttcfrspw|Time to first response (censored) (wk)
+131|ttfrsp1|Time to first response line 1
+132|censfrsp1|Line 1 censor flag: first response
+133|frsp1cdy|Line 1 first response date (censored)
+134|ttcfrsp1|Time to first response (censored) line 1
+135|ttfrsp1w|Time to first response (wk) line 1
+136|ttcfrsp1w|Time to first response (censored) (wk) line 1
+137|ttfrsp2|Time to first response line 2
+138|censfrsp2|Line 2 censor flag: first response
+139|frsp2cdy|Line 2 first response date (censored)
+140|ttcfrsp2|Time to first response (censored) line 2
+141|ttfrsp2w|Time to first response (wk) line 2
+142|ttcfrsp2w|Time to first response (censored) (wk) line 2
+143|ttfrsp3|Time to first response line 3
+144|censfrsp3|Line 3 censor flag: first response
+145|frsp3cdy|Line 3 first response date (censored)
+146|ttcfrsp3|Time to first response (censored) line 3
+147|ttfrsp3w|Time to first response (wk) line 3
+148|ttcfrsp3w|Time to first response (censored) (wk) line 3
