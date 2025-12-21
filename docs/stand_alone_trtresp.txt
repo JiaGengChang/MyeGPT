@@ -2,7 +2,7 @@ Table name: `stand_alone_trtresp`
 Description: Treatment response data of each patient.
 Format: column_number|field_name|description
 # Identifier column
-1|public_id|Patient public identifier. Last 4 digits are unique. e.g. MMRF_1234
+1|public_id|Index column. Patient public identifier. MMRF_ followed by 4 unique digits. e.g. MMRF_1234
 # Treatment and treatment response fields
 2|line|Line of therapy
 3|trtname|Treatment name (e.g. Dexamethasone, Bortezomib/Carfilzomib/Lenalidomide/Cyclophosphamide/Dexamethasone)
