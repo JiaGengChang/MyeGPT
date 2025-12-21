@@ -1,0 +1,16 @@
+Table name: `per_patient`
+Description: A table containing general patient-level information such as clinical and demographic background of the patients. Also contains patient-level information on treatment type, stem cell transplant, ISS stage, risk markers, and death-related info.
+Format: column_number|column_name|description
+# Identifier field
+1|public_id|Index column. Patient public identifier. MMRF_ followed by 4 unique digits. e.g. MMRF_1234
+# Fields related to treatment response or disease progression (PD). This is just a patient-level summary, for more detailed information on treatment response, it is best to use the `stand_alone_trtresp` table.
+81|d_pt_pddy|date of PD (progression of disease)
+82|d_pt_pdflag|Has at least one PD
+83|d_pt_ttfpdw|Time to first PD (weeks)
+84|d_pt_respdur|Duration of first response
+85|d_pt_mmstatus|MM status(derived)
+86|d_pt_mmstatus1|MM status(derived) Line 1
+87|d_pt_mmstatus2|MM status(derived) Line 2
+88|d_pt_mmstatus3|MM status(derived) Line 3
+89|d_pt_rapd|Rapid responder flag
+90|d_pt_dresp|Derived response assessment

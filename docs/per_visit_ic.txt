@@ -1,0 +1,30 @@
+Table name: `per_visit`
+Description: Clinical data obtained from each visit made by a patient. Each patient has multiple visits throughout the treatment journey and  results for each visit are recorded here. If column description is missing, avoid using it unless explicitly asked to.
+column_number | column_name | column_description
+# Identifier columns
+1|public_id|Index column. Patient public identifier. MMRF_ followed by 4 unique digits. e.g. MMRF_1234
+3|visit|A unique number assigned to the visit. e.g. 1 means first visit at which diagnosis was made.
+5|visitdy|Day of Visit counting from day of diagnosis
+# Fields related to informed consent ("ic_")
+124|ic_dayofinforme|Date of Informed Consent
+125|ic_dayofvisit|Date of visit
+126|ic_dayuniversal|Date Universal Consent signed
+127|ic_didthepatient|Did the patient meet all eligibility requirements for this study?
+128|ic_hasthepatient|The patient has signed the Universal Informed Consent
+129|ic_ifyespleasepr|If yes, please provide Date of Informed Consent
+130|ic_involvedfreel|Involved free light chain level >= to 10 mg/dl and an abnormal serum free light chain ratio (<0.26 or >1.65)
+131|ic_ipermitmysamp|I permit my Samples and correlating health information to be stored at the MMRF Longitudinal Study Biobank and MMRF Databank, respectively, and used by the MMRF, other organizations and researchers fo
+132|ic_ipermitmysamp2|I permit my Samples and correlating health information to be used by the MMRF, other organizations and researchers in the Study and future research to learn about, prevent, or treat any other disorder
+133|ic_ipermitresear|I permit researchers at the facility to contact me in the future for an update on my status, or to discuss potential studies which may be appropriate for me
+134|ic_nomorethan30d|No more than 30 days from baseline bone marrow evaluation as per this protocol to initiation of first-line therapy.
+135|ic_othreason|Other reason for ineligibility?
+136|ic_participatepss|Has the patient agreed to participate in the Patient Support Services
+137|ic_patienthadano|Patient had another malignancy within the last 5 years (except for basal or squamous cell carcinoma, or in situ cancer of the cervix).
+138|ic_patienthasrea|Patient has read, understood and signed informed consent.
+139|ic_patientisalre|Patient is already receiving systemic therapy for MM (a single dose of bisphosphonates and up to 100 mg total dose of dexamethasone or equivalent corticosteroids are permitted prior to registration on
+140|ic_patientisatle|Patient is at least 18 years old
+141|ic_patientisenro|Patient is enrolled in a blinded clinical trial for the first-line treatment of multiple myeloma. Patients may be enrolled in subsequent clinical trials as long as continued access to data and tissue,
+142|ic_serummprotein|Serum M protein >= to 1g/dl IC_THEPATIENTISA="The patient is a candidate for systemic therapy that includes anIMiD® (e.g., lenalidomide, pomalidomide, thalidomide) and/orproteasome inhibitor (e.g., bortezomib, carfilzomib) as part of theinitia"
+143|ic_thepatientisa|The patient is a candidate for systemic therapy that includes an IMiDÂ® (e.g., lenalidomide, pomalidomide, thalidomide) and/or proteasome inhibitor (e.g., bortezomib, carfilzomib) as part of the initia
+144|ic_urinemprotein|Urine M protein >= to 200 mg/24 hrs
+145|ic_wasthispatien2|Was this patient previously consented for this study?

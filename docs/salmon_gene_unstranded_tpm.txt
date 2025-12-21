@@ -1,8 +1,9 @@
 Table name: `salmon_gene_unstranded_tpm`
-Description: This is a gene expression matrix that has been melted to long format. Gene expression is quantified from RNA-Sequencing data using the Salmon algorithm.
-Each row details the integer read count (`Count`) for a particular gene GENCODE accession/Ensembl stable identifier (`Gene`), patient identifier (`PUBLIC_ID`), and sample identifier (`Sample`). 
-column_number | name | description
-1	public_id	Index column. Patient public identifier. Last 4 digits are unique. e.g. MMRF_1021
-2   gene        Index column. GENCODE accession/ENSEMBL Stable ID of the gene. string. example: ENSG00000227830.
-3	sample_id	Patient sample identifier. Follows the format [PUBLIC_ID]_[VISIT_ID]_[BM=Bone Marrow/PB=Peripheral Blood]_CD138pos e.g. MMRF_1024_2_BM_CD138pos
-4   tpm   Number of reads mapping to the transcript of the gene, per million reads. It is derived from counts by normalizing the read counts to transcripts per million (TPM), and is preferred over raw read counts for cross-sample comparisons. e.g. 0.1744079999999999 
+Description: This is a gene expression matrix that has been melted to long format. Gene expression is quantified from RNA-Sequencing data using the Salmon algorithm. Each row details the integer read count (`Count`) for a particular gene GENCODE accession/Ensembl stable identifier (`Gene`), patient identifier (`PUBLIC_ID`), and sample identifier (`Sample`). 
+Format: column_number | field name | description
+# Identifier columns
+1|public_id|Index column. Patient public identifier. Last 4 digits are unique. e.g. MMRF_1021
+2|gene|Index column. GENCODE accession/ENSEMBL Stable ID of the gene. string. example: ENSG00000227830.
+3|sample_id|Patient sample identifier. Follows the format [PUBLIC_ID]_[VISIT_ID]_[BM=Bone Marrow/PB=Peripheral Blood]_CD138pos e.g. MMRF_1024_2_BM_CD138pos
+# Gene expression data field
+4|tpm|Number of reads mapping to the transcript of the gene, per million reads. It is derived from counts by normalizing the read counts to transcripts per million (TPM), and is preferred over raw read counts for cross-sample comparisons. e.g. 0.1744079999999999 

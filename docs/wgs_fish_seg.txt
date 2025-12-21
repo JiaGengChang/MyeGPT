@@ -1,0 +1,65 @@
+Table name: `wgs_fish`
+Description: Contains FISH segment mean/log2 ratio and integer copy number statuses for various genes and chromosome arms, such as 1q21, 17p13, RB1, and TP53. Rows starting with SeqWGS_Cp represents a FISH probe value for a patient in integer copy number statuses (-2, -1, 0, +1, or +2), with 2 exceptions: 1. SeqWGS_Cp_Hyperdiploid_Chr_Count indicates the number of hyperdiploid chromosomes detected in that sample. 2. SeqWGS_Cp_Hyperdiploid_Call column indicates whether the sample is hyperdiploid (1) or not (0). The remaining columns are ordinary copy number statuses. Rows starting with SeqWGS_SegmentMean represent the mean log ratio of the probe values.
+Format: column_number|name|description
+# Identifier fields
+1|public_id|Index column. Patient public identifier. MMRF_ followed by 4 unique digits. e.g. MMRF_1234
+2|sample|Patient sample identifier. Follows the format [PUBLIC_ID]_[VISIT_ID]_[BM=Bone Marrow/PB=Peripheral Blood]_CD138pos e.g. MMRF_1024_2_BM_CD138pos
+62|visit|A unique number assigned to the visit. e.g. 1 means first visit.
+# Fields related to copy number segment mean. This is a scalar value representing the average signal across all probes in that segment (genomic position), typically a chromosome band or gene. Also known as mean log2 ratio.
+3|seqwgs_segmentmean_10p14|10p14
+4|seqwgs_segmentmean_10q23|10q23
+5|seqwgs_segmentmean_11p15|11p15
+6|seqwgs_segmentmean_11q23|11q23
+7|seqwgs_segmentmean_12p13|12p13
+8|seqwgs_segmentmean_12q21|12q21
+9|seqwgs_segmentmean_13q14|13q14
+10|seqwgs_segmentmean_13q34|13q34
+11|seqwgs_segmentmean_14q23|14q23
+12|seqwgs_segmentmean_15q15|15q15
+13|seqwgs_segmentmean_15q26|15q26
+14|seqwgs_segmentmean_16p12|16p12
+15|seqwgs_segmentmean_16q22|16q22
+16|seqwgs_segmentmean_17p13|17p13
+17|seqwgs_segmentmean_17q23|17q23
+18|seqwgs_segmentmean_18p11|18p11
+19|seqwgs_segmentmean_18q21|18q21
+20|seqwgs_segmentmean_19p13|19p13
+21|seqwgs_segmentmean_19q13|19q13
+22|seqwgs_segmentmean_1p22|1p22
+23|seqwgs_segmentmean_1q21|1q21
+24|seqwgs_segmentmean_20p12|20p12
+25|seqwgs_segmentmean_20q13|20q13
+26|seqwgs_segmentmean_21q21|21q21
+27|seqwgs_segmentmean_21q22|21q22
+28|seqwgs_segmentmean_22q13|22q13
+29|seqwgs_segmentmean_2p23|2p23
+30|seqwgs_segmentmean_2q22|2q22
+31|seqwgs_segmentmean_3p22|3p22
+32|seqwgs_segmentmean_3q21|3q21
+33|seqwgs_segmentmean_4p15|4p15
+34|seqwgs_segmentmean_4q31|4q31
+35|seqwgs_segmentmean_5p15|5p15
+36|seqwgs_segmentmean_5q31|5q31
+37|seqwgs_segmentmean_6p22|6p22
+38|seqwgs_segmentmean_6q25|6q25
+39|seqwgs_segmentmean_7p14|7p14
+40|seqwgs_segmentmean_7q22|7q22
+41|seqwgs_segmentmean_8p22|8p22
+42|seqwgs_segmentmean_8q24|8q24
+43|seqwgs_segmentmean_9p13|9p13
+44|seqwgs_segmentmean_9q33|9q33
+45|seqwgs_segmentmean_bcma|BCMA gene
+46|seqwgs_segmentmean_bircs|BIRCs gene
+47|seqwgs_segmentmean_cdkn2c|CDKN2C gene
+48|seqwgs_segmentmean_cyld|CYLD gene
+49|seqwgs_segmentmean_fam46c|FAM46C gene
+50|seqwgs_segmentmean_fcrl5|FCRL5 gene
+51|seqwgs_segmentmean_gprc5d|GPRC5D gene
+52|seqwgs_segmentmean_myc|MYC gene
+53|seqwgs_segmentmean_rb1|RB1 gene
+54|seqwgs_segmentmean_tp53|TP53 gene
+55|seqwgs_segmentmean_traf2|TRAF2 gene
+56|seqwgs_segmentmean_traf3|TRAF3 gene
+57|seqwgs_segmentmean_utx|UTX gene
+58|seqwgs_segmentmean_xp11|Xp11
+59|seqwgs_segmentmean_xq22|Xq22

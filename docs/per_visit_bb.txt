@@ -1,0 +1,16 @@
+Table name: `per_visit`
+Description: Clinical data obtained from each visit made by a patient. Each patient has multiple visits throughout the treatment journey and results for each visit are recorded here. If column description is Ignore, do not use the column.
+Format: column_number|column_name|column_description
+# Identifier columns
+1|public_id|Index column. Patient public identifier. MMRF_ followed by 4 unique digits. e.g. MMRF_1234
+3|visit|A unique number assigned to the visit. e.g. 1 means first visit at which diagnosis was made.
+5|visitdy|Day of Visit counting from day of diagnosis
+# Bone-marrow biopsy ("bb_")
+48|bb_reasonforproc|Reason for procedure e.g., screening/baseline.
+49|bb_cellularity2 Bone marrow percentage cellularity, secondary assessment
+50|bb_percentofplas|Percent of plasma cells
+51|bb_wasabonemarro|Was a bone marrow biopsy performed since the last study visit?
+52|bb_dayofcollect|Date of collection
+53|bb_wasbiopsyspec|Was biopsy specimen adequate for cellularity?
+54|bb_ifnopleasespe|If biopsy specimen not adequate for cellularity, specify
+55|bb_cellularity|Bone marrow percentage cellularity, main assessment

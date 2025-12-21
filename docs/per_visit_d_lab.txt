@@ -1,0 +1,31 @@
+Table name: `per_visit`
+Description: Clinical data obtained from each visit made by a patient. Each patient has multiple visits throughout the treatment journey and results for each visit are recorded here. If column description is Ignore, do not use the column.
+Format: column_number | column_name | column_description
+# Identifier columns
+1|public_id|Index column. Patient public identifier. MMRF_ followed by 4 unique digits. e.g. MMRF_1234
+3|visit|A unique number assigned to the visit. e.g. 1 means first visit at which diagnosis was made.
+5|visitdy|Day of Visit counting from day of diagnosis
+# Derived laboratory biochemistry values:
+291|d_lab_cbc_abs_neut|Absolute Neutrophil count x10^9/L
+292|d_lab_chem_albumin|Albumin (g/L)
+293|d_lab_chem_bun|Blood Urea Nitrogen (mmol/L)
+294|d_lab_chem_calcium|Calcium (mmol/L)
+295|d_lab_chem_creatinine|Serum Creatinine (umol/L)
+296|d_lab_chem_glucose|Glucose (mmol/L)
+297|d_lab_cbc_hemoglobin|Hemogobin (mmol/L
+298|d_lab_serum_kappa|Serum Kappa (mg/dL)
+299|d_lab_chem_ldh|LDH (ukat/L)
+300|d_lab_serum_m_protein|Serum M Protein (g/dL)
+301|d_lab_cbc_platelet|Platelet count x10^9/L
+302|d_lab_chem_totprot|Total Protein (g/dL)
+303|d_lab_cbc_wbc|White Blood Count  x10^9/L
+304|d_lab_serum_iga|Serum IgA (g/L)
+305|d_lab_serum_igg|Serum IgG (g/L)
+306|d_lab_serum_igm|Serum IgM (g/L)
+307|d_lab_serum_beta2_microglobulin|Beta 2 Microglobulin (mcg/mL)
+308|d_lab_serum_lambda|Serum Lambda (mg/dL)
+309|d_lab_urine_24hr_m_protein|24 hr Urine M Protein (g/24 hr)
+310|d_lab_urine_24hr_total_protein|24 hr Urine Total Protein (g/24 hr)
+311|d_lab_serum_c_reactive_protein|C-Reactive Protein (mg/dL)
+312|d_lab_serum_igd|Serum IgD (mg/L)
+313|d_lab_serum_ige|Serum IgE (mg/L)

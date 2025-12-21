@@ -1,0 +1,10 @@
+Table name: `per_visit`
+Description: Clinical data obtained from each visit made by a patient. Each patient has multiple visits throughout the treatment journey and results for each visit are recorded here. If column description is Ignore, do not use the column.
+Format: column_number|column_name|column_description
+# Identifier columns
+1|public_id|Index column. Patient public identifier. MMRF_ followed by 4 unique digits. e.g. MMRF_1234
+3|visit|A unique number assigned to the visit. e.g. 1 means first visit at which diagnosis was made.
+5|visitdy|Day of Visit counting from day of diagnosis
+# After treatment checkup (at_; "Checked" means yes):
+7|at_wasanassessme|Was an assessment of treatment response performed since the last study visit?
+8|at_responseasses|Day (since baseline) the response assessment was done.

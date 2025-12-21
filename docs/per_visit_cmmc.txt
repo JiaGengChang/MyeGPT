@@ -1,0 +1,17 @@
+Table name: `per_visit`
+Description: Clinical data obtained from each visit made by a patient. Each patient has multiple visits throughout the treatment journey and results for each visit are recorded here. If column description is Ignore, do not use the column.
+Format: column_number | column_name | column_description
+# Identifier columns
+1|public_id|Index column. Patient public identifier. MMRF_ followed by 4 unique digits. e.g. MMRF_1234
+3|visit|A unique number assigned to the visit. e.g. 1 means first visit at which diagnosis was made.
+5|visitdy|Day of Visit counting from day of diagnosis
+# Circulating multiple myeloma cell ("cmmc_"):
+365	cmmc_visit_name	Reason for CMMC appointment e.g., follow up, Screening, Restaging, Baseline, Post-transplant, Remission/Response, Relapse/progression
+366	cmmc_comments	Additional remarks left by clinician. Unstructured field.
+367	cmmc	Number of circulating multiple myeloma cells detected from blood lab test. A positive integer or zero.
+368	cmmc_reasonforproc	Reason for counting the cells e.g., post-transplant, confirm progression, Confirm response, Restaging disease
+369	cmmc_bone_specify2	Additional remarks left by clinician. Unstructured field.
+371	cmmc_crhit	Complete remission confirmed based on circulating MM cell count.
+372	cmmc_pdhit	Progression of disease confirmed based on circulating MM cell count.
+373	cmmc_hit	Either complete remission or progression of disease hit.
+374	cmmc_recdy	Day relative to diagnosis was the cell count done. A negative number means the test was done prior to diagnosis.

@@ -1,0 +1,31 @@
+Table name: `per_patient`
+Description: A table containing general patient-level information such as clinical and demographic background of the patients. Also contains patient-level information on treatment type, stem cell transplant, ISS stage, risk markers, and death-related info.
+Format: column_number|column_name|description
+# Identifier field
+1|public_id|Index column. Patient public identifier. MMRF_ followed by 4 unique digits. e.g. MMRF_1234
+# Fields related to the time and type of treatment or stem cell transplant received. This is just a patient-level overview, for detailed info on treatment regimen, it is better to use the `stand_alone_treatment_regimen` table instead.
+22|d_pt_trtstdy|Treatment Start Date
+57|sct_elig|Stem cell transplant (SCT) eligible flag
+58|thercat|Therapy category
+59|d_pt_therclass|Therapy classification
+60|d_pt_therfstn|Therapy first treatment coded
+61|d_pt_therclassn|Therapy classification code
+62|thercatn|Therapy category coded
+63|d_pt_maxline|Lines of therapy
+64|ftrttrpl|Triplet as first treatment regimen flag
+65|sct_bresp|SCT prior to overall best response flag
+66|line1sct|SCT during first line of therapy flag
+67|sctline|First SCT line of therapy
+68|prescttrt|Treatment prior to first SCT
+69|presctst|Start date of pre-SCT treatment
+70|prescten|End date of pre-SCT treatment
+71|fstsctdy|Date of first SCT
+72|bmtx_type|First transplant type
+73|sctflag|Stem Cell Transplant (SCT) flag
+74|sct1stf|SCT within first line of therapy
+75|mainttrt|Treatment following first SCT
+76|maintstdy|Treatment start date following stem cell transplant (Maintenance Start Date)
+77|maintendy|Treatment end date following stem cell transplant (Maintenance End Date)
+78|maintday|Duration of post-SCT maintenance treatment
+79|maintflag|Flag for subjects that were on maintenance at any time (1=Within 1 year, 2=after a year)
+80|maint1stf|Flag for subjects that were on maintenance during the first line of therapy (1=Within 1 year, 2=after a year)

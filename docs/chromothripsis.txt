@@ -1,6 +1,7 @@
 Table name: `chromothripsis`
-Description: Calls for chromothripsis, whole genome shattering, as detected by Shatterseek.
-Below is a description of each field.
-column_number | name | description
-1	public_id	Patient public identifier. Last 4 digits are unique. e.g. MMRF_1234
-2   chromothripsis   Indicates whether chromothripsis occurred as per the ShatterSeek algorithm at significance level of 0.05. There are three kinds of values: `negative` means not occurred, `lowconf` means low confidence, and `highconf` means high confidence. Only `highconf` cases should be taken as positive. `negative` and `lowconf` cases are taken to be negative in chromothripsis.
+Description: Calls for chromothripsis, also known as whole genome shattering, as detected by the Shatterseek algorithm.
+Format: column_number|name|description
+# Identifier column
+1|public_id|Patient public identifier. Last 4 digits are unique. e.g. MMRF_1234
+# Data column
+2|chromothripsis|Indicates whether chromothripsis occurred as per the ShatterSeek algorithm at significance level of 0.05. There are three kinds of values: `negative` means not occurred, `lowconf` means low confidence, and `highconf` means high confidence. Only `highconf` cases should be taken as positive. `negative` and `lowconf` cases are taken to be negative in chromothripsis.

@@ -1,0 +1,26 @@
+Table name: `per_visit`
+Description: Clinical data obtained from each visit made by a patient. Each patient has multiple visits throughout the treatment journey and results for each visit are recorded here. If column description is Ignore, do not use the column.
+Format: column_number | column_name | column_description
+# Identifier columns
+1|public_id|Index column. Patient public identifier. MMRF_ followed by 4 unique digits. e.g. MMRF_1234
+3|visit|A unique number assigned to the visit. e.g. 1 means first visit at which diagnosis was made.
+5|visitdy|Day of Visit counting from day of diagnosis
+# Results of symptom survey ("ss_")
+185|ss_isthepatientr|Is the patient returning for their regular scheduled follow-up?
+186|ss_dayofvisit|Date of Visit
+187|ss_doesthepatien|Does the patient have evidence of symptomatic myeloma related to organ damage, tissue impairments or other symptoms?
+188|ss_spinalcordcom|Spinal cord compression
+189|ss_bonepain|Bone pain present
+190|ss_fatigue|Fatigue present
+191|ss_hypercalcemia|Hypercalcemia (corrected calcium > 11.5 mg/dl)
+192|ss_renalinsuffic|Renal insufficiency attributable to myeloma
+193|ss_anemiahemoglo|Anemia (hemoglobin <10 g/dL)
+194|ss_bonelesionsly|Bone Lesions - Lytic Lesions
+195|ss_bonelesionsos|Bone Lesions - Osteoporosis with compression fractures
+196|ss_softtissuepla|Soft Tissue Plasmacytoma - Single
+197|ss_ofttissueplas|Soft Tissue Plasmacytoma - Multiple
+198|ss_recurrentbact|Recurrent bacterial infections
+199|ss_symptomatichy|Symptomatic hyperviscosity
+200|ss_amyloidosis|Amyloidosis
+201|ss_other|Other symptoms
+202|ss_specify|Specify the symptom

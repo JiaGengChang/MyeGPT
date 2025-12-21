@@ -1,0 +1,17 @@
+Table name: `per_visit`
+Description: Clinical data obtained from each visit made by a patient. Each patient has multiple visits throughout the treatment journey and results for each visit are recorded here. If column description is Ignore, do not use the column.
+Format: column_number | column_name | column_description
+# Identifier columns
+1|public_id|Index column. Patient public identifier. MMRF_ followed by 4 unique digits. e.g. MMRF_1234
+3|visit|A unique number assigned to the visit. e.g. 1 means first visit at which diagnosis was made.
+5|visitdy|Day of Visit counting from day of diagnosis
+# Fields related to Bone marrow transplant ("bmt_")
+112|bmt_wasabonemarro|Was a bone marrow transplant performed?
+113|bmt_dayoftranspl|Date of transplant
+114|bmt_autologous|Autologous transplant
+115|bmt_allogenic|Allogenic transplant
+116|bmt_pleasespecify|Type of allogenic transplant
+117|bmt_specify|Type of allogenic transplant
+118|bmt_stemcells|Transplant involves Stem cells
+119|bmt_bonemarrow|Transplant involves Bone marrow
+120|bmt_number|Single transplant or tandem (double-auto) transplant - within a few months of each other.

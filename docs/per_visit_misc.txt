@@ -1,0 +1,32 @@
+Table name: `per_visit`
+Description: Clinical data obtained from each visit made by a patient. Each patient has multiple visits throughout the treatment journey and results for each visit are recorded here. If column description is Ignore, do not use the column.
+Format: column_number | column_name | column_description
+# Identifier columns
+1|public_id|Index column. Patient public identifier. MMRF_ followed by 4 unique digits. e.g. MMRF_1234
+3|visit|A unique number assigned to the visit. e.g. 1 means first visit at which diagnosis was made.
+5|visitdy|Day of Visit counting from day of diagnosis
+# Miscellaneous, undescribed, or problematic columns. Do not use Unannotated/Ignore fields.
+2|spectrum_seq|Ignore
+4|vj_interval|Record Interval. e.g. Year 6, Discontinuation/EOS, Unscheduled 2, Month 51
+6|at_definitedevel|Unannotated
+9|at_treatmentresp|Unannotated
+10|at_increaseof25f|Unannotated
+11|at_serummcompone|Unannotated
+12|at_urinemcompone|Unannotated
+13|at_onlyinpatient|Unannotated
+14|at_onlyinpatient2|Unannotated
+15|at_developmentof|Unannotated
+47|bb_specify|Specify for BA_OTHER
+159|se_daypatientco Unannotated
+163|se_specify|Unannotated
+164|se_specify2|Unannotated
+214|d_im_dcl_patient_id|Public Patient ID. Problematic as it is often missing.
+355|d_qol_enr|Enrolled Population
+370|cmmc_reasoncode|Ignore
+375|enr|Enrolled Population
+59|bone_volumeofbmasp|Unannotated
+61|bone_bmavolumesent|Unannotated
+64|bone_dayofcollect2|Unannotated
+67|bone_reasonforproc|Unannotated
+69|bone_percentofplas3|Unannotated
+75|bone_bcytomorpholo|Unannotated

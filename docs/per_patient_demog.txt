@@ -1,0 +1,27 @@
+Table name: `per_patient`
+Description: A table containing general patient-level information such as clinical and demographic background of the patients. Also contains patient-level information on treatment type, stem cell transplant, ISS stage, risk markers, and death-related info.
+Format: column_number|column_name|description
+# Identifier field
+1|public_id|Index column. Patient public identifier. MMRF_ followed by 4 unique digits. e.g. MMRF_1234
+# Columns related to patient sex, age, race, and other demographic data 
+16|d_pt_raceoth|Specify minority race
+17|d_pt_race|Race
+18|d_pt_ethnic|Ethnicity
+19|d_pt_gender|Gender code (Male=1 Female=2)
+39|d_pt_age|Age at diagnosis
+47|demog_height|Italy: Height
+48|demog_weight|Italy: Weight
+51|demog_heightunitofm|Italy: Height unit
+52|demog_weightunitofm|Italy: Weight unit
+95|demog_patientage|Patient Age
+96|demog_gender|Gender
+97|demog_americanindia|American Indian or Alaska Native
+98|demog_asian|Asian
+99|demog_blackorafrica|Black or African American
+100|demog_nativehawaiia|Native Hawaiian or other Pacific Islander
+101|demog_white|White
+102|demog_other|Other
+103|demog_specify|Specify race
+104|demog_ethnicity|Ethnicity
+105|demog_dayofvisit|Date of visit
+107|demog_visit|visit

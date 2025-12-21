@@ -1,0 +1,39 @@
+Table name: `per_visit`
+Description: Clinical data obtained from each visit made by a patient. Each patient has multiple visits throughout the treatment journey and results for each visit are recorded here. If column description is Ignore, do not use the column.
+Format: column_number|column_name|column_description
+# Identifier columns
+1|public_id|Index column. Patient public identifier. MMRF_ followed by 4 unique digits. e.g. MMRF_1234
+3|visit|A unique number assigned to the visit. e.g. 1 means first visit at which diagnosis was made.
+5|visitdy|Day of Visit counting from day of diagnosis
+# Bone assessment ("ba_"). ba_[site] means bone assessment for [site]. "Checked/checked" means yes.
+16|ba_wasaboneasses|Was a bone assessment done since the last study visit?
+17|ba_dayofassessm|Date of assessment
+18|ba_typeofboneass|Type of bone assessment. Unstructured field.
+19|ba_specify|Other bone assessment, specify. Unstructured field.
+20|ba_imageinterpre|Clinical interpretation of bone assessment. Categorized as normal/clinically significant/clinically insignificant abnormality, is abnormality related or unrelated to MM.
+21|ba_lyticlesions|Were there lytic Lesions?
+22|ba_oflyticlesion|Number of Lytic Lesions. Ordinal categories: "0", "1", "2", or ">=3"
+23|ba_osteopeniaost|Osteopenia / Osteoporosis
+24|ba_pathologicfra|Pathologic fracture
+25|ba_multipledisse|Multiple disseminated lesions
+26|ba_skull|Skull
+27|ba_spine|Spine
+28|ba_cervical|Cervical
+29|ba_thoracic|Thoracic
+30|ba_lumbar|Lumbar
+31|ba_sacral|Sacral
+32|ba_pelvis|Pelvis
+33|ba_right|Right region 1
+34|ba_left|Left region 2
+35|ba_femur|Femur
+36|ba_right2|Right region 2
+37|ba_left2|Left region 2
+38|ba_humerus|Humerus
+39|ba_right3|Right region 3
+40|ba_left3|Left region 3
+41|ba_ribs|Ribs
+42|ba_right4|Right region 4
+43|ba_numberaffecte|Number of ribs affected (right side)
+44|ba_left4|Left region 4
+45|ba_numberaffecte2|Number of ribs affected (leftt side)
+46|ba_other|Other site
