@@ -21,7 +21,7 @@ def create_embedding_service(model_provider):
 
 # do not change, set in create_vectorstore.py
 SCHEMA_NAME = "document_embeddings"
-TABLE_NAME = os.environ.get("EMBEDDINGS_MODEL_PROVIDER")
+TABLE_NAME = os.environ.get("EMBEDDINGS_MODEL_PROVIDER") + os.environ.get("EMBEDDINGS_TABLE_SUFFIX","")
 
 # create pgengine connection pool manager
 pg_engine = PGEngine.from_connection_string(os.environ.get("COMMPASS_DB_URI"))
