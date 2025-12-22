@@ -1,4 +1,6 @@
 import os
+from dotenv import load_dotenv
+assert load_dotenv(".env")
 import re
 import uuid
 import psycopg
