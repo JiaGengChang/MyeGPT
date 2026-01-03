@@ -1,6 +1,6 @@
 from langchain.chat_models.base import BaseChatModel
-from openevals.llm import create_llm_as_judge
 
+# import local objects
 from prompts import CORRECTNESS_PROMPT
 
 def universal_chat_model(MODEL_ID: str) -> BaseChatModel:
