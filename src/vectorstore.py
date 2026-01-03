@@ -31,7 +31,10 @@ pg_engine = PGEngine.from_connection_string(os.environ.get("COMMPASS_DB_URI"))
 embeddings = create_embedding_service(os.environ.get("EMBEDDINGS_MODEL_PROVIDER"))
 
 # set env var for embedding model id (prefer 'model', fallback to 'model_id')
-os.environ["EMBEDDINGS_MODEL_ID"] = embeddings.model
+try:
+    os.environ["EMBEDDINGS_MODEL_ID"] = embeddings.model
+except AttributeError:
+    os.environ["EMBEDDINGS_MODEL_ID"] = embeddings.model_id
 
 # create connection to vector store
 def connect_store():
