@@ -27,4 +27,5 @@ scikit-learn
 seaborn
 statsmodels
 sqlalchemy
+tabulate
 uvicorn
