@@ -1,6 +1,7 @@
 # MyeGPT files
 src/graph
-src/result
+src/result/*
+!src/result/cox_dataset_template_*s.csv
 src/*.ipynb
 src/*.png
 src/responses.json

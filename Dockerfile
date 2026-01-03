@@ -15,9 +15,12 @@ COPY src/mail.py .
 COPY src/security.py .
 COPY src/serialize.py .
 COPY src/prompt.txt .
+COPY src/prompts.py .
+COPY src/llm_utils.py .
 COPY src/static static
 COPY src/templates templates
 COPY refdata /refdata
+COPY src/result/cox_dataset_template_*s.csv ./result/
 
 EXPOSE 8080
 
