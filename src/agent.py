@@ -12,6 +12,7 @@ import logging
 
 from tools import document_search_tool, convert_gene_tool, gene_metadata_tool, gene_level_copy_number_tool, cox_regression_base_data_tool, langchain_query_sql_tool, python_repl_tool, python_execute_sql_query_tool, display_plot_tool, generate_graph_filepath_tool
 from utils import format_text_message
+from llm_utils import universal_chat_model
 
 # Create a system message for the agent
 # dynamic variables will be filled in at the start of each session
@@ -35,38 +36,7 @@ async def send_init_prompt(app:FastAPI):
     config_ask = {"thread_id": app.state.username, "recursion_limit": 50} # ask configuration
 
     #  initialize the chat model
-    model_id = os.environ.get("MODEL_ID")
-    
-    if not model_id:
-        raise ValueError("MODEL_ID environment variable is not set")
-    elif model_id.startswith("gpt-"):
-        from langchain_openai import ChatOpenAI as ChatModel
-    elif model_id.startswith("claude"):
-        from langchain_anthropic import ChatAnthropic as ChatModel
-    elif model_id.startswith("gemini"):
-        from langchain_google_genai import ChatGoogleGenerativeAI as ChatModel
-    elif model_id.startswith("apac."):
-        from langchain_aws import ChatBedrockConverse as ChatModel
-    else:
-        raise ValueError(f"Unsupported MODEL_ID prefix in {model_id}")
-    
-    try:
-        # Google, Claude, OpenAI use "model" parameter
-        llm = ChatModel(
-            model=model_id,
-            temperature=0.,
-            max_tokens=5000,
-        )
-    except Exception as e:
-        # AWS Bedrock uses "model_id" parameter
-        try: 
-            llm = ChatModel(
-                model_id=model_id,
-                temperature=0.,
-                max_tokens=5000,
-            )
-        except Exception as e:
-            raise ValueError(f"Failed to initialize chat model with MODEL_ID {model_id}: {e}")
+    llm = universal_chat_model(os.environ.get("MODEL_ID"))
     
     graph = create_react_agent(
         model=llm,

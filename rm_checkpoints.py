@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-assert load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
+assert load_dotenv(os.path.join(os.path.dirname(__file__), 'src', '.env'))
 import psycopg
 
 if __name__ == "__main__":

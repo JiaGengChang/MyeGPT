@@ -202,7 +202,14 @@ gene_level_copy_number_tool = StructuredTool.from_function(
 )
 
 def get_cox_regression_base_data(endpoint='os'):
-    print(f'A table containing common fields for Cox Proportional Hazards regression (PUBLIC ID, {endpoint} duration, {endpoint} event, age, ISS stage, and gender) is available at refdata/cox_dataset_template_{endpoint}.csv')
+    # input: endpoint: 'os' or 'pfs' 
+    # output: None except printed statement
+    # behavior: 
+    # saves a template dataset for Cox PH regression analysis to result/cox_dataset_template_{endpoint}.csv
+    # this csv file contains PUBLIC ID, survival time, censoring status, age, ISS (I, II, III), and gender (Male, Female)
+    # ... which are the common covariates used in Cox PH regression with variable of interest
+    # Already pre-generated to save
+    print(f'Saved template dataset containing PUBLIC ID, {endpoint}, age, ISS, gender columns to result/cox_dataset_template_{endpoint}.csv')
 
 cox_regression_base_data_tool = StructuredTool.from_function(
     func=get_cox_regression_base_data,
