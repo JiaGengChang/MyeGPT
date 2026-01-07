@@ -207,6 +207,28 @@ def get_cox_regression_base_data(endpoint='os'):
     # saves a template dataset for Cox PH regression analysis to result/cox_dataset_template_{endpoint}.csv
     # this csv file contains PUBLIC ID, survival time, censoring status, age, ISS (I, II, III), and gender (Male, Female)
     # ... which are the common covariates used in Cox PH regression with variable of interest
+    # create the datase only if not already exists
+    if not os.path.exists(f'result/cox_dataset_template_{endpoint}.csv'):
+        conn = psycopg.connect(os.environ.get("COMMPASS_DSN"))
+        with conn.cursor() as curs:
+            if endpoint == 'os':
+                curs.execute(f'SELECT PUBLIC_ID, oscdy, censos FROM stand_alone_survival WHERE censos is not null')
+            elif endpoint == 'pfs':
+                curs.execute(f'SELECT PUBLIC_ID, pfscdy, censpfs FROM stand_alone_survival WHERE censpfs is not null')
+            else:
+                raise ValueError('endpoint must be either \"os\" or \"pfs\"')
+            result = curs.fetchall()
+            df_surv = pd.DataFrame(result, columns=['PUBLIC_ID', endpoint+'cdy', 'cens'+endpoint])
+            curs.execute('SELECT PUBLIC_ID, D_PT_age, D_PT_gender, D_PT_iss FROM per_patient')
+            result = curs.fetchall()
+            df_clin = pd.DataFrame(result, columns=['PUBLIC_ID', 'D_PT_age', 'D_PT_gender', 'D_PT_iss'])
+            df_clin['D_PT_gender'] = df_clin['D_PT_gender'].map({1: 'Male',2: 'Female'})
+            df_clin['D_PT_iss'] = df_clin['D_PT_iss'].map({1: 'I',2: 'II', 3: 'III'})
+            df_clin['D_PT_gender'] = df_clin['D_PT_gender'].astype(pd.CategoricalDtype())
+            df_clin['D_PT_iss'] = df_clin['D_PT_iss'].astype(pd.CategoricalDtype())
+            df_cph_template = df_surv.merge(df_clin, on='PUBLIC_ID')
+            df_cph_template.to_csv(f'result/cox_dataset_template_{endpoint}.csv', index=False)
+
     # Already pre-generated to save
     print(f'Saved template dataset containing PUBLIC ID, {endpoint}, age, ISS, gender columns to result/cox_dataset_template_{endpoint}.csv')
 
