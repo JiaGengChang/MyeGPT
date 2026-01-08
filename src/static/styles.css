@@ -177,6 +177,10 @@ body {
     margin-left: auto;
   }
   
+  .chat-message.system {
+    border-radius: 20px 20px 20px 0px;
+  }
+
   .chat-message.ai {
     background-color: rgb(230, 243, 254);
     border-radius: 20px 20px 20px 0px;

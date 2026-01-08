@@ -1,4 +1,5 @@
 import { getCookie } from './utils.js';
+import { createSystemMessage } from './messages.js';
 
 async function eraseMemory() {
     if(confirm('Erase memory of previous conversations associated with this account?')) { 
@@ -17,7 +18,8 @@ async function eraseMemory() {
         } catch (error) {
             console.error('Error:', error);
         } finally {
-            //
+            // insert a message into chat indicating memory has been erased
+            createSystemMessage('🗑️ Memory of previous conversations has been erased.');
         }
     }
 }
@@ -26,6 +28,7 @@ function clearChat() {
     if(confirm('Clear current conversation? This will not erase memory of these conversations.')){
         document.getElementById('chat-history').innerHTML = '';
     }
+    createSystemMessage('🧹 Conversation has been cleared.');
 }
 
 function logOut() {
