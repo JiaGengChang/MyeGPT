@@ -3,7 +3,7 @@ Description: Activities of Single Base Substitution (SBS) mutational signatures,
 Format: column_number|field_name|description
 # Identifier fields
 1|public_id|Patient public identifier. Last 4 digits are unique. e.g. MMRF_1234
-2|sample_id|Patient sample identifier. Follows the format [PUBLIC_ID]_[VISIT_ID]_[BM=Bone Marrow/PB=Peripheral Blood]_CD138pos e.g. MMRF_1234_1_BM_CD138pos
+2|sample|Patient sample identifier. Follows the format [PUBLIC_ID]_[VISIT_ID]_[BM=Bone Marrow/PB=Peripheral Blood]_CD138pos e.g. MMRF_1234_1_BM_CD138pos
 89|visit|A unique number assigned to the visit. e.g. 1 means first visit at which diagnosis was made.
 # Data fields for mutational signature activities. If a field description is blank, do not use that column.
 3|sbs1|Spontaneous deamination of 5-methylcytosine (clock-like signature)
