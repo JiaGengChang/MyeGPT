@@ -11,7 +11,6 @@ matplotlib.use('Agg') # non-interactive backend
 import logging
 
 from tools import document_search_tool, convert_gene_tool, gene_metadata_tool, gene_level_copy_number_tool, cox_regression_base_data_tool, langchain_query_sql_tool, python_repl_tool, python_execute_sql_query_tool, display_plot_tool, generate_graph_filepath_tool
-from utils import format_text_message
 from llm_utils import universal_chat_model
 
 # Create a system message for the agent
@@ -40,7 +39,12 @@ async def send_init_prompt(app:FastAPI):
     
     graph = create_react_agent(
         model=llm,
-        tools=[document_search_tool, convert_gene_tool, gene_metadata_tool, gene_level_copy_number_tool, cox_regression_base_data_tool, langchain_query_sql_tool, python_repl_tool, python_execute_sql_query_tool, generate_graph_filepath_tool, display_plot_tool],
+        tools=[document_search_tool, 
+               gene_level_copy_number_tool, 
+               cox_regression_base_data_tool, 
+               langchain_query_sql_tool, 
+               python_repl_tool, 
+               python_execute_sql_query_tool],
         checkpointer=app.state.checkpointer,
     )
     system_message = create_system_message()
@@ -54,7 +58,7 @@ async def send_init_prompt(app:FastAPI):
             app.state.init_response = "Crash recovery succeeded."
         except Exception as e2:
             # likely input length exceeded
-            app.state.init_response = f"Error during initialization: {e2}"
+            app.state.init_response = f"Fatal error, please erase memory. Crash message: {e2}"
 
     
     # Open the gate for queries
@@ -66,24 +70,30 @@ def query_agent(user_input: str):
     user_message = HumanMessage(content=user_input)
     
     for step in graph.stream({"messages": [user_message]}, config_ask, stream_mode="updates"):
+        # for python tty
         print(step)
-        pretty = json.dumps(step, indent=2, ensure_ascii=False, default=str)
-        yield pretty
-        chunks = None
-        if "agent" in step:
-            chunks = step["agent"]["messages"][-1].content
-            if isinstance(chunks, list):
-                for chunk in chunks:
-                        if chunk["type"]=="text":
-                            chunk = format_text_message(chunk)
-                            yield str(chunk)
-            elif isinstance(chunks, dict):
-                if chunk["type"]=="text":
-                    chunk = format_text_message(chunk)
-                    yield str(chunk)
+        # for chat.js
+        if 'agent' in step:
+            msg = step['agent']['messages'][0].text()
+            if len(msg.strip()) > 0: 
+                # the AI answer
+                yield f"🤖 done: {msg}"
             else:
-                if chunks!="":
-                    yield format_text_message(chunks)
+                # Tool call
+                # that's why its an Ai message with no content
+                # remove Ai message heading
+                msg = '\n'.join(step['agent']['messages'][0].pretty_repr().split('\n')[1:])
+                yield f"🤖➡️🔧: {msg}"
+        elif 'tools' in step:
+            # Tool result
+            msg = step['tools']['messages'][0].text()
+            if len(msg.strip()) > 0:
+                yield f"🔧➡️🤖: {msg}"
+            else:
+                yield f"⁉️🔧➡️🤖: {step['tools']['messages'][0].pretty_repr()}"
+        else:
+            msg = json.dumps(step, indent=2, ensure_ascii=False, default=str)
+            f'⁉️ Unparsed message: {msg}'
 
 async def handle_invalid_chat_history(app: FastAPI, e: Exception):
     global graph
