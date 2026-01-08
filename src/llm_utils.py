@@ -1,9 +1,7 @@
 from langchain.chat_models.base import BaseChatModel
 
-# import local objects
-from prompts import CORRECTNESS_PROMPT
-
 def universal_chat_model(MODEL_ID: str) -> BaseChatModel:
+    MAX_TOKENS = 5000
     # Create a langchain chat model given a string MODEL_ID
     if not MODEL_ID:
         raise ValueError("MODEL_ID environment variable is not set")
@@ -22,7 +20,7 @@ def universal_chat_model(MODEL_ID: str) -> BaseChatModel:
         llm = ChatModel(
             model=MODEL_ID,
             temperature=0.,
-            max_tokens=None,
+            max_tokens=MAX_TOKENS,
         )
     except Exception as e:
         # AWS Bedrock uses "MODEL_ID" parameter
@@ -30,7 +28,7 @@ def universal_chat_model(MODEL_ID: str) -> BaseChatModel:
             llm = ChatModel(
                 MODEL_ID=MODEL_ID,
                 temperature=0.,
-                max_tokens=None,
+                max_tokens=MAX_TOKENS,
             )
         except Exception as e:
             raise ValueError(f"Failed to initialize chat model with MODEL_ID {MODEL_ID}: {e}")
