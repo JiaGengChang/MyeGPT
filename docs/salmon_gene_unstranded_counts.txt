@@ -4,6 +4,6 @@ Format: column_number | field name | description
 # Identifier columns
 1|public_id|Index column. Patient public identifier. Last 4 digits are unique. e.g. MMRF_1021
 2|gene|Index column. GENCODE accession/ENSEMBL Stable ID of the gene. string. example: ENSG00000227830.
-3|sample_id|Patient sample identifier. Follows the format [PUBLIC_ID]_[VISIT_ID]_[BM=Bone Marrow/PB=Peripheral Blood]_CD138pos e.g. MMRF_1024_2_BM_CD138pos
+3|sample|Patient sample identifier. Follows the format [PUBLIC_ID]_[VISIT_ID]_[BM=Bone Marrow/PB=Peripheral Blood]_CD138pos e.g. MMRF_1024_2_BM_CD138pos
 # Gene expression data field
 4|count|Read count. Number of RNA-Seq reads that map to the gene e.g. 497

@@ -4,8 +4,8 @@ Format: column_number|field_name|description
 1|geneid|Gene identifier, an Ensembl Gene stable ID (e.g., ENSG00000141510)
 2|public_id|Patient public identifier. Last 4 digits are unique. e.g. MMRF_1234
 3|chr|Chromosome where the mutation is located (chr2, chrX, chrY, chr10)
-4|start|Start position of the mutation (1-based)
-5|end|End position of the mutation
+4|start_pos|Start position of the mutation (1-based)
+5|end_pos|End position of the mutation
 6|sample|Sample identifier (e.g., MMRF_1030_3_BM_CD138pos, MMRF_1030_3_BM_CD138pos, MMRF_2605_2_PB_Plasma)
 7|effect|Predicted effect of the mutation (e.g., missense_variant, stop_gained, stop_loss, splice_acceptor_variant, intron_variant)
 8|gene|Gene symbol affected by the mutation (e.g. TP53, IGHD6-6, CLU, WIZ).
