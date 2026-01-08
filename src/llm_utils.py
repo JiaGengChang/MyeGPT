@@ -22,7 +22,7 @@ def universal_chat_model(MODEL_ID: str) -> BaseChatModel:
         llm = ChatModel(
             model=MODEL_ID,
             temperature=0.,
-            max_tokens=5000,
+            max_tokens=None,
         )
     except Exception as e:
         # AWS Bedrock uses "MODEL_ID" parameter
@@ -30,7 +30,7 @@ def universal_chat_model(MODEL_ID: str) -> BaseChatModel:
             llm = ChatModel(
                 MODEL_ID=MODEL_ID,
                 temperature=0.,
-                max_tokens=5000,
+                max_tokens=None,
             )
         except Exception as e:
             raise ValueError(f"Failed to initialize chat model with MODEL_ID {MODEL_ID}: {e}")
