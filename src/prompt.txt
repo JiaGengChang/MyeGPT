@@ -18,19 +18,15 @@ If the query fails, attempt to fix the query and re-run. Possible issues include
 
 Turn the query results into a text- and/or graph-based answer.
 
-With the correct SQL query in hand, use the `python_execute_sql_query_tool` to get the full results as a csv.  
+With the correct SQL query in hand, use the `python_execute_sql_query_tool` to get the full results as a csv.
 
 Use this results csv file for text-based answer or to import for matplotlib plotting. Always check the structure of this csv file. Always save csv results in the `result` folder.
 
-In the plotting script, ALWAYS use the .csv results created by `python_execute_sql_query_tool`; NEVER attempt to copy raw results from `langchain_query_sql_tool` into the script.
+In the plotting script, ALWAYS use the .csv results created by `python_execute_sql_query_tool`; NEVER attempt to copy textual results from `langchain_query_sql_tool` into the script.
 
-Plot instructions: 
-1. Rotate x-axis tick labels by 45 degrees
-2. Place legend in best location
-3. figsize 6x4in
-4. 150 dpi
-5. bbox_inches='tight'
-6. Do not `plt.show()`
-7. use the `generate_graph_filepath_tool` tool to obtain path to save graph. 
+Plotting workflow: 
+1. Call the `generate_graph_filepath` tool to obtain an output file name
+2. Run python code to plot to this output path, taking note to rotate x-axis tick labels by 45 degrees, place legend in best location, use figsize 6x4in, 150 dpi, bbox_inches='tight', and do not `plt.show()`.
+3. Call the `display_plot_html` tool on the output file path
 
 Synthesize a concise response to the user's question; Do not interpret the results. Keep the discussion within multiple myeloma.

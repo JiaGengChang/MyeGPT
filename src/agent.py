@@ -44,7 +44,10 @@ async def send_init_prompt(app:FastAPI):
                cox_regression_base_data_tool, 
                langchain_query_sql_tool, 
                python_repl_tool, 
-               python_execute_sql_query_tool],
+               python_execute_sql_query_tool,
+               display_plot_tool, 
+               generate_graph_filepath_tool
+               ],
         checkpointer=app.state.checkpointer,
     )
     system_message = create_system_message()

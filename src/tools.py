@@ -104,22 +104,25 @@ generate_graph_filepath_tool = StructuredTool.from_function(
 )
 
 def display_plot_html(file_path: str) -> str:
-    html = f"""
-    <div class=image-container>
-        <img src={file_path} width=100% height=auto>
-        <div class=links-container>
-            <a href={file_path} download>Download</a>
-            <a href={file_path} target=_blank rel=noopener noreferrer>New tab</a>
+    if not os.path.exists(file_path):
+        return f"Error: Path for PNG file {file_path} does not exist. Rename the newly generated PNG to {file_path}, or re-generate and save to {file_path}."
+    else:
+        html = f"""
+        <div class=image-container>
+            <img src={file_path} width=100% height=auto>
+            <div class=links-container>
+                <a href={file_path} download>Download</a>
+                <a href={file_path} target=_blank rel=noopener noreferrer>New tab</a>
+            </div>
         </div>
-    </div>
-    """
-    return html.replace('\n', '')
+        """
+        return html.replace('\n', '')
 
 # tool to plot image
 display_plot_tool = StructuredTool.from_function(
     func=display_plot_html,
     name="display_plot_html",
-    description="Display the plot image saved at the given file path as HTML output."
+    description="Display the plot image saved at the given file path as HTML output. Arguments: file_path (str). If file path does not exist, an error message is returned. Thus, the plot must first be saved as file_path before this plot tool is called."
 )
 
 def _max_overlapping_segment(gene_stable_id: str):
