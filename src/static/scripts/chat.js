@@ -88,14 +88,32 @@ async function sendMessage() {
         // Read the streaming response
         const reader = response.body.getReader();
         const decoder = new TextDecoder();
+
+        var originalTitle = document.title;
+        document.title = 'Working on it...';
         
         while (true) {
             const { done, value } = await reader.read();
-            if (done) break;
+            if (done) {
+                let flashInterval = setInterval(() => {
+                    document.title = document.title === originalTitle ? '🔔 New Message!' : originalTitle;
+                }, 1000);
+                
+                // Stop flashing when user focuses on the tab
+                window.addEventListener('focus', () => {
+                    clearInterval(flashInterval);
+                    document.title = originalTitle;
+                }, { once: true });
+                break;
+            }
             var chunk = decoder.decode(value);
-            console.log('Received chunk: ' + chunk);
-            createAIMessage(chunk);
-            createTraceMessage(chunk);
+            if (chunk.startsWith('trace: ')) {
+                chunk = chunk.split('trace: ')[1]
+                console.log(chunk);
+                createTraceMessage(chunk);
+            } else {
+                createAIMessage(chunk);
+            }
         }
 
     } catch (error) {
