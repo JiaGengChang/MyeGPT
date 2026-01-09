@@ -115,10 +115,10 @@ async function sendMessage() {
                 break;
             }
             var chunk = decoder.decode(value);
-            if (chunk.startsWith('trace: ')) {
-                chunk = chunk.split('trace: ')[1]
-                console.log(chunk);
-                createTraceMessage(chunk);
+            if (chunk.startsWith('TRACE_START:')) {
+                let chunks = chunk.split('TRACE_START:')[1].split(':TRACE_END');
+                console.log(chunks[0])
+                createTraceMessage(chunks[0]);
             } else {
                 createAIMessage(chunk);
             }
