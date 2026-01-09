@@ -72,25 +72,27 @@ def query_agent(user_input: str):
     for step in graph.stream({"messages": [user_message]}, config_ask, stream_mode="updates"):
         # for python tty
         print(step)
+        # for trace panel
+        yield f"trace: {step}"
         # for chat.js
         if 'agent' in step:
             msg = step['agent']['messages'][0].text()
             if len(msg.strip()) > 0: 
                 # the AI answer
-                yield f"🤖 done: {msg}"
+                yield f"🤖 Agent: {msg}"
             else:
                 # Tool call
                 # that's why its an Ai message with no content
                 # remove Ai message heading
                 msg = '\n'.join(step['agent']['messages'][0].pretty_repr().split('\n')[1:])
-                yield f"🤖➡️🔧: {msg}"
+                yield f"🛠️ Tool call: {msg}"
         elif 'tools' in step:
             # Tool result
             msg = step['tools']['messages'][0].text()
             if len(msg.strip()) > 0:
-                yield f"🔧➡️🤖: {msg}"
+                yield f"🛠️ Tool result: {msg}"
             else:
-                yield f"⁉️🔧➡️🤖: {step['tools']['messages'][0].pretty_repr()}"
+                yield f"⁉️🛠️ Tool result: {step['tools']['messages'][0].pretty_repr()}"
         else:
             msg = json.dumps(step, indent=2, ensure_ascii=False, default=str)
             f'⁉️ Unparsed message: {msg}'
