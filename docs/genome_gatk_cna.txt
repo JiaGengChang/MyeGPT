@@ -1,13 +1,14 @@
 Table name: `genome_gatk_cna`
 Description: Copy number values of genomic segments by whole genome sequencing. To estimate the copy number of a certain gene, the copy number of the probe with largest overlap with that gene can be used, providing there are probes with sufficient overlap with the gene (>50% of the gene's length).
 Format: column_number|name|description
-# Identifier column
-1|sample|Patient sample identifier. Follows the format [PUBLIC_ID]_[VISIT_ID]_[BM=Bone Marrow/PB=Peripheral Blood]_CD138pos e.g. MMRF_1234_1_BM_CD138pos. PUBLIC_ID is MMRF_ followed by 4 random digits.
-# Data columns
-2|chromosome|chromosome name with the 'chr' prefix. e.g. chr1, chr22, chrY
-3|start_pos|Genomic coordinates of the start of where the probe maps to. example 826107
-4|end_pos|Genomic coordinates of the end of where the probe maps to. example 9608793
-5|num_probes|The number of probes which map to this genomic segment. example 137
-6|segment_mean|The mean log2 ratio of the probe intensity of this segment. example 0.48990600000000006
-7|visit|The visit ID of the patient. An integer. e.g. 1 means this observation was recorded at the visit of new diagnosis.
-8|segment_copy_number|Integer copy number status derived from Segment_Mean. Values are -2, -1, 0, 1, 2, with respective cut off values of <=-1.5, <=-0.5, <=0.38, <=0.66, >0.66. 0 is normal ploidy. -1 and -2 is copy number loss, 1 and 2 is copy number gain.
+# Identifier columns
+1|public_id|Patient public identifier. Last 4 digits are unique. e.g. MMRF_1234
+12sample|Patient sample identifier. Follows the format [PUBLIC_ID]_[VISIT_ID]_[BM=Bone Marrow/PB=Peripheral Blood]_CD138pos e.g. MMRF_1234_1_BM_CD138pos. PUBLIC_ID is MMRF_ followed by 4 random digits.
+# Probe coordinates and copy number value columns
+3|chromosome|chromosome name with the 'chr' prefix. e.g. chr1, chr22, chrY
+4|start_pos|Genomic coordinates of the start of where the probe maps to. example 826107
+5|end_pos|Genomic coordinates of the end of where the probe maps to. example 9608793
+6|num_probes|The number of probes which map to this genomic segment. example 137
+7|segment_mean|The mean log2 ratio of the probe intensity of this segment. example 0.48990600000000006
+8|visit|The visit ID of the patient. An integer. e.g. 1 means this observation was recorded at the visit of new diagnosis.
+9|segment_copy_number|Integer copy number status derived from Segment_Mean. Values are -2, -1, 0, 1, 2, with respective cut off values of <=-1.5, <=-0.5, <=0.38, <=0.66, >0.66. 0 is normal ploidy. -1 and -2 is copy number loss, 1 and 2 is copy number gain.

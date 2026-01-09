@@ -122,8 +122,9 @@ def segment_copy_number(x):
 def upload_table_genome_gatk_cna():
     # Load the data
     df = pd.read_csv(f'{PROJECTDIR}/omicdata/Copy Number Estimates-MMRF_CoMMpass_IA22_genome_gatk_cna.seg', sep='\t')
+    df['PUBLIC_ID'] = df['SAMPLE'].str.extract(r'(MMRF_\d+)')  # Extract the numeric part of the sample name
     df['VISIT'] = df['SAMPLE'].str.extract(r'MMRF_\d+_(\d+)_.*$')  # Extract the visit number
-    df = df.set_index('SAMPLE')
+    df = df.set_index(['PUBLIC_ID','SAMPLE'])
 
     df['Segment_Copy_Number_Status'] = df['Segment_Mean'].apply(segment_copy_number)
     # rename End to End_bp to avoid conflict with SQL reserved word
@@ -132,7 +133,7 @@ def upload_table_genome_gatk_cna():
     print(df.head())
     # Upload to the database
     with engine.connect() as conn:
-        df.to_sql('genome_gatk_cna', con=conn, if_exists='replace', index=True, index_label='SAMPLE')
+        df.to_sql('genome_gatk_cna', con=conn, if_exists='replace', index=True, index_label=['PUBLIC_ID','SAMPLE'])
         print("Data uploaded successfully.")
 
 def upload_table_exome_NS_variants():
