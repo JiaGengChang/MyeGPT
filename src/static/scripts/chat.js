@@ -51,6 +51,21 @@ async function initializeChat() {
     }
 }
 
+function togglePageTitle(oldTitle, newTitle) {
+    document.title = newTitle;
+    if (document.hasFocus()) {
+        setTimeout(() => {
+            document.title = oldTitle;
+        }, 10000);
+    } else {
+        const focusHandler = () => {
+            document.title = oldTitle;
+            window.removeEventListener('focus', focusHandler);
+        };
+        window.addEventListener('focus', focusHandler);
+    }
+}
+
 async function sendMessage() {
     const message = chatInput.value.trim();
     if (!message) return;
@@ -64,7 +79,7 @@ async function sendMessage() {
 
     // Replace newline characters with <br> for HTML rendering
     userMessageElement.innerHTML = message.replace(/\n/g, '<br>'); 
-
+    
     userMessageContainer.appendChild(userMessageElement);
     chatHistory.appendChild(userMessageContainer);
 
@@ -89,17 +104,14 @@ async function sendMessage() {
         const reader = response.body.getReader();
         const decoder = new TextDecoder();
 
-        var originalTitle = document.title;
-        
+        let originalTitle = document.title;
+        let loadingTitle = 'Working on it...';
+        let alertTitle = '🔔 New Message'
         while (true) {
-            document.title = 'Working on it...';
+            document.title = loadingTitle;
             const { done, value } = await reader.read();
             if (done) {
-                document.title = '🔔 New Message!'
-                
-                window.addEventListener('focus', () => {
-                    document.title = originalTitle;
-                });
+                togglePageTitle(originalTitle, alertTitle);
                 break;
             }
             var chunk = decoder.decode(value);
