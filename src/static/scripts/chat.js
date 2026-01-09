@@ -90,20 +90,16 @@ async function sendMessage() {
         const decoder = new TextDecoder();
 
         var originalTitle = document.title;
-        document.title = 'Working on it...';
         
         while (true) {
+            document.title = 'Working on it...';
             const { done, value } = await reader.read();
             if (done) {
-                let flashInterval = setInterval(() => {
-                    document.title = document.title === originalTitle ? '🔔 New Message!' : originalTitle;
-                }, 1000);
+                document.title = '🔔 New Message!'
                 
-                // Stop flashing when user focuses on the tab
                 window.addEventListener('focus', () => {
-                    clearInterval(flashInterval);
                     document.title = originalTitle;
-                }, { once: true });
+                });
                 break;
             }
             var chunk = decoder.decode(value);
