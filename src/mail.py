@@ -23,4 +23,6 @@ async def send_verification_email(email: str, token: str, app_url: str = "http:/
         subtype=MessageType.plain
     )
     fm = FastMail(conf)
+    # expect exceptions will be raised by aiosmtplib if recipient does not exist
     await fm.send_message(message)
+        
