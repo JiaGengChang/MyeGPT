@@ -95,8 +95,11 @@ async def register_with_form(request: Request):
         raise HTTPException(status_code=400, detail="Passwords do not match")
     if not (username and email and password):
         raise HTTPException(status_code=400, detail="All fields are required")
-    new_user = UserCreate(username=username, password=password, email=email)
-    response = await register_user(new_user)
+    try:
+        new_user = UserCreate(username=username, password=password, email=email)
+        response = await register_user(new_user)
+    except HTTPException as e:
+        raise HTTPException(status_code=e.status_code, detail=e.detail)
     return response
 
 
@@ -108,24 +111,23 @@ async def register_user(user: UserCreate):
     assert os.environ.get("SERVER_BASE_URL"), "Env. variable SERVER_BASE_URL is missing"
     hashed_password = get_password_hash(user.password)
     with auth_db_conn.cursor() as cur:
+        user_email = user.email if user.email.strip().__len__() > 0 else None
         try:
-            user_email = user.email if user.email.strip().__len__() > 0 else None
-            # FIXME - do not allow delete if account was created within X minutes
-            cur.execute("DELETE FROM auth.users WHERE email = %s AND is_verified = FALSE", (user_email,))
-            auth_db_conn.commit()
-            cur.execute(
-            "INSERT INTO auth.users (username, email, hashed_password) VALUES (%s, %s, %s)",
-            (user.username, user_email, hashed_password)
-            )
+            cur.execute("DELETE FROM auth.users WHERE (username = %s OR email = %s) AND is_verified = FALSE", (user.username, user_email))
+            cur.execute("INSERT INTO auth.users (username, email, hashed_password) VALUES (%s, %s, %s)",(user.username, user_email, hashed_password))
             auth_db_conn.commit()
         except psycopg.errors.UniqueViolation:
-            raise HTTPException(status_code=400, detail="Username or email is already taken.")
+            auth_db_conn.rollback()
+            raise HTTPException(status_code=400, detail="Username or email already registered")
+        except Exception as e_unknown:
+            auth_db_conn.rollback()
+            raise HTTPException(status_code=400, detail="Failed to register user. Error: " + str(e_unknown))
 
-    # try:
-    token = generate_verification_token(user_email)
-    await send_verification_email(user_email, token, os.environ.get("SERVER_BASE_URL"))
-    # except Exception as e:
-    #     raise HTTPException(status_code=500, detail="Failed to send verification email. Error: " + str(e))
+    try:
+        token = generate_verification_token(user_email)
+        await send_verification_email(user_email, token, os.environ.get("SERVER_BASE_URL"))
+    except Exception as e:
+        raise HTTPException(status_code=400, detail="Failed to send verification email. Error: " + str(e))
 
     with open(f"{app_dir}/templates/redirect.html") as html_file, open(f"{app_dir}/templates/pending.html") as script_file:
         html = html_file.read()
