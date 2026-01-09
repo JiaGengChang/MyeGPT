@@ -41,7 +41,8 @@ body {
 
   .command-tray {
     display: grid;
-    grid-template-columns: 2fr 6fr;
+    grid-template-columns: 2fr 5fr;
+    margin-top: 10px;
     margin-bottom: 5px;
     width: 80dvw;
     max-width: var(--max-width);
@@ -49,7 +50,7 @@ body {
 
   .command-buttons {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     margin-left: auto;
   }
 

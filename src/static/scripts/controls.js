@@ -73,26 +73,6 @@ async function deleteAccount() {
     }
 }
 
-function toggleNotificationBtn() {
-    const notificationBtn = document.getElementById("notifications-button");
-    Notification.requestPermission().then((permission) => {
-        if (permission === "granted") {
-            if (window.innerWidth < 768) {
-                notificationBtn.textContent = "🔔 On";
-            } else {
-                notificationBtn.textContent = "🔔 Enabled";
-            }
-            return new Notification("Example Notification from MyeGPT");
-        } else {
-            if (window.innerWidth < 768) {
-                notificationBtn.textContent = "🔕 Off";
-            } else {
-                notificationBtn.textContent = "🔕 Disabled";
-            }
-        }
-    });
-}
-
 function toggleTracePanel() {
     let mobile = window.innerWidth < 768;
     const tracePanel = document.getElementById('trace-contents');
@@ -129,4 +109,4 @@ function toggleTracePanel() {
     }
 }
 
-export {eraseMemory, clearChat, logOut, deleteAccount, toggleNotificationBtn, toggleTracePanel};
+export {eraseMemory, clearChat, logOut, deleteAccount, toggleTracePanel};

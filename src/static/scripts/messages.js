@@ -19,6 +19,11 @@ function createTraceMessage(message) {
     // first reveal the trace button if its hidden
     const traceButton = document.getElementById('toggle-trace-button');
     if (traceButton && traceButton.hidden) {
+        // add extra column to accommodate trace button
+        const commandButtons = document.querySelector('.command-buttons');
+        if (commandButtons) {
+            commandButtons.style.gridTemplateColumns = 'repeat(5, 1fr)';
+        }
         traceButton.hidden = false;
     }
     const tracePanel = document.getElementById('trace-contents');
