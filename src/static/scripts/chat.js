@@ -1,5 +1,5 @@
 import { getCookie } from './utils.js';
-import { createAIMessage, createTraceMessage } from './messages.js';
+import { createAIMessage } from './messages.js';
 import { create_spinner, loading_spinner_html, intervalId } from './spinner.js';
 
 const sendButton = document.querySelector('button#send-button');
