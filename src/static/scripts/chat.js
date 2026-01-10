@@ -45,18 +45,18 @@ async function initializeChat() {
         const embeddingsModelIdDisplay = document.getElementById('embeddings-model-id-display');
         embeddingsModelIdDisplay.textContent = `🤖𝐄 ${response.embeddings_model_id}`;
         createAIMessage(response.message);
-        return new Notification("New message from MyeGPT");
+        togglePageTitle(document.title, '🔔 New Message', 2000);
     } catch (error) {
         console.error('Error initializing chat:', error);
     }
 }
 
-function togglePageTitle(oldTitle, newTitle) {
+function togglePageTitle(oldTitle, newTitle, timeOutMs=10000) {
     document.title = newTitle;
     if (document.hasFocus()) {
         setTimeout(() => {
             document.title = oldTitle;
-        }, 10000);
+        }, timeOutMs);
     } else {
         const focusHandler = () => {
             document.title = oldTitle;
@@ -114,11 +114,10 @@ async function sendMessage() {
                 togglePageTitle(originalTitle, alertTitle);
                 break;
             }
-            var chunk = decoder.decode(value);
+            var chunk = decoder.decode(value, { stream: false });
             console.log('Received chunk:', chunk);
             createAIMessage(chunk);
         }
-
     } catch (error) {
         console.error('Error:', error);
     } finally {
