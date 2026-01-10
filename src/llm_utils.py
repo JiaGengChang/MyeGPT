@@ -7,6 +7,8 @@ def universal_chat_model(MODEL_ID: str) -> BaseChatModel:
         raise ValueError("MODEL_ID environment variable is not set")
     elif MODEL_ID.startswith("gpt-"):
         from langchain_openai import ChatOpenAI as ChatModel
+        if MODEL_ID in ["gpt-3.5-turbo", "gpt-4-turbo"]:
+            MAX_TOKENS = 4096
     elif MODEL_ID.startswith("claude"):
         from langchain_anthropic import ChatAnthropic as ChatModel
     elif MODEL_ID.startswith("gemini"):
