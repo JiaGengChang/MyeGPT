@@ -5,7 +5,7 @@ const chatHistory = document.querySelector('div#chat-history');
 function createAIMessage(message) {
     const botMessageElement = document.createElement('div');
     botMessageElement.classList.add('chat-message', 'ai');
-    botMessageElement.innerHTML = message.replace(/\n/g, '<br>'); 
+    botMessageElement.innerHTML = message//.replace(/\n/g, '<br>'); 
     const botMessageContainer = document.createElement('div');
     botMessageContainer.classList.add('chat-message-container');
     botMessageContainer.appendChild(botMessageElement);
@@ -31,7 +31,7 @@ function createTraceMessage(message) {
 
     const traceMessageElement = document.createElement('div');
     traceMessageElement.classList.add('trace-message');
-    traceMessageElement.innerHTML = message.replace(/\n/g, '<br>'); 
+    traceMessageElement.innerHTML = message//.replace(/\n/g, '<br>'); 
     tracePanel.appendChild(traceMessageElement);
     tracePanel.scrollTop = tracePanel.scrollHeight;
     return traceMessageElement;
