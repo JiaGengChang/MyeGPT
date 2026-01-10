@@ -1,6 +1,8 @@
 import { getCookie } from './utils.js';
 import { createSystemMessage } from './messages.js';
 
+const chatHistory = document.querySelector('div#chat-history');
+
 async function eraseMemory() {
     if(confirm('Erase memory of previous conversations associated with this account?')) { 
         try {
@@ -109,4 +111,8 @@ function toggleTracePanel() {
     }
 }
 
-export {eraseMemory, clearChat, logOut, deleteAccount, toggleTracePanel};
+function exportChat(){
+    alert('Coming soon!');
+}
+
+export {eraseMemory, clearChat, logOut, deleteAccount, toggleTracePanel, exportChat};
