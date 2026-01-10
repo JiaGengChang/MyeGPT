@@ -1,5 +1,4 @@
 import os
-import json
 from pprint import pformat
 from fastapi import FastAPI
 from langchain_community.utilities import SQLDatabase
@@ -12,7 +11,7 @@ import logging
 
 from tools import document_search_tool, convert_gene_tool, gene_metadata_tool, gene_level_copy_number_tool, cox_regression_base_data_tool, langchain_query_sql_tool, python_repl_tool, python_execute_sql_query_tool, display_plot_tool, generate_graph_filepath_tool
 from llm_utils import universal_chat_model
-import re
+from utils import parse_step
 
 # Create a system message for the agent
 # dynamic variables will be filled in at the start of each session
@@ -79,40 +78,7 @@ def query_agent(user_input: str):
         # for frontend
         # the following parsing is based on GPT-5-Mini. 
         # It may not work for other LLMS.
-        if 'agent' in step:
-            msg = step['agent']['messages'][0].text()
-            if len(msg.strip()) > 0: 
-                # the AI answer
-                yield f"🤖 Agent: {msg}"
-            else:
-                # Tool call
-                # that's why its an Ai message with no content
-                # remove Ai message heading
-                msg = '\n'.join(step['agent']['messages'][0].pretty_repr().split('\n')[1:])
-                # Add HTML code block tags for the query part
-                if "Tool Calls:\n" in msg:
-                    match = re.split(r"Args:\n", msg, maxsplit=1)
-                    if len(match) == 2:
-                        match_query = re.split(r"\ +Args:\s+query: ", msg, maxsplit=1)
-                        if len(match_query) == 2:
-                            msg = f"{match_query[0]}Args: query:\n<div class=\"scrollable lightaccent codeblock\">{match_query[1]}</div>"
-                        else:
-                            msg = f"{match[0]}Args:\n<div class=\"scrollable lightaccent codeblock\">{match[1]}</div>"
-                yield f"🤖 {msg}"
-        elif 'tools' in step:
-            # Tool result
-            msg = step['tools']['messages'][0].text()
-            if len(msg.strip()) > 0:
-                if "<div class=image-container>" in msg:
-                    yield f"🛠️ Tool result: {msg}"
-                else:
-                    yield f"🛠️ Tool result:<div class=\"scrollable lightaccent codeblock\">{msg}</div>"
-            else:
-                # python_repl_ast is called upon for plotting
-                yield f'🛠️ Tool result: {str(step)}'
-        else:
-            msg = json.dumps(step, indent=2, ensure_ascii=False, default=str)
-            f'⁉️ Unparsed message: {msg}'
+        yield parse_step(step)
 
 async def handle_invalid_chat_history(app: FastAPI, e: Exception):
     global graph

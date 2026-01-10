@@ -1,33 +1,49 @@
 import re
+import json
 
 # present structured tool message in html
-def format_tool_message(message: dict) -> str:
-    tool_name = message.get('name', 'Unknown Tool')
-    tool_input = message.get('input', {})
-    
-    formatted = f"🛠️ Tool call: `{tool_name}`\n"
-    
-    if isinstance(tool_input, dict):
-        for key, value in tool_input.items():
-            formatted += f"  {key}: <div class='code'>{value}</div>"
+def format_step_tool(step:dict):
+    # Tool result
+    msg = step['tools']['messages'][0].text()
+    if len(msg.strip()) > 0:
+        if "<div class=image-container>" in msg:
+            formatted_msg = f"🛠️ Tool result: {msg}"
+        else:
+            formatted_msg = f"🛠️ Tool result:<div class=\"scrollable lightaccent codeblock\">{msg}</div>"
     else:
-        formatted += f"  input: <div class='code'>{tool_input}</div>"
-
-    return formatted
+        # python_repl_ast is called upon for plotting
+        formatted_msg = f'🛠️ Tool result: {str(step)}'
+    return formatted_msg
 
 # present structured AI response or unstructured tool response in html
-def format_text_message(message) -> str:
-    if isinstance(message, dict):
-        content = message.get('text', '')
+def format_step_agent(step:dict):
+    msg = step['agent']['messages'][0].text()
+    if len(msg.strip()) > 0: 
+        # the AI answer
+        formatted_msg = f"🤖 Agent: {msg}"
     else:
-        content = str(message)
-    
-    # Detect if the content contains tool results (e.g., text within [ ])
-    if re.search(r"\[\(.*?\)\]", content) or re.search(r"The top \d+ table\(s\) with best match:", content):
-        # scrollable div to reduce clutter
-        content = f'<div class="scrollable_tool_result">{content}</div>'
-        formatted = f"🛠️ Tool result: {content}"
-    else:
-        formatted = f"💬 {content}"
+        # Tool call
+        # that's why its an Ai message with no content
+        # remove Ai message heading
+        msg = '\n'.join(step['agent']['messages'][0].pretty_repr().split('\n')[1:])
+        # Add HTML code block tags for the query part
+        if "Tool Calls:\n" in msg:
+            match = re.split(r"Args:\n", msg, maxsplit=1)
+            if len(match) == 2:
+                match_query = re.split(r"\ +Args:\s+query: ", msg, maxsplit=1)
+                if len(match_query) == 2:
+                    msg = f"{match_query[0]}Args: query:\n<div class=\"scrollable lightaccent codeblock\">{match_query[1]}</div>"
+                else:
+                    msg = f"{match[0]}Args:\n<div class=\"scrollable lightaccent codeblock\">{match[1]}</div>"
+        formatted_msg = f"🤖 {msg}"
+    return formatted_msg
 
-    return formatted
+def parse_step(step):
+    if 'agent' in step:
+        formatted_msg = format_step_agent(step)
+    elif 'tools' in step:
+        formatted_msg = format_step_tool(step)
+    else:
+        msg = json.dumps(step, indent=2, ensure_ascii=False, default=str)
+        formatted_msg = f'⁉️ Unparsed message: {msg}'
+    return formatted_msg
