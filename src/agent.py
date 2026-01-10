@@ -75,8 +75,6 @@ def query_agent(user_input: str):
     for step in graph.stream({"messages": [user_message]}, config_ask, stream_mode="updates"):
         # for python tty
         print(step)
-        # for trace panel
-        yield f"TRACE_START:{step}:TRACE_END"
         # for chat.js
         if 'agent' in step:
             msg = step['agent']['messages'][0].text()
