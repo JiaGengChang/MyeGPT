@@ -80,8 +80,8 @@ def document_search(query: str, k:int = 1):
     store = connect_store()
     results = store.similarity_search(query, k=k)
     if results:
-        return f"""The top {k} table(s) with best match:
-        {[doc.page_content for doc in results]}
+        return f"""The top {k} table(s) with the best match:
+        <div class="scrollable lightaccent codeblock">{[doc.page_content for doc in results]}</div>
         """
     else:
         return "No tables with relevant fields found"

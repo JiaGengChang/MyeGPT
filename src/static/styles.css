@@ -194,12 +194,16 @@ body {
     font-size: 12px;
   }
 
-  .code {
+  .lightaccent {
+    background-color: rgb(240, 247, 253);
+  }
+
+  .codeblock {
     font-family: monospace;
-    font-size: 14px;
+    font-size: 12px;
   }
   
-  .scrollable_tool_result {
+  .scrollable {
     max-height: 20dvh;
     overflow-y: scroll;
   }
