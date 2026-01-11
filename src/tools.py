@@ -233,7 +233,7 @@ def get_cox_regression_base_data(endpoint='os'):
             df_cph_template.to_csv(f'result/cox_dataset_template_{endpoint}.csv', index=False)
 
     # Already pre-generated to save
-    print(f'Saved template dataset containing PUBLIC ID, {endpoint}, age, ISS, gender columns to result/cox_dataset_template_{endpoint}.csv')
+    return f'Saved template dataset containing PUBLIC ID, {endpoint}, age, ISS, gender columns to result/cox_dataset_template_{endpoint}.csv'
 
 cox_regression_base_data_tool = StructuredTool.from_function(
     func=get_cox_regression_base_data,
