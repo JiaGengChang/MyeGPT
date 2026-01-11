@@ -1,7 +1,7 @@
 from langchain.chat_models.base import BaseChatModel
 
 def universal_chat_model(MODEL_ID: str) -> BaseChatModel:
-    MAX_TOKENS = 5000
+    MAX_TOKENS = 20000
     # Create a langchain chat model given a string MODEL_ID
     if not MODEL_ID:
         raise ValueError("MODEL_ID environment variable is not set")
