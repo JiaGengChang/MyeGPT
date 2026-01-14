@@ -124,3 +124,6 @@ The following terminal commands have only been tested on MacOS Sequioa 15.5
 - Multiple Myeloma Research Foundation (MMRF) 
 - Participants of the CoMMpass trial (NCT01454297)
 - Members of the Chng Wee Joo lab
+
+# License
+- This project is open source under [Dual Licensing](LICENSE.md)
