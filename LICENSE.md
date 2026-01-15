@@ -6,7 +6,7 @@ The source code and models within this repository are dual licenced. You may cho
 
 For non-commercial uses and licensing of these code and models (which include academic purposes), an open-source licence is granted in accordance with the following terms and conditions:
 
-**Apache License Version 2.0** ([https://www.apache.org/licenses/LICENSE-2.0](https://www.apache.org/licenses/LICENSE-2.0))
+**GNU General Public License Version 3** ([https://www.gnu.org/licenses/gpl-3.0.en.html](https://www.gnu.org/licenses/gpl-3.0.en.html))   
 
 ## Commercial Use
 
