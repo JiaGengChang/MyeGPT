@@ -148,22 +148,22 @@ def _max_overlapping_segment(gene_stable_id: str):
         curs.execute('SELECT * FROM genome_gatk_cna WHERE chromosome = %s', (gc,))
         result = curs.fetchall()
         cn_chrom = pd.DataFrame(result, columns=[desc[0] for desc in curs.description])
-        curs.execute('SELECT * FROM genome_gatk_cna WHERE chromosome = %s AND start_bp < %s AND end_bp > %s AND end_bp < %s', (gc,gs,gs,ge))
+        curs.execute('SELECT * FROM genome_gatk_cna WHERE chromosome = %s AND start_pos < %s AND end_pos > %s AND end_pos < %s', (gc,gs,gs,ge))
         result = curs.fetchall()
         df_case1 = pd.DataFrame(result, columns=[desc[0] for desc in curs.description])
-        curs.execute('SELECT * FROM genome_gatk_cna WHERE chromosome = %s AND start_bp > %s AND start_bp < %s AND end_bp > %s', (gc,gs,ge,ge))
+        curs.execute('SELECT * FROM genome_gatk_cna WHERE chromosome = %s AND start_pos > %s AND start_pos < %s AND end_pos > %s', (gc,gs,ge,ge))
         result = curs.fetchall()
         df_case2 = pd.DataFrame(result, columns=[desc[0] for desc in curs.description])
-        curs.execute('SELECT * FROM genome_gatk_cna WHERE chromosome = %s AND end_bp < %s', (gc,gs))
+        curs.execute('SELECT * FROM genome_gatk_cna WHERE chromosome = %s AND end_pos < %s', (gc,gs))
         result = curs.fetchall()
         df_case3 = pd.DataFrame(result, columns=[desc[0] for desc in curs.description])
-        curs.execute('SELECT * FROM genome_gatk_cna WHERE chromosome = %s AND start_bp > %s', (gc,ge))
+        curs.execute('SELECT * FROM genome_gatk_cna WHERE chromosome = %s AND start_pos > %s', (gc,ge))
         result = curs.fetchall()
         df_case4 = pd.DataFrame(result, columns=[desc[0] for desc in curs.description])        
-        curs.execute('SELECT * FROM genome_gatk_cna WHERE chromosome = %s AND start_bp > %s AND end_bp < %s', (gc,gs,ge))
+        curs.execute('SELECT * FROM genome_gatk_cna WHERE chromosome = %s AND start_pos > %s AND end_pos < %s', (gc,gs,ge))
         result = curs.fetchall()
         df_case5 = pd.DataFrame(result, columns=[desc[0] for desc in curs.description])
-        curs.execute('SELECT * FROM genome_gatk_cna WHERE chromosome = %s AND start_bp < %s AND end_bp > %s', (gc,gs,ge))
+        curs.execute('SELECT * FROM genome_gatk_cna WHERE chromosome = %s AND start_pos < %s AND end_pos > %s', (gc,gs,ge))
         result = curs.fetchall()
         df_case6 = pd.DataFrame(result, columns=[desc[0] for desc in curs.description])
         conn.close()
@@ -172,9 +172,9 @@ def _max_overlapping_segment(gene_stable_id: str):
         assert len(df_case1) + len(df_case2) + len(df_case3) + len(df_case4) + len(df_case5) + len(df_case6) == len(cn_chrom)
 
         # calculate overlap lengths
-        df_case1.loc[:,'overlap_len'] = df_case1['end_bp'] - gs + 1
-        df_case2.loc[:,'overlap_len'] = ge - df_case2['start_bp'] + 1
-        df_case5.loc[:,'overlap_len'] = df_case5['end_bp'] - df_case5['start_bp'] + 1
+        df_case1.loc[:,'overlap_len'] = df_case1['end_pos'] - gs + 1
+        df_case2.loc[:,'overlap_len'] = ge - df_case2['start_pos'] + 1
+        df_case5.loc[:,'overlap_len'] = df_case5['end_pos'] - df_case5['start_pos'] + 1
         df_case6.loc[:,'overlap_len'] = ge - gs + 1
 
         df_overlaps = pd.concat([df for df in [df_case1, df_case2, df_case5, df_case6] if len(df)], ignore_index=True)
@@ -191,7 +191,7 @@ def max_overlapping_segment(gene_stable_id: str):
     ans_df = _max_overlapping_segment(gene_stable_id)
     # index [public_id] 
     # MMRF_1016	
-    # values [sample	chromosome	start_bp	end_bp	num_probes	segment_mean	visit	segment_copy_number_status	overlap_len]
+    # values [sample	chromosome	start_pos	end_pos	num_probes	segment_mean	visit	segment_copy_number_status	overlap_len]
     # MMRF_1016_1_BM_CD138pos	chr1	149053976	155975058	700	0.499688	1	1	46319
     csv_path = f'result/gene_level_copy_number_{gene_stable_id}.csv'
     ans_df.to_csv(csv_path)
@@ -200,7 +200,7 @@ def max_overlapping_segment(gene_stable_id: str):
 gene_level_copy_number_tool = StructuredTool.from_function(
     func=max_overlapping_segment,
     name="get_gene_level_copy_number_data",
-    description="Retrieve the gene-level copy number data for a given GENCODE accession aka Ensembl Gene stable ID. Returns the path to a csv file of a pandas dataframe with index as public_id, columns as sample, chromosome, start_bp, end_bp, num_probes, segment_mean, visit, segment_copy_number_status, and overlap_len. The variables related to copy number are 1. segment_mean, which is the log2 fold-change of the probe, and 2. segment_copy_number_status, which is the categorical copy number status (-2, -1, 0, +1, or +2). Example input: ENSG00000143621, example output: public_id=MMRF_1016, sample=MMRF_1016_1_BM_CD138pos, chromosome=chr1, start_bp=149053976, end_bp=155975058, num_probes=700, segment_mean=0.499688, visit=1, segment_copy_number_status=1, overlap_len=46319."
+    description="Retrieve the gene-level copy number data for a given GENCODE accession aka Ensembl Gene stable ID. Returns the path to a csv file of a pandas dataframe with index as public_id, columns as sample, chromosome, start_pos, end_pos, num_probes, segment_mean, visit, segment_copy_number_status, and overlap_len. The variables related to copy number are 1. segment_mean, which is the log2 fold-change of the probe, and 2. segment_copy_number_status, which is the categorical copy number status (-2, -1, 0, +1, or +2). Example input: ENSG00000143621, example output: public_id=MMRF_1016, sample=MMRF_1016_1_BM_CD138pos, chromosome=chr1, start_pos=149053976, end_pos=155975058, num_probes=700, segment_mean=0.499688, visit=1, segment_copy_number_status=1, overlap_len=46319."
 )
 
 def get_cox_regression_base_data(endpoint='os'):
