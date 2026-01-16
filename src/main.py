@@ -30,13 +30,13 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["GET","POST"],
-    allow_headers=["Content-Type"],
-)
+# app.add_middleware(
+#     CORSMiddleware,
+#     allow_origins=[os.environ.get("SERVER_BASE_URL")],
+#     allow_credentials=True,
+#     allow_methods=["GET","POST","DELETE"],
+#     allow_headers=["Content-Type","Authorization"],
+# )
 
 app_dir = os.path.dirname(os.path.abspath(__file__))
 graph_folder = os.path.join(app_dir, 'graph')
@@ -167,26 +167,58 @@ def verify_email(token: str):
 # triggered by clicking delete account button
 # this will remove user from auth.users and the conversation history
 @app.delete("/api/delete_account")
-async def delete_account(token: Annotated[str, Depends(oauth2_scheme)]):
+async def delete_account(token: Annotated[str, Depends(oauth2_scheme)], request: Request):
+    print(request.headers)
+
+    # ensure same origin request
+    if not request.headers.get("sec-fetch-site") == "same-origin":
+        raise HTTPException(status_code=403, detail="Access forbidden")
+    
+    # ensure token is valid
+    try:
+        username = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM]).get("sub")
+    except Exception as e:
+        raise HTTPException(status_code=409, detail="Failed to decode token. Error: " + str(e))
+    
+    # ensure user exists
+    with auth_db_conn.cursor() as cur:
+        try:
+            cur.execute("SELECT * FROM auth.users WHERE username = %s", (username,))
+            row = cur.fetchone()
+            if not row:
+                raise HTTPException(status_code=401, detail=f"User {username} does not exist")
+        except Exception as e:
+            raise HTTPException(status_code=500, detail='main.py line 276')
+
+    # clear conversation history of user
     try:
         await erase_memory(token)
     except Exception as e:
-        raise e
-    username = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM]).get("sub")
+        raise HTTPException(status_code=400, detail="Failed to erase memory. Error: " + str(e))
+    
+    # delete user from db
     with auth_db_conn.cursor() as cur:
         try:
             cur.execute("DELETE FROM auth.users WHERE username = %s", (username,))
             auth_db_conn.commit()
-        except:
-            raise HTTPException(status_code=500, detail="Failed to delete account")
+        except Exception as e:
+            raise HTTPException(status_code=400, detail="Failed to delete account. Error: " + str(e))
+
     return JSONResponse({"message": "Account deleted successfully."})
 
 
 # triggered by clicking erase memory button
 # this will remove conversation history
 @app.delete("/api/erase_memory")
-async def erase_memory(token: Annotated[str, Depends(oauth2_scheme)]):
-    username = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM]).get("sub")
+async def erase_memory(token: Annotated[str, Depends(oauth2_scheme)], request: Request):
+    print(request.headers)
+    if not request.headers.get("sec-fetch-site") == "same-origin":
+        raise HTTPException(status_code=403, detail="Access forbidden")
+    try:
+        username = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM]).get("sub")
+    except Exception as e:
+        raise HTTPException(status_code=401, detail="Failed to decode token. Error: " + str(e))
+
     with auth_db_conn.cursor() as cur:
         try:
             cur.execute("DELETE FROM commpass_schema.checkpoints WHERE thread_id = %s", (username,))
@@ -194,7 +226,7 @@ async def erase_memory(token: Annotated[str, Depends(oauth2_scheme)]):
             cur.execute("DELETE FROM commpass_schema.checkpoint_blobs WHERE thread_id = %s", (username,))
             auth_db_conn.commit()
         except:
-            raise HTTPException(status_code=500, detail="Failed to erase memory")
+            raise HTTPException(status_code=400, detail="Failed to erase memory")
     return JSONResponse({"message": "Memory erased successfully."})
 
 
@@ -202,6 +234,7 @@ async def erase_memory(token: Annotated[str, Depends(oauth2_scheme)]):
 # triggered by login form submission
 @app.post("/app")
 async def serve_homepage(request: Request, token: Annotated[Token, Depends(login_for_access_token)]):
+    print(request.headers)
     app.state.init_prompt_done = asyncio.Event()
     response = FileResponse(f"{app_dir}/templates/app.html")
     try:
@@ -215,55 +248,63 @@ async def serve_homepage(request: Request, token: Annotated[Token, Depends(login
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail="Failed to set cookie. Error: " + str(e))
+    
     try:
         # "gate" to ensure model first receives init prompt
         username = jwt.decode(token.access_token, SECRET_KEY, algorithms=[ALGORITHM]).get("sub")
-        app.state.username = username
-        app.state.model_id = os.environ.get("MODEL_ID")
-        app.state.embeddings_model_id = os.environ.get("EMBEDDINGS_MODEL_ID")
     except Exception as e:
-        raise HTTPException(status_code=500, detail="Failed to decode token. Error: " + str(e))
+        raise HTTPException(status_code=401, detail="Failed to decode token. Error: " + str(e))
+
     with auth_db_conn.cursor() as cur:
         try:
             cur.execute("SELECT email FROM auth.users WHERE username = %s", (username,))
             row = cur.fetchone()
-            app.state.email = row[0] if row and row[0] else None
+            if not row:
+                raise HTTPException(status_code=401, detail=f"User {username} does not exist")
+            app.state.email = row[0]
         except Exception as e:
-            raise HTTPException(status_code=500, detail="Failed to fetch user email. Error: " + str(e))
+            raise HTTPException(status_code=500, detail='main.py line 247')
+    
+    app.state.username = username
+    app.state.model_id = os.environ.get("MODEL_ID")
+    app.state.embeddings_model_id = os.environ.get("EMBEDDINGS_MODEL_ID")
     
     if not app.state.init_prompt_done.is_set():
         asyncio.create_task(send_init_prompt(app))
     return response
 
-# similar to /app, triggered by eval script
-# does not require login form submission, uses string access token
-@app.post("/eval")
-async def serve_homepage(access_token: Annotated[str, Depends(oauth2_scheme)]):
-    app.state.init_prompt_done = asyncio.Event()
-    try:
-        # "gate" to ensure model first receives init prompt
-        username = jwt.decode(access_token, SECRET_KEY, algorithms=[ALGORITHM]).get("sub")
-        app.state.username = username
-        app.state.model_id = os.environ.get("MODEL_ID")
-        app.state.embeddings_model_id = os.environ.get("EMBEDDINGS_MODEL_ID")
-    except Exception as e:
-        raise HTTPException(status_code=500, detail="Failed to decode token. Error: " + str(e))
-    with auth_db_conn.cursor() as cur:
-        try:
-            cur.execute("SELECT email FROM auth.users WHERE username = %s", (username,))
-            row = cur.fetchone()
-            app.state.email = row[0] if row and row[0] else None
-        except Exception as e:
-            raise HTTPException(status_code=500, detail="Failed to fetch user email. Error: " + str(e))
-    
-    if not app.state.init_prompt_done.is_set():
-        asyncio.create_task(send_init_prompt(app))
-    return
-
 # triggered by /app
 @app.post("/api/init")
-async def get_init_response():
+async def get_init_response(token: Annotated[str, Depends(oauth2_scheme)], request: Request):
+    print(request.headers)
+
+    # ensure same origin request
+    if not request.headers.get("sec-fetch-site") == "same-origin":
+        raise HTTPException(status_code=403, detail="Access forbidden")
+
+    # ensure token is valid
+    try:
+        username = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM]).get("sub")
+    except Exception as e:
+        raise HTTPException(status_code=401, detail="Failed to decode token. Error: " + str(e))
+    
+    # ensure user exists
+    with auth_db_conn.cursor() as cur:
+        try:
+            cur.execute("SELECT * FROM auth.users WHERE username = %s", (username,))
+            row = cur.fetchone()
+            if not row:
+                raise HTTPException(status_code=401, detail=f"User {username} does not exist")
+        except Exception as e:
+            raise HTTPException(status_code=500, detail='main.py line 276')
+    
+    # ensure init prompt is sent
+    if not hasattr(app.state, "init_prompt_done"):
+        raise HTTPException(status_code=409, detail="Agent not initialized.")
+    
+    # await initialization
     await app.state.init_prompt_done.wait()
+
     return JSONResponse({
         "message": app.state.init_response,
         "username": app.state.username,
@@ -275,11 +316,37 @@ async def get_init_response():
 
 # triggered by submission of query
 @app.post("/api/ask")
-async def ask(query: Query, token: Annotated[str, Depends(oauth2_scheme)]):
+async def ask(query: Query, token: Annotated[str, Depends(oauth2_scheme)], request: Request):
+    print(request.headers)
+
+    # ensure same origin request
+    if not request.headers.get("sec-fetch-site") == "same-origin":
+        raise HTTPException(status_code=403, detail="Access forbidden")
+    
+    # ensure token is valid    
+    try:
+        username = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM]).get("sub")
+    except Exception as e:
+        raise HTTPException(status_code=401, detail="Failed to decode token. Error: " + str(e))
+
+    # ensure user exists in DB
+    with auth_db_conn.cursor() as cur:
+        try:
+            cur.execute("SELECT * FROM auth.users WHERE username = %s", (username,))
+        except Exception as e:
+            raise HTTPException(status_code=401, detail=f"User {username} does not exist")
+
+
+    # ensure init prompt is sent
+    if not hasattr(app.state, "init_prompt_done"):
+        raise HTTPException(status_code=409, detail="Agent not initialized.")
+
+    # await initialization
     await app.state.init_prompt_done.wait()
+
     def generate_response():
-        for chunk in query_agent(query.user_input):
-            yield chunk
+        yield from query_agent(query.user_input)
+        
     return StreamingResponse(generate_response(), media_type="text/plain")
 
 if __name__ == "__main__":
