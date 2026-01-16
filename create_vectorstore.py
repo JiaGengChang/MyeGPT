@@ -29,7 +29,11 @@ def main():
         with open(os.path.join(docsdir, file), "r", encoding="utf-8") as f:
             content = f.read()
             print(f"Content preview: {content[:50]}...")
-            docs.append(Document(id=uuid.uuid3(uuid.NAMESPACE_URL, file).__str__(), page_content=content))
+            if 'salmon_gene_unstranded_tpm' in file or 'salmon_gene_unstranded_counts' in file:
+                print('Skipping old gene expression documentation.')
+                continue
+            else:
+                docs.append(Document(id=uuid.uuid3(uuid.NAMESPACE_URL, file).__str__(), page_content=content))
 
     # Create an embedding class instance
     embeddings = create_embedding_service(args.model_provider)

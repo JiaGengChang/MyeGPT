@@ -1,0 +1,15 @@
+Table name: `salmon_gene_unstranded_array`
+Description: RNA-Seq based gene expression across 933 samples and 60218 genes. Comes in two formats: estimated counts (count) and transcripts per million (tpm). Expression is quantified using the Salmon algorithm, with RNA-Seq reads mapped to the GRCh38 reference genome. The 933 values in tpm and count fields are from all samples, regardless of visit ID, tissue type, and immunotype. To filter by sample type, obtain sample IDs from the helper table `salmon_sample_names`.
+column_number | field name | description | dtype
+1|gene|GENCODE accession/ENSEMBL Stable ID of the gene. example: ENSG00000227830|varchar primary key
+2|tpm|an array of 933 tpm values|float[]
+3|count|an array of 933 estimated read counts|float[]
+
+Helper table: `salmon_sample_names`
+Description: ordered sample IDs of the 933 samples that appear in `salmon_gene_unstranded_array`.
+column_number | field name | description | dtype
+1|sample_index|The 0-indexed position of the sample|int primary key
+2|sample_name|Patient sample identifier. Follows the format [PUBLIC_ID]_[VISIT_ID]_[BM=Bone Marrow/PB=Peripheral Blood]_CD138pos e.g. MMRF_1024_2_BM_CD138pos|varchar
+3|public_id|Patient public identifier. MMRF_ followed by 4 unique digits. e.g. MMRF_1234|varchar
+4|visit_id|The Nth visit, N from 1 up to 6|int
+5|tissue_type|Either "Bone Marrow" (N=915) or "Peripheral Blood" (N=18)|varchar

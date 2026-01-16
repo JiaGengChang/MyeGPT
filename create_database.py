@@ -1,3 +1,4 @@
+import re
 import pandas as pd
 from sqlalchemy import create_engine, text
 from tqdm import tqdm
@@ -46,12 +47,12 @@ def chunker(seq, size):
     # from http://stackoverflow.com/a/434328
     return (seq[pos:pos + size] for pos in range(0, len(seq), size))
 
+expr_tpm = pd.read_csv(f'{PROJECTDIR}/omicdata/MMRF_CoMMpass_IA22_salmon_geneUnstranded_tpm.tsv', sep='\t').set_index('Gene')
+expr_counts = pd.read_csv(f'{PROJECTDIR}/omicdata/MMRF_CoMMpass_IA22_salmon_geneUnstranded_counts.tsv', sep='\t').set_index('Gene')
+
 def upload_table_salmon_gene_unstranded_counts():
     # Load the data
-    df = pd.read_csv(f'{PROJECTDIR}/omicdata/MMRF_CoMMpass_IA22_salmon_geneUnstranded_counts.tsv', sep='\t')
-    df = df.set_index('Gene')
-    # convert all columns from float to int
-    df = df.astype(int)
+    df = expr_counts.copy()
     # Transpose to have samples as rows and genes as columns
     df = df.transpose()
     df.index.name = 'SAMPLE'
@@ -75,8 +76,7 @@ def upload_table_salmon_gene_unstranded_counts():
 
 def upload_table_salmon_gene_unstranded_tpm():
     # Load the data
-    df = pd.read_csv(f'{PROJECTDIR}/omicdata/MMRF_CoMMpass_IA22_salmon_geneUnstranded_tpm.tsv', sep='\t')
-    df = df.set_index('Gene')
+    df = expr_tpm.copy()
     # Transpose to have samples as rows and genes as columns
     df = df.transpose()
     df.index.name = 'SAMPLE'
@@ -99,6 +99,60 @@ def upload_table_salmon_gene_unstranded_tpm():
                 cdf.to_sql('salmon_gene_unstranded_tpm', con=conn, if_exists=replace, index=True, index_label=['PUBLIC_ID','Gene'])
                 pbar.update(chunksize)
         print("TPM values updated successfully.")
+
+def upload_table_expr_metadata():
+    with engine.connect() as conn:
+        sample_names = expr_tpm.columns.tolist()
+        public_ids = [re.match(r'(MMRF_\d+)_', name).group(1) for name in sample_names]
+        visit_ids = [int(name.split('_')[2]) for name in sample_names]
+        tissue_types = ['Bone Marrow' if '_BM_' in name else 'Peripheral Blood' if '_PB_' in name else 'Unknown' for name in sample_names]
+        # Create reference table with ordered sample names
+        conn.execute(text("DROP TABLE IF EXISTS salmon_sample_names;"))
+        conn.execute(text("""
+            CREATE TABLE salmon_sample_names (
+                sample_index INT PRIMARY KEY,
+                sample_name VARCHAR,
+                public_id VARCHAR,
+                visit_id INT,
+                tissue_type VARCHAR
+            );
+        """))
+        conn.execute(
+            text("INSERT INTO salmon_sample_names (sample_index, sample_name, public_id, visit_id, tissue_type) VALUES (:sample_index, :sample_name, :public_id, :visit_id, :tissue_type) "),
+            [{"sample_index": i, "sample_name": name, "public_id": public_ids[i], "visit_id": visit_ids[i], "tissue_type": tissue_types[i]} for i, name in enumerate(sample_names)]
+        )
+        conn.commit()
+        print("Gene expression metadata created successfully.")
+
+# gene expression matrix
+# optimized for faster retrieval of all TPMs for a gene across samples
+# gene varchar, tpm array float, count array float
+def upload_table_expr():
+    # Load the data
+    df_expr = expr_tpm.copy()
+    df_counts = expr_counts.copy()
+    with engine.connect() as conn:
+        # Create table with gene and tpm_array columns
+        conn.execute(text("""
+            CREATE TABLE IF NOT EXISTS expr (
+                gene VARCHAR PRIMARY KEY,
+                tpm FLOAT[], 
+                count FLOAT[]
+            );
+        """))
+        with tqdm(total=len(df_expr)) as pbar:
+            for i in range(len(df_expr)):
+                gene = df_expr.index[i]
+                tpm_array = df_expr.iloc[i].values.tolist()
+                count_array = df_counts.iloc[i].values.tolist()
+                conn.execute(
+                    text("INSERT INTO expr (gene, tpm, count) VALUES (:gene, :tpm, :count) "
+                            "ON CONFLICT (gene) DO UPDATE SET tpm = EXCLUDED.tpm, count = EXCLUDED.count;"),
+                    {"gene": gene, "tpm": tpm_array, "count": count_array}
+                )
+                pbar.update(1)
+        conn.commit()
+        print("Gene expression updated successfully.")
 
 # based on Soekojo et al 2022 Genomic Classification of Functional High Risk patients in Multiple myeloma
 # add integer-level segment copy number status, defined for segment_mean x as:
@@ -326,7 +380,7 @@ if __name__ == "__main__":
         # upload_table_stand_alone_trtresp()
         # upload_table_salmon_gene_unstranded_counts()
         # upload_table_salmon_gene_unstranded_tpm()
-        upload_table_genome_gatk_cna()
+        # upload_table_genome_gatk_cna()
         # upload_table_gene_annotation()
         # upload_table_exome_NS_variants()
         # upload_table_canonical_ig()
@@ -336,6 +390,8 @@ if __name__ == "__main__":
         # upload_table_gep_scores()
         # upload_table_baf()
         # upload_table_hgnc()
+        # upload_table_expr()
+        upload_table_expr_metadata()
         # rename all fields to lowercase
         change_lowercase_column_names()
         grant_select_privileges_to_client()
