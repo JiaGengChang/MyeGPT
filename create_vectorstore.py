@@ -17,8 +17,9 @@ parser = ArgumentParser()
 parser.add_argument('--model_provider', type=str, required=True, choices=['mistral','openai','gemini','amazon'], help='Embedding model provider to use.')
 # vector length: mistral-embed: 1024, amazon titan text embed v1: 1536, openai text-embed-large: 3072, gemini-embedding-001
 parser.add_argument('--vector_size', type=int, required=True, help='Dimension of the embedding vectors.') 
+parser.add_argument('--embeddings_table_suffix', type=str, required=True, help='Suffix for the embeddings table name.') 
 args = parser.parse_args()
-TABLE_NAME = args.model_provider
+TABLE_NAME = args.model_provider + args.embeddings_table_suffix
 VECTOR_SIZE = args.vector_size
 
 def main():
