@@ -303,7 +303,8 @@ async def get_init_response(token: Annotated[str, Depends(oauth2_scheme)], reque
         raise HTTPException(status_code=409, detail="Agent not initialized.")
     
     # await initialization
-    await app.state.init_prompt_done.wait()
+    if not app.state.init_prompt_done.is_set():
+        await app.state.init_prompt_done.wait()
 
     return JSONResponse({
         "message": app.state.init_response,
