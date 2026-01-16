@@ -30,6 +30,7 @@ async function initializeChat() {
             method: 'POST',
             headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${getCookie('access_token')}`,
             },
         });
         if (!initResponse.ok) throw new Error('Failed to initialize chat');
