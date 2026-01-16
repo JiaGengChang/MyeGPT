@@ -18,13 +18,13 @@ canonical_ig:
 Immunoglobulin gene translocations detected by Low coverage, Long insert Whole Genome Sequencing, indexed by "public_id". Each column is a gene name which indicates whether the translocation event for the gene occured. Each value is either 0 (no translocation detected) or 1 (translocation detected). The columns are SeqWGS_WHSC1_CALL, SeqWGS_CCND1_CALL, SeqWGS_MAF_CALL, SeqWGS_MYC_CALL, SeqWGS_MAFA_CALL, SeqWGS_MAFB_CALL, SeqWGS_CCND2_CALL, and SeqWGS_CCND3_CALL.
 
 wgs_fish: 
-WGS-reconstruction of FISH probe values, indexed by "public_id". 
+Chromosome arm-level copy number data, indexed by "public_id". Contains copy number of cytobands such as 1q21, 17p13, etc. Also contains copy number of important oncogenes and tumor suppressor genes.
 
-salmon_gene_unstranded_counts: 
-Gene expression read counts, indexed by "public_id" and "gene" (GENCODE accession).
+expr:
+RNA-Seq gene expression data, indexed by Ensembl Gene ID. Enables efficient querying of gene-level tpm or read-count estimates across all samples with RNA-Seq data. The count and tpm fields are float arrays. To filter by sample, obtain indices using `salmon_sample_names` helper table.
 
-salmon_gene_unstranded_tpm: 
-Gene expression transcripts per million (tpm), indexed by "public_id" and "gene" (GENCODE accession).
+expr_metadata:
+Gene expression sample metadata. Use this if filtering gene expression by sample. Sample names, public ID, visit number, and tissue type, ordered in the same order of appearance in the `count` and `tpm` fields of the `expr` table.
 
 genome_gatk_cna: 
 Copy number alteration segments from GATK, indexed by SAMPLE. Segment_Mean indicates raw mean log ratios of each probe. Segment_Copy_Number indicates the derived integer copy number status (-2, -1, 0, +1, or +2) for the probe. A CN status of 0 is normal, -1 and -2 indicate loss/deletion, +1 and +2 indicate gain/amplification.
