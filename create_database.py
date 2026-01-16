@@ -107,9 +107,9 @@ def upload_table_expr_metadata():
         visit_ids = [int(name.split('_')[2]) for name in sample_names]
         tissue_types = ['Bone Marrow' if '_BM_' in name else 'Peripheral Blood' if '_PB_' in name else 'Unknown' for name in sample_names]
         # Create reference table with ordered sample names
-        conn.execute(text("DROP TABLE IF EXISTS salmon_sample_names;"))
+        conn.execute(text("DROP TABLE IF EXISTS expr_metadata;"))
         conn.execute(text("""
-            CREATE TABLE salmon_sample_names (
+            CREATE TABLE expr_metadata (
                 sample_index INT PRIMARY KEY,
                 sample_name VARCHAR,
                 public_id VARCHAR,
@@ -118,7 +118,7 @@ def upload_table_expr_metadata():
             );
         """))
         conn.execute(
-            text("INSERT INTO salmon_sample_names (sample_index, sample_name, public_id, visit_id, tissue_type) VALUES (:sample_index, :sample_name, :public_id, :visit_id, :tissue_type) "),
+            text("INSERT INTO expr_metadata (sample_index, sample_name, public_id, visit_id, tissue_type) VALUES (:sample_index, :sample_name, :public_id, :visit_id, :tissue_type) "),
             [{"sample_index": i, "sample_name": name, "public_id": public_ids[i], "visit_id": visit_ids[i], "tissue_type": tissue_types[i]} for i, name in enumerate(sample_names)]
         )
         conn.commit()
