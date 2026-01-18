@@ -1,5 +1,6 @@
 import os
 import jwt
+import uuid
 from datetime import timedelta
 from fastapi import Depends, FastAPI, Request, HTTPException, status
 from fastapi.responses import FileResponse, StreamingResponse, JSONResponse, HTMLResponse
@@ -15,7 +16,7 @@ from typing import Annotated
 # src modules
 from agent import send_init_prompt, query_agent
 from models import Token, Query, UserCreate, UserInDB
-from security import get_password_hash, authenticate_user, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES, ALGORITHM, SECRET_KEY
+from security import get_password_hash, authenticate_user, create_access_token, validate_token, validate_user, ACCESS_TOKEN_EXPIRE_MINUTES, ALGORITHM, SECRET_KEY
 from mail import send_verification_email
 from serialize import generate_verification_token, confirm_verification_token
 
@@ -30,13 +31,6 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
-# app.add_middleware(
-#     CORSMiddleware,
-#     allow_origins=[os.environ.get("SERVER_BASE_URL")],
-#     allow_credentials=True,
-#     allow_methods=["GET","POST","DELETE"],
-#     allow_headers=["Content-Type","Authorization"],
-# )
 
 app_dir = os.path.dirname(os.path.abspath(__file__))
 graph_folder = os.path.join(app_dir, 'graph')
@@ -176,19 +170,15 @@ async def delete_account(token: Annotated[str, Depends(oauth2_scheme)], request:
     
     # ensure token is valid
     try:
-        username = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM]).get("sub")
+        username = validate_token(token)
     except Exception as e:
         raise HTTPException(status_code=409, detail="Failed to decode token. Error: " + str(e))
     
     # ensure user exists
-    with auth_db_conn.cursor() as cur:
-        try:
-            cur.execute("SELECT * FROM auth.users WHERE username = %s", (username,))
-            row = cur.fetchone()
-            if not row:
-                raise HTTPException(status_code=401, detail=f"User {username} does not exist")
-        except Exception as e:
-            raise HTTPException(status_code=500, detail='main.py line 276')
+    try:
+        validate_user(username)
+    except Exception as e:
+        raise HTTPException(status_code=401, detail="User does not exist. Error: " + str(e))
 
     # clear conversation history of user
     try:
@@ -215,7 +205,7 @@ async def erase_memory(token: Annotated[str, Depends(oauth2_scheme)], request: R
     if not request.headers.get("sec-fetch-site") == "same-origin":
         raise HTTPException(status_code=403, detail="Access forbidden")
     try:
-        username = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM]).get("sub")
+        username = validate_token(token)
     except Exception as e:
         raise HTTPException(status_code=401, detail="Failed to decode token. Error: " + str(e))
 
@@ -250,20 +240,14 @@ async def serve_homepage(request: Request, token: Annotated[Token, Depends(login
         raise HTTPException(status_code=500, detail="Failed to set cookie. Error: " + str(e))
     
     try:
-        # "gate" to ensure model first receives init prompt
-        username = jwt.decode(token.access_token, SECRET_KEY, algorithms=[ALGORITHM]).get("sub")
+        username = validate_token(token.access_token)
     except Exception as e:
         raise HTTPException(status_code=401, detail="Failed to decode token. Error: " + str(e))
 
-    with auth_db_conn.cursor() as cur:
-        try:
-            cur.execute("SELECT email FROM auth.users WHERE username = %s", (username,))
-            row = cur.fetchone()
-            if not row:
-                raise HTTPException(status_code=401, detail=f"User {username} does not exist")
-            app.state.email = row[0]
-        except Exception as e:
-            raise HTTPException(status_code=500, detail='main.py line 247')
+    try: 
+        validate_user(username)
+    except Exception as e:
+        raise HTTPException(status_code=401, detail="User does not exist. Error: " + str(e))
     
     app.state.username = username
     app.state.model_id = os.environ.get("MODEL_ID")
@@ -284,20 +268,22 @@ async def get_init_response(token: Annotated[str, Depends(oauth2_scheme)], reque
 
     # ensure token is valid
     try:
-        username = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM]).get("sub")
+        username = validate_token(token)
     except Exception as e:
         raise HTTPException(status_code=401, detail="Failed to decode token. Error: " + str(e))
     
     # ensure user exists
-    with auth_db_conn.cursor() as cur:
-        try:
-            cur.execute("SELECT * FROM auth.users WHERE username = %s", (username,))
-            row = cur.fetchone()
-            if not row:
-                raise HTTPException(status_code=401, detail=f"User {username} does not exist")
-        except Exception as e:
-            raise HTTPException(status_code=500, detail='main.py line 276')
+    try:
+        validate_user(username)
+    except Exception as e:
+        raise HTTPException(status_code=401, detail="User does not exist. Error: " + str(e))
     
+    # ensure same user as app
+    try:
+        assert app.state.username == username
+    except Exception as e:
+        raise HTTPException(status_code=401, detail="Token username does not match app username. Error: " + str(e))
+
     # ensure init prompt is sent
     if not hasattr(app.state, "init_prompt_done"):
         raise HTTPException(status_code=409, detail="Agent not initialized.")
@@ -326,17 +312,21 @@ async def ask(query: Query, token: Annotated[str, Depends(oauth2_scheme)], reque
     
     # ensure token is valid    
     try:
-        username = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM]).get("sub")
+        username = validate_token(token)
     except Exception as e:
         raise HTTPException(status_code=401, detail="Failed to decode token. Error: " + str(e))
 
     # ensure user exists in DB
-    with auth_db_conn.cursor() as cur:
-        try:
-            cur.execute("SELECT * FROM auth.users WHERE username = %s", (username,))
-        except Exception as e:
-            raise HTTPException(status_code=401, detail=f"User {username} does not exist")
+    try:
+        validate_user(username)
+    except Exception as e:
+        raise HTTPException(status_code=401, detail="User does not exist. Error: " + str(e))
 
+    # ensure same user as app
+    try:
+        assert app.state.username == username
+    except Exception as e:
+        raise HTTPException(status_code=401, detail="Token username does not match app username. Error: " + str(e))
 
     # ensure init prompt is sent
     if not hasattr(app.state, "init_prompt_done"):
@@ -349,6 +339,49 @@ async def ask(query: Query, token: Annotated[str, Depends(oauth2_scheme)], reque
         yield from query_agent(query.user_input)
         
     return StreamingResponse(generate_response(), media_type="text/plain")
+
+
+# readiness probe
+@app.post("/ready")
+async def ready():
+
+    # test commpass db connection
+    with psycopg.connect(os.environ.get("COMMPASS_DSN")) as conn:
+        with conn.cursor() as cur:
+            cur.execute("SELECT * FROM pg_tables WHERE schemaname = 'public' LIMIT 1")
+            result = cur.fetchone()
+            if not result:
+                raise HTTPException(status_code=500, detail="Commpass database connection failed")
+    
+    # test auth db connection
+    with psycopg.connect(os.environ.get("COMMPASS_AUTH_DSN")) as conn:
+        with conn.cursor() as cur:
+            cur.execute("SELECT * FROM auth.users LIMIT 1;")
+            result = cur.fetchone()
+            if not result:
+                raise HTTPException(status_code=500, detail="User database connection failed")
+
+    # test memory db connection
+    with psycopg.connect(os.environ.get("COMMPASS_MEMORY_DB_URI")) as conn:
+        with conn.cursor() as cur:
+            cur.execute("SELECT * FROM pg_tables WHERE schemaname = 'commpass_schema' LIMIT 1")
+            result = cur.fetchone()
+            if not result:
+                raise HTTPException(status_code=500, detail="Memory database connection failed")
+
+    try:
+        test_username = uuid.uuid4().hex
+        assert test_username == validate_token(jwt.encode({"sub": test_username}, SECRET_KEY, algorithm=ALGORITHM))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Token validation failed. Error: " + str(e))
+    
+    try:
+        validate_user("admin")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="User validation failed. Error: " + str(e))
+
+    return JSONResponse({"status": "ok"})
+
 
 if __name__ == "__main__":
     import uvicorn
