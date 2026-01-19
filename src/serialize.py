@@ -1,6 +1,7 @@
 from itsdangerous import URLSafeTimedSerializer
 import os
 from dotenv import load_dotenv
+from fastapi import HTTPException
 load_dotenv(os.path.join(os.path.dirname(__file__),'.env'))
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
@@ -14,6 +15,7 @@ def generate_verification_token(email: str) -> str:
 def confirm_verification_token(token: str, expiration=3600) -> str:
     try:
         email = serializer.loads(token, salt=SECURITY_SALT, max_age=expiration)
-    except Exception:
-        return None
+    except Exception as e:
+        raise HTTPException(status_code=400, detail="Invalid or expired token")
+    
     return email

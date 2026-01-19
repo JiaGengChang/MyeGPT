@@ -6,7 +6,6 @@ from fastapi import Depends, FastAPI, Request, HTTPException, status
 from fastapi.responses import FileResponse, StreamingResponse, JSONResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from fastapi.middleware.cors import CORSMiddleware
 import asyncio 
 from contextlib import asynccontextmanager
 from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
@@ -15,8 +14,8 @@ from typing import Annotated
 
 # src modules
 from agent import send_init_prompt, query_agent
-from models import Token, Query, UserCreate, UserInDB
-from security import get_password_hash, authenticate_user, create_access_token, validate_token, validate_user, ACCESS_TOKEN_EXPIRE_MINUTES, ALGORITHM, SECRET_KEY
+from models import Token, TokenData, Query, UserCreate
+from security import get_password_hash, authenticate_user, create_access_token, validate_token, validate_user, patch_user_info, ACCESS_TOKEN_EXPIRE_MINUTES, ALGORITHM, SECRET_KEY
 from mail import send_verification_email
 from serialize import generate_verification_token, confirm_verification_token
 
@@ -72,9 +71,9 @@ async def login_for_access_token(
     else:
         access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
         access_token = create_access_token(
-        data={"sub": user.username}, expires_delta=access_token_expires
+            data={"sub": user.username}, expires_delta=access_token_expires
         )
-        return Token(access_token=access_token, token_type="bearer")
+        return access_token
 
 
 # triggered by registration form submission
@@ -85,15 +84,20 @@ async def register_with_form(request: Request):
     password = form.get("password")
     confirm_password = form.get("confirm-password")
     email = form.get("email", "").strip()
+    
     if password != confirm_password:
         raise HTTPException(status_code=400, detail="Passwords do not match")
+    
     if not (username and email and password):
         raise HTTPException(status_code=400, detail="All fields are required")
+    
+    new_user = UserCreate(username=username, password=password, email=email)
+    
     try:
-        new_user = UserCreate(username=username, password=password, email=email)
         response = await register_user(new_user)
     except HTTPException as e:
         raise HTTPException(status_code=e.status_code, detail=e.detail)
+    
     return response
 
 
@@ -101,7 +105,7 @@ async def register_with_form(request: Request):
 # called by register_with_form
 # for use within swagger UI
 @app.post("/api/register")
-async def register_user(user: UserCreate):
+async def register_user(user: UserCreate) -> HTMLResponse:
     assert os.environ.get("SERVER_BASE_URL"), "Env. variable SERVER_BASE_URL is missing"
     hashed_password = get_password_hash(user.password)
     with auth_db_conn.cursor() as cur:
@@ -117,43 +121,55 @@ async def register_user(user: UserCreate):
             auth_db_conn.rollback()
             raise HTTPException(status_code=400, detail="Failed to register user. Error: " + str(e_unknown))
 
+    token = generate_verification_token(user_email)
+
     try:
-        token = generate_verification_token(user_email)
         await send_verification_email(user_email, token, os.environ.get("SERVER_BASE_URL"))
     except Exception as e:
         raise HTTPException(status_code=400, detail="Failed to send verification email. Error: " + str(e))
 
-    with open(f"{app_dir}/templates/redirect.html") as html_file, open(f"{app_dir}/templates/pending.html") as script_file:
+    with open(f"{app_dir}/templates/redirect.html") as html_file, open(f"{app_dir}/templates/pending.html") as f:
         html = html_file.read()
-        script = script_file.read()
+        script = f.read()
         response = HTMLResponse(html + script)
         response.headers["X-User-Email"] = user_email
 
     return response
 
 
-# triggered by clicking the link in verification email
+# triggered by clicking the link in verification email, expires in 5 minutes
 @app.get("/verify")
 def verify_email(token: str):
-    email = confirm_verification_token(token)
-    if not email:
-        raise HTTPException(status_code=400, detail="Invalid or expired token")
+    
+    # raises 400 if token is invalid or expired
+    try:
+        email = confirm_verification_token(token, expiration=300)
+    except Exception as e:
+        raise e
+    
     with auth_db_conn.cursor() as cur:
-        cur.execute("SELECT username, email, hashed_password, is_verified FROM auth.users WHERE email = %s", (email,))
-        row = cur.fetchone()
-        if not row:
-            raise HTTPException(status_code=404, detail="User not found")
-        user = UserInDB(username=row[0], email=row[1], hashed_password=row[2], is_verified=row[3])
-        if user.is_verified:
-            raise HTTPException(status_code=400, detail="Account already verified.")
-        cur.execute("UPDATE auth.users SET is_verified = TRUE WHERE email = %s", (email,))
-        auth_db_conn.commit()
+        try:
+            cur.execute("SELECT username, email, hashed_password, is_verified FROM auth.users WHERE email = %s", (email,))
+            row = cur.fetchone()
+        except Exception as e:
+            raise HTTPException(status_code=400, detail="User not found. Error: " + str(e))
+    
+    if not row:
+        raise HTTPException(status_code=404, detail="User not found. Please register first.")
+    
+    with auth_db_conn.cursor() as cur:
+        try:
+            cur.execute("UPDATE auth.users SET is_verified = TRUE WHERE email = %s", (email,))
+            auth_db_conn.commit()
+        except Exception as e:
+            auth_db_conn.rollback()
+            raise HTTPException(status_code=400, detail="Failed to verify account. Error: " + str(e))
 
     with open(f"{app_dir}/templates/redirect.html") as html_file, open(f"{app_dir}/templates/verified.html") as script_file:
         html = html_file.read()
         script = script_file.read()
         response = HTMLResponse(html + script)
-        response.headers["Refresh"] = "4; url=/"
+        response.headers["Refresh"] = "3; url=/"
 
     return response
 
@@ -161,7 +177,7 @@ def verify_email(token: str):
 # triggered by clicking delete account button
 # this will remove user from auth.users and the conversation history
 @app.delete("/api/delete_account")
-async def delete_account(token: Annotated[str, Depends(oauth2_scheme)], request: Request):
+async def delete_account(token: Annotated[TokenData, Depends(oauth2_scheme)], request: Request):
     print(request.headers)
 
     # ensure same origin request
@@ -184,7 +200,7 @@ async def delete_account(token: Annotated[str, Depends(oauth2_scheme)], request:
     try:
         await erase_memory(token)
     except Exception as e:
-        raise HTTPException(status_code=400, detail="Failed to erase memory. Error: " + str(e))
+        raise HTTPException(status_code=500, detail="DB error. Failed to erase memory. Error: " + str(e))
     
     # delete user from db
     with auth_db_conn.cursor() as cur:
@@ -192,7 +208,8 @@ async def delete_account(token: Annotated[str, Depends(oauth2_scheme)], request:
             cur.execute("DELETE FROM auth.users WHERE username = %s", (username,))
             auth_db_conn.commit()
         except Exception as e:
-            raise HTTPException(status_code=400, detail="Failed to delete account. Error: " + str(e))
+            auth_db_conn.rollback()
+            raise HTTPException(status_code=500, detail="Failed to delete account. Error: " + str(e))
 
     return JSONResponse({"message": "Account deleted successfully."})
 
@@ -200,23 +217,25 @@ async def delete_account(token: Annotated[str, Depends(oauth2_scheme)], request:
 # triggered by clicking erase memory button
 # this will remove conversation history
 @app.delete("/api/erase_memory")
-async def erase_memory(token: Annotated[str, Depends(oauth2_scheme)], request: Request):
+async def erase_memory(token: Annotated[TokenData, Depends(oauth2_scheme)], request: Request):
     print(request.headers)
     if not request.headers.get("sec-fetch-site") == "same-origin":
         raise HTTPException(status_code=403, detail="Access forbidden")
+    
     try:
-        username = validate_token(token)
+        user = validate_token(token)
     except Exception as e:
-        raise HTTPException(status_code=401, detail="Failed to decode token. Error: " + str(e))
+        raise e
 
     with auth_db_conn.cursor() as cur:
         try:
-            cur.execute("DELETE FROM commpass_schema.checkpoints WHERE thread_id = %s", (username,))
-            cur.execute("DELETE FROM commpass_schema.checkpoint_writes WHERE thread_id = %s", (username,))
-            cur.execute("DELETE FROM commpass_schema.checkpoint_blobs WHERE thread_id = %s", (username,))
+            cur.execute("DELETE FROM commpass_schema.checkpoints WHERE thread_id = %s", (user.username,))
+            cur.execute("DELETE FROM commpass_schema.checkpoint_writes WHERE thread_id = %s", (user.username,))
+            cur.execute("DELETE FROM commpass_schema.checkpoint_blobs WHERE thread_id = %s", (user.username,))
             auth_db_conn.commit()
-        except:
-            raise HTTPException(status_code=400, detail="Failed to erase memory")
+        except Exception as e:
+            auth_db_conn.rollback()
+            raise HTTPException(status_code=500, detail="Failed to erase memory. Error: " + str(e))
     return JSONResponse({"message": "Memory erased successfully."})
 
 
@@ -225,8 +244,11 @@ async def erase_memory(token: Annotated[str, Depends(oauth2_scheme)], request: R
 @app.post("/app")
 async def serve_homepage(request: Request, token: Annotated[Token, Depends(login_for_access_token)]):
     print(request.headers)
+    
     app.state.init_prompt_done = asyncio.Event()
+    
     response = FileResponse(f"{app_dir}/templates/app.html")
+    
     try:
         response.set_cookie(
             key="access_token",
@@ -238,49 +260,42 @@ async def serve_homepage(request: Request, token: Annotated[Token, Depends(login
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail="Failed to set cookie. Error: " + str(e))
-    
+
+    # ensure token is valid and user exists in db    
     try:
-        username = validate_token(token.access_token)
+        user = validate_token(TokenData(payload=token.access_token))
     except Exception as e:
         raise HTTPException(status_code=401, detail="Failed to decode token. Error: " + str(e))
-
-    try: 
-        validate_user(username)
-    except Exception as e:
-        raise HTTPException(status_code=401, detail="User does not exist. Error: " + str(e))
     
-    app.state.username = username
-    app.state.model_id = os.environ.get("MODEL_ID")
-    app.state.embeddings_model_id = os.environ.get("EMBEDDINGS_MODEL_ID")
+    # patch missing user info in app.state
+    patch_user_info(app, auth_db_conn, user)
     
     if not app.state.init_prompt_done.is_set():
         asyncio.create_task(send_init_prompt(app))
+    
     return response
 
 # triggered by /app
 @app.post("/api/init")
-async def get_init_response(token: Annotated[str, Depends(oauth2_scheme)], request: Request):
+async def get_init_response(token: Annotated[TokenData, Depends(oauth2_scheme)], request: Request):
     print(request.headers)
 
     # ensure same origin request
     if not request.headers.get("sec-fetch-site") == "same-origin":
         raise HTTPException(status_code=403, detail="Access forbidden")
 
-    # ensure token is valid
+    # ensure token is valid and user exists in db
     try:
-        username = validate_token(token)
+        user = validate_token(TokenData(payload=token))
     except Exception as e:
-        raise HTTPException(status_code=401, detail="Failed to decode token. Error: " + str(e))
+        raise e
     
-    # ensure user exists
-    try:
-        validate_user(username)
-    except Exception as e:
-        raise HTTPException(status_code=401, detail="User does not exist. Error: " + str(e))
-    
+    # patch missing user info in app.state
+    patch_user_info(app, auth_db_conn, user)
+
     # ensure same user as app
     try:
-        assert app.state.username == username
+        assert app.state.username == user.username
     except Exception as e:
         raise HTTPException(status_code=401, detail="Token username does not match app username. Error: " + str(e))
 
@@ -290,7 +305,11 @@ async def get_init_response(token: Annotated[str, Depends(oauth2_scheme)], reque
     
     # await initialization
     if not app.state.init_prompt_done.is_set():
-        await app.state.init_prompt_done.wait()
+        try:
+            # send init prompt from agent.py
+            await app.state.init_prompt_done.wait()
+        except Exception as e:
+            raise HTTPException(status_code=500, detail="Failed to initialize agent. Error: " + str(e))
 
     return JSONResponse({
         "message": app.state.init_response,
@@ -303,28 +322,22 @@ async def get_init_response(token: Annotated[str, Depends(oauth2_scheme)], reque
 
 # triggered by submission of query
 @app.post("/api/ask")
-async def ask(query: Query, token: Annotated[str, Depends(oauth2_scheme)], request: Request):
+async def ask(query: Query, token: Annotated[TokenData, Depends(oauth2_scheme)], request: Request):
     print(request.headers)
 
     # ensure same origin request
     if not request.headers.get("sec-fetch-site") == "same-origin":
         raise HTTPException(status_code=403, detail="Access forbidden")
     
-    # ensure token is valid    
+    # ensure token is valid and user exists in DB
     try:
-        username = validate_token(token)
+        user = validate_token(TokenData(payload=token))
     except Exception as e:
-        raise HTTPException(status_code=401, detail="Failed to decode token. Error: " + str(e))
-
-    # ensure user exists in DB
-    try:
-        validate_user(username)
-    except Exception as e:
-        raise HTTPException(status_code=401, detail="User does not exist. Error: " + str(e))
+        raise e
 
     # ensure same user as app
     try:
-        assert app.state.username == username
+        assert app.state.username == user.username
     except Exception as e:
         raise HTTPException(status_code=401, detail="Token username does not match app username. Error: " + str(e))
 
@@ -342,8 +355,23 @@ async def ask(query: Query, token: Annotated[str, Depends(oauth2_scheme)], reque
 
 
 # readiness probe
+# returns 200 if all checks pass
+# otherwise returns 500
 @app.post("/ready")
-async def ready():
+async def ready(token: Annotated[TokenData, Depends(oauth2_scheme)], request: Request):
+
+    print(request.headers)
+
+    # ensure same origin request
+    if not request.headers.get("sec-fetch-site") == "same-origin":
+        raise HTTPException(status_code=403, detail="Access forbidden")
+
+    # validate token to allow readiness probing
+    # and test token and user validation
+    try:
+        user = validate_token(TokenData(payload=token))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Failed to decode token. Error: " + str(e))
 
     # test commpass db connection
     with psycopg.connect(os.environ.get("COMMPASS_DSN")) as conn:
@@ -368,17 +396,6 @@ async def ready():
             result = cur.fetchone()
             if not result:
                 raise HTTPException(status_code=500, detail="Memory database connection failed")
-
-    try:
-        test_username = uuid.uuid4().hex
-        assert test_username == validate_token(jwt.encode({"sub": test_username}, SECRET_KEY, algorithm=ALGORITHM))
-    except Exception as e:
-        raise HTTPException(status_code=500, detail="Token validation failed. Error: " + str(e))
-    
-    try:
-        validate_user("admin")
-    except Exception as e:
-        raise HTTPException(status_code=500, detail="User validation failed. Error: " + str(e))
 
     return JSONResponse({"status": "ok"})
 

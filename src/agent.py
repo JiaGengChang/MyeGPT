@@ -28,7 +28,9 @@ def create_system_message() -> str:
     return [HumanMessage(content='Hello, MyeGPT!'),
             SystemMessage(content=system_message)]
 
-async def send_init_prompt(app:FastAPI):
+async def send_init_prompt(app:FastAPI) -> None:
+    # initializes LLM, stores response in app.state.init_response
+    # then flags app.state.init_prompt_done event as done
     global graph
     global config_ask
     config_init = {"thread_id": app.state.username, "recursion_limit": 5} # init configuration
@@ -50,7 +52,9 @@ async def send_init_prompt(app:FastAPI):
                ],
         checkpointer=app.state.checkpointer,
     )
+
     system_message = create_system_message()
+
     try:
         init_response = await graph.ainvoke({"messages" : system_message}, config_init)
         # Store the init response for injection into HTML
@@ -61,11 +65,12 @@ async def send_init_prompt(app:FastAPI):
             app.state.init_response = "Crash recovery succeeded."
         except Exception as e2:
             # likely input length exceeded
-            app.state.init_response = f"Fatal error, please erase memory. Crash message: {e2}"
-
+            app.state.init_response = f"Crash recovery unsuccessful. Consider erasing memory. Error: {e2}"
+    finally:
+        # release /api/init from waiting
+        app.state.init_prompt_done.set()
     
-    # Open the gate for queries
-    app.state.init_prompt_done.set()
+    return
 
 def query_agent(user_input: str):
     global graph

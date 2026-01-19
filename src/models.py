@@ -10,12 +10,12 @@ class TokenData(BaseModel):
     payload: str | None = None
 
 
-class User(BaseModel):
+class _User(BaseModel):
     username: str
     email: str | None = None
 
 
-class UserInDB(User):
+class UserInDB(_User):
     hashed_password: str
     is_verified: bool = False
 
