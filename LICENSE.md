@@ -1,6 +1,6 @@
 # Dual Licensing Options
 
-The source code and models within this repository are dual licenced. You may choose to use it under the terms of the Apache License Version 2.0 for non-commercial purposes, or you can obtain a commercial license for commercial use.
+The source code and models within this repository are dual licenced. You may choose to use it under the terms of the GNU General Public License Version 3 (GPLv3) for non-commercial purposes, or you can obtain a commercial license for commercial use.
 
 ## Non-Commercial Use
 
