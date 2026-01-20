@@ -33,7 +33,9 @@ async function initializeChat() {
             'Authorization': `Bearer ${getCookie('access_token')}`,
             },
         });
-        if (!initResponse.ok) throw new Error('Failed to initialize chat');
+        if (!initResponse.ok) {
+            throw new Error(`Failed to initialize chat. ${initResponse.status} ${initResponse.statusText}`);
+        }
         const response = await initResponse.json();
         clearInterval(intervalId); // remove the countdown till refresh
         window.spinner.remove(); // remove the loading icon
@@ -99,7 +101,9 @@ async function sendMessage() {
             body: JSON.stringify({ user_input: message }),  
         });
 
-        if (!response.ok) throw new Error('Failed to send message');
+        if (!response.ok) {
+            throw new Error(`Failed to send message. ${response.status} ${response.statusText}`);
+        }
         
         // Read the streaming response
         const reader = response.body.getReader();
