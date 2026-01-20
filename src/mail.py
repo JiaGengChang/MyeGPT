@@ -1,7 +1,10 @@
 import os
 from dotenv import load_dotenv
 load_dotenv(os.path.join(os.path.dirname(__file__),'.env'))
+from fastapi import HTTPException, status
 from fastapi_mail import FastMail, MessageSchema, ConnectionConfig, MessageType
+
+from models import TokenData
 
 conf = ConnectionConfig(
     MAIL_USERNAME=os.getenv("MAIL_USERNAME"),
@@ -14,15 +17,21 @@ conf = ConnectionConfig(
     USE_CREDENTIALS=True,
 )
 
-async def send_verification_email(email: str, token: str, app_url: str = "http://localhost:8080"):
-    link = os.path.join(app_url, f"verify?token={token}")
+async def send_verification_email(email: str, token: TokenData, app_url: str = "http://localhost:8080") -> None:
+    link = os.path.join(app_url, f"verify?token={str(token.payload)}")
     message = MessageSchema(
         subject="Verify your email",
         recipients=[email],
         body=f"Dear MyeGPT User,\n\nPlease click this link to verify your account: {link}\n\nBest regards,\nMyeGPT Admin",
         subtype=MessageType.plain
     )
-    fm = FastMail(conf)
+    try:
+        fm = FastMail(conf)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to create email client. Error: " + str(e))
+    
     # expect exceptions will be raised by aiosmtplib if recipient does not exist
-    await fm.send_message(message)
-        
+    try:
+        await fm.send_message(message)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Failed to send verification email to address {email}. Error: " + str(e))
