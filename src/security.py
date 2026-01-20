@@ -22,7 +22,7 @@ def _verify_password(plain_password, hashed_password) -> bool:
     return password_hash.verify(plain_password, hashed_password)
 
 
-def get_password_hash(password):
+def get_password_hash(password) -> str:
     if password=="":
         raise HTTPException(status_code=400, detail="Password is empty")
     return password_hash.hash(password)
