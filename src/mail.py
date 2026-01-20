@@ -1,10 +1,12 @@
 import os
 from dotenv import load_dotenv
 load_dotenv(os.path.join(os.path.dirname(__file__),'.env'))
-from fastapi import HTTPException, status
+from typing import Annotated
+from fastapi import HTTPException, status, Depends
 from fastapi_mail import FastMail, MessageSchema, ConnectionConfig, MessageType
 
 from models import TokenData
+from serialize import generate_verification_token
 
 conf = ConnectionConfig(
     MAIL_USERNAME=os.getenv("MAIL_USERNAME"),
@@ -17,7 +19,7 @@ conf = ConnectionConfig(
     USE_CREDENTIALS=True,
 )
 
-async def send_verification_email(email: str, token: TokenData, app_url: str = "http://localhost:8080") -> None:
+async def send_verification_email(email: str, token: Annotated[TokenData, Depends(generate_verification_token)], app_url) -> None:
     link = os.path.join(app_url, f"verify?token={str(token.payload)}")
     message = MessageSchema(
         subject="Verify your email",

@@ -2,10 +2,10 @@ import jwt
 import os
 from dotenv import load_dotenv
 load_dotenv(os.path.join(os.path.dirname(__file__),'.env'))
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, status, Request
 import psycopg
 from psycopg import sql
-from models import Token, TokenData, UserInDB
+from models import Token, UserInDB
 from pwdlib import PasswordHash
 from datetime import datetime, timedelta, timezone
 
@@ -15,9 +15,6 @@ ALGORITHM = os.environ.get("ALGORITHM")
 ACCESS_TOKEN_EXPIRE_MINUTES = 120
 
 password_hash = PasswordHash.recommended()
-
-auth_db_conn = psycopg.connect(os.environ.get("COMMPASS_AUTH_DSN"))
-
 
 def _verify_password(plain_password, hashed_password):
     if plain_password=="":
@@ -34,34 +31,30 @@ def get_password_hash(password):
 
 
 # retrieve an existing user
-def _get_user(dbconn, username: str) -> UserInDB:
+def _get_user(username: str) -> UserInDB:
+    
     if username=="":
         raise HTTPException(status_code=400, detail="Username is empty")
-    with dbconn.cursor() as cur:
-        try:
-            query = sql.Composed([sql.SQL("SELECT username, email, hashed_password FROM auth.users WHERE username = "), sql.Literal(username)])
-            cur.execute(query)
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=f"SQL query on auth DB failed. Error: " + str(e))
-        row = cur.fetchone()
-        try:
-            user_obj = UserInDB(username=row[0], email=row[1], hashed_password=row[2])
-        except Exception as e:
-            raise HTTPException(status_code=404, detail=f"User {username} not found. Error: " + str(e))
+    
+    with psycopg.connect(os.environ.get("COMMPASS_AUTH_DSN")) as conn:
+        with conn.cursor() as cur:
+            try:
+                query = sql.Composed([sql.SQL("SELECT username, email, hashed_password FROM auth.users WHERE username = "), sql.Literal(username)])
+                cur.execute(query)
+            except Exception as e:
+                raise HTTPException(status_code=500, detail=f"SQL query on auth DB failed. Error: " + str(e))
+            row = cur.fetchone()
+            try:
+                user = UserInDB(username=row[0], email=row[1], hashed_password=row[2])
+            except Exception as e:
+                raise HTTPException(status_code=404, detail=f"User {username} not found. Error: " + str(e))
         
-        return user_obj
+        return user
 
-# silently validate user existence
-def validate_user(username: str) -> None:
+
+def authenticate_user(username: str, password: str) -> UserInDB:
     try:
-        _get_user(auth_db_conn, username)
-    except HTTPException as http_e:
-        raise http_e
-
-
-def authenticate_user(dbconn, username: str, password: str) -> UserInDB:
-    try:
-        user = _get_user(dbconn, username)
+        user = _get_user(username)
     except HTTPException as http_e:
         raise http_e
     try:
@@ -72,36 +65,41 @@ def authenticate_user(dbconn, username: str, password: str) -> UserInDB:
     return user
 
 
-def create_access_token(data: dict, expires_delta: timedelta | None = None) -> Token:
+def create_bearer_token(data: dict, expires_delta: timedelta | None = None) -> Token:
     to_encode = data.copy()
     if expires_delta:
         expire = datetime.now(timezone.utc) + expires_delta
     else:
         expire = datetime.now(timezone.utc) + timedelta(minutes=15)
     to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
-    token_obj = Token(access_token=encoded_jwt, token_type="bearer")
-    return token_obj
-
-
-def validate_token(token: TokenData) -> UserInDB:
-    if token.payload == os.environ.get("API_BYPASS_TOKEN"):
-        # assumes the existence of username called "admin"
-        return _get_user(auth_db_conn, "admin")
     try:
-        payload = jwt.decode(token.payload, SECRET_KEY, algorithms=[ALGORITHM])
-        username: str = payload.get("sub")
+        encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Token generation failed. Error: " + str(e))
+    
+    bearer_token = Token(access_token=encoded_jwt, token_type="bearer")
+    
+    return bearer_token
+
+
+def validate_token_str(token_str: str) -> UserInDB:
+    if token_str == os.environ.get("API_BYPASS_TOKEN"):
+        # assumes the existence of username called "admin"
+        return _get_user("admin")
+    try:
+        data = jwt.decode(token_str, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = data.get("sub")
     except jwt.PyJWTError:
         raise HTTPException(status_code=401, detail="Invalid token")
     except Exception as e:
         raise HTTPException(status_code=500, detail="Token validation failed. Error: " + str(e))
     if username == "":
         raise HTTPException(status_code=401, detail="Invalid token")
-    return _get_user(auth_db_conn, username)
+    return _get_user(username)
 
 
 # update FastAPI app state with user info and model IDs
-def patch_user_info(app: FastAPI, auth_db_conn: psycopg.Connection, user: UserInDB) -> None:
+def patch_user_info(app: FastAPI, user: UserInDB) -> None:
     # user must be verified to exist by now
     if not hasattr(app.state, "username"):
         app.state.username = user.username
@@ -111,3 +109,9 @@ def patch_user_info(app: FastAPI, auth_db_conn: psycopg.Connection, user: UserIn
         app.state.model_id = os.environ.get("MODEL_ID")
     if not hasattr(app.state, "embeddings_model_id"):
         app.state.embeddings_model_id = os.environ.get("EMBEDDINGS_MODEL_ID")
+
+
+# ensure same site origin, prevents scraping
+def validate_headers(request: Request) -> None:
+    if not request.headers.get("sec-fetch-site") == "same-origin":
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN)
