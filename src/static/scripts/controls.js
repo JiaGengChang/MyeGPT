@@ -45,8 +45,8 @@ function logOut() {
 async function deleteAccount() {
     if(confirm('Are you sure you want to delete your account?\nThis action is irreversible and will erase all your data, including chat history and memory.')) {
         const header = {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${getCookie('access_token')}`,
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${getCookie('access_token')}`,
         };
         try {
             const response0 = await fetch('/api/erase_memory', {
@@ -75,44 +75,8 @@ async function deleteAccount() {
     }
 }
 
-function toggleTracePanel() {
-    let mobile = window.innerWidth < 768;
-    const tracePanel = document.getElementById('trace-contents');
-    const toggleButton = document.getElementById('toggle-trace-button');
-    if (!tracePanel || !toggleButton) return;
-
-    const isNowExpanded = tracePanel.classList.toggle('expanded');
-
-    if (isNowExpanded) {
-        tracePanel.hidden = false;
-        toggleButton.textContent = mobile ? '🔎📜' : '📜 Click to hide';
-        toggleButton.setAttribute('aria-expanded', 'true');
-        tracePanel.style.height = 'auto';
-        tracePanel.style.maxHeight = '40dvh';
-        tracePanel.style.zIndex = '9999';
-        tracePanel.style.overflow = 'auto';
-        tracePanel.style.boxShadow = mobile ? '0vw 0vw 0vw 0.1vw rgba(155, 155, 155, 1)' : '';
-        tracePanel.focus?.();
-    } else {
-        tracePanel.hidden = true;
-        // Revert to original content
-        toggleButton.setAttribute('aria-expanded', 'false');
-        toggleButton.textContent = mobile ? '🔎📜' : '📜 Click to show';
-        // Revert to original styles
-        ['position','left','right','bottom','height','width','zIndex','overflow'].forEach(prop => {
-            tracePanel.style[prop] = '';
-        });
-        ['boxShadow'].forEach(prop => {
-            toggleButton.style[prop] = '';
-        });
-        if (typeof chatHistory !== 'undefined' && chatHistory) {
-            chatHistory.style.marginTop = '';
-        }
-    }
-}
-
 function exportChat(){
     alert('Coming soon!');
 }
 
-export {eraseMemory, clearChat, logOut, deleteAccount, toggleTracePanel, exportChat};
+export {eraseMemory, clearChat, logOut, deleteAccount, exportChat};
