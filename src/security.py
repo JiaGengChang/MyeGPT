@@ -1,7 +1,5 @@
 import jwt
 import os
-from dotenv import load_dotenv
-load_dotenv(os.path.join(os.path.dirname(__file__),'.env'))
 from fastapi import FastAPI, HTTPException, status, Request
 import psycopg
 from psycopg import sql
@@ -16,7 +14,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 120
 
 password_hash = PasswordHash.recommended()
 
-def _verify_password(plain_password, hashed_password):
+def _verify_password(plain_password, hashed_password) -> bool:
     if plain_password=="":
         raise HTTPException(status_code=400, detail="Plain password is empty")
     if hashed_password=="":
@@ -47,7 +45,7 @@ def _get_user(username: str) -> UserInDB:
             try:
                 user = UserInDB(username=row[0], email=row[1], hashed_password=row[2])
             except Exception as e:
-                raise HTTPException(status_code=404, detail=f"User {username} not found. Error: " + str(e))
+                raise HTTPException(status_code=404, detail=f"User {username} not found.")
         
         return user
 
@@ -58,9 +56,12 @@ def authenticate_user(username: str, password: str) -> UserInDB:
     except HTTPException as http_e:
         raise http_e
     try:
-        _verify_password(password, user.hashed_password)
+        is_password_correct = _verify_password(password, user.hashed_password)
     except HTTPException as http_e:
         raise http_e
+    
+    if not is_password_correct:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect username or password")
     
     return user
 
@@ -86,29 +87,20 @@ def validate_token_str(token_str: str) -> UserInDB:
     if token_str == os.environ.get("API_BYPASS_TOKEN"):
         # assumes the existence of username called "admin"
         return _get_user("admin")
+    
     try:
         data = jwt.decode(token_str, SECRET_KEY, algorithms=[ALGORITHM])
-        username: str = data.get("sub")
-    except jwt.PyJWTError:
-        raise HTTPException(status_code=401, detail="Invalid token")
+    except jwt.PyJWTError as e:
+        raise HTTPException(status_code=401, detail="Invalid token. Wrong format. Error: " + str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail="Token validation failed. Error: " + str(e))
+    
+    username = data.get("sub")
+
     if username == "":
-        raise HTTPException(status_code=401, detail="Invalid token")
+        raise HTTPException(status_code=401, detail="Invalid token: missing username")
+    
     return _get_user(username)
-
-
-# update FastAPI app state with user info and model IDs
-def patch_user_info(app: FastAPI, user: UserInDB) -> None:
-    # user must be verified to exist by now
-    if not hasattr(app.state, "username"):
-        app.state.username = user.username
-    if not hasattr(app.state, "email"):
-        app.state.email = user.email
-    if not hasattr(app.state, "model_id"):
-        app.state.model_id = os.environ.get("MODEL_ID")
-    if not hasattr(app.state, "embeddings_model_id"):
-        app.state.embeddings_model_id = os.environ.get("EMBEDDINGS_MODEL_ID")
 
 
 # ensure same site origin, prevents scraping

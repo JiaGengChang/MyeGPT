@@ -12,8 +12,8 @@ from fastapi.responses import FileResponse, StreamingResponse, JSONResponse, HTM
 # src modules
 from agent import send_init_prompt, query_agent
 from mail import send_verification_email
-from models import Token, TokenData, Query, UserCreate
-from security import get_password_hash, authenticate_user, create_bearer_token, validate_token_str, validate_headers, patch_user_info
+from models import Token, TokenData, Query, UserCreate, UserInDB
+from security import get_password_hash, authenticate_user, create_bearer_token, validate_token_str, validate_headers
 from serialize import generate_verification_token, confirm_verification_token
 
 
@@ -25,6 +25,15 @@ async def lifespan(app: FastAPI):
         yield
 
 app = FastAPI(lifespan=lifespan)
+
+# update FastAPI app state with user info and model IDs
+def update_app_state(user: UserInDB) -> None:
+    global app
+    # user must be verified to exist by now
+    app.state.username = user.username
+    app.state.email = user.email
+    app.state.model_id = os.environ.get("MODEL_ID")
+    app.state.embeddings_model_id = os.environ.get("EMBEDDINGS_MODEL_ID")
 
 
 app_dir = os.path.dirname(os.path.abspath(__file__))
@@ -42,7 +51,7 @@ app.mount("/static", StaticFiles(directory=static_dir), name="static") # serve c
 app.mount("/scripts", StaticFiles(directory=scripts_dir), name="scripts") # serve css/js files
 app.mount("/templates", StaticFiles(directory=templates_dir), name="templates") # serve html files
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
 
 # Routes
 
@@ -66,7 +75,10 @@ async def login_for_access_token(
 
     validate_headers(request)
 
-    user = authenticate_user(form_data.username, form_data.password)
+    try:
+        user = authenticate_user(form_data.username, form_data.password)
+    except HTTPException as http_e:
+        raise http_e
     
     access_token = create_bearer_token(data={"sub": user.username})
     
@@ -234,12 +246,21 @@ async def erase_memory(token_str: Annotated[str, Depends(oauth2_scheme)], reques
 
 # triggered by login form submission
 @app.post("/app")
-async def serve_homepage(request: Request, token: Annotated[Token, Depends(login_for_access_token)]) -> FileResponse:
+async def serve_homepage(token: Annotated[Token, Depends(login_for_access_token)], request: Request) -> FileResponse:
     print(request.headers)
     
     validate_headers(request)
     
     app.state.init_prompt_done = asyncio.Event()
+    
+    # ensure token is valid and user exists in db   
+    user = validate_token_str(token.access_token)
+    
+    # patch missing user info in app.state
+    update_app_state(user)
+    
+    if not app.state.init_prompt_done.is_set():
+        asyncio.create_task(send_init_prompt(app))
     
     response = FileResponse(f"{app_dir}/templates/app.html")
     
@@ -255,15 +276,6 @@ async def serve_homepage(request: Request, token: Annotated[Token, Depends(login
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to set cookie. Error: " + str(e))
 
-    # ensure token is valid and user exists in db    
-    user = validate_token_str(token.access_token)
-    
-    # patch missing user info in app.state
-    patch_user_info(app, user)
-    
-    if not app.state.init_prompt_done.is_set():
-        asyncio.create_task(send_init_prompt(app))
-    
     return response
 
 # triggered by /app
@@ -273,21 +285,14 @@ async def get_init_response(token_str: Annotated[str, Depends(oauth2_scheme)], r
 
     validate_headers(request)
 
-    # ensure token is valid and user exists in db
     user = validate_token_str(token_str)
     
-    # patch missing user info in app.state
-    patch_user_info(app, user)
-
-    # ensure same user as app
-    try:
-        assert app.state.username == user.username
-    except Exception as e:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token username does not match app username. Error: " + str(e))
+    update_app_state(user)
 
     # ensure init prompt is sent
     if not hasattr(app.state, "init_prompt_done"):
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Agent not initialized.")
+        token = Token(access_token=token_str, token_type="bearer")
+        await serve_homepage(token, request)
     
     # await initialization
     if not app.state.init_prompt_done.is_set():
@@ -314,17 +319,12 @@ async def ask(query: Query, token_str: Annotated[str, Depends(oauth2_scheme)], r
     validate_headers(request)
     
     # ensure token is valid and user exists in DB
-    user = validate_token_str(token_str)
-
-    # ensure same user as app
-    try:
-        assert app.state.username == user.username
-    except Exception as e:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token username does not match app username. Error: " + str(e))
+    validate_token_str(token_str)
 
     # ensure init prompt is sent
     if not hasattr(app.state, "init_prompt_done"):
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Agent not initialized.")
+    
     # await initialization
     await app.state.init_prompt_done.wait()
 
