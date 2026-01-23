@@ -37,15 +37,15 @@ def _get_user(username: str) -> UserInDB:
     with psycopg.connect(os.environ.get("COMMPASS_AUTH_DSN")) as conn:
         with conn.cursor() as cur:
             try:
-                query = sql.Composed([sql.SQL("SELECT username, email, hashed_password FROM auth.users WHERE username = "), sql.Literal(username)])
+                query = sql.Composed([sql.SQL("SELECT username, email, hashed_password, is_verified FROM auth.users WHERE username = "), sql.Literal(username)])
                 cur.execute(query)
             except Exception as e:
                 raise HTTPException(status_code=500, detail=f"SQL query on auth DB failed. Error: " + str(e))
             row = cur.fetchone()
             try:
-                user = UserInDB(username=row[0], email=row[1], hashed_password=row[2])
+                user = UserInDB(username=row[0], email=row[1], hashed_password=row[2], is_verified=row[3])
             except Exception as e:
-                raise HTTPException(status_code=404, detail=f"User {username} not found.")
+                raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Unauthorized")
         
         return user
 

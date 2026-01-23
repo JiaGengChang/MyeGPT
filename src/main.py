@@ -81,7 +81,10 @@ async def login_for_access_token(
         raise http_e
     
     access_token = create_bearer_token(data={"sub": user.username})
-    
+
+    # add user info to app.state
+    update_app_state(user)
+
     return access_token
 
 
@@ -252,12 +255,6 @@ async def serve_homepage(token: Annotated[Token, Depends(login_for_access_token)
     validate_headers(request)
     
     app.state.init_prompt_done = asyncio.Event()
-    
-    # ensure token is valid and user exists in db   
-    user = validate_token_str(token.access_token)
-    
-    # patch missing user info in app.state
-    update_app_state(user)
     
     if not app.state.init_prompt_done.is_set():
         asyncio.create_task(send_init_prompt(app))
