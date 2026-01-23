@@ -1,7 +1,9 @@
 # MyeGPT files
 src/graph
 src/result/*
-!src/result/cox_dataset_template_*s.csv
+!src/result/cox_ph_covariates_*s.csv
+!src/result/gene_log2tpm_mad.csv
+!src/result/cox_ph_*_genes.csv
 src/*.ipynb
 src/*.png
 src/responses.json

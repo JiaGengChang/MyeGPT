@@ -230,10 +230,10 @@ def get_cox_regression_base_data(endpoint='os'):
             df_clin['D_PT_gender'] = df_clin['D_PT_gender'].astype(pd.CategoricalDtype())
             df_clin['D_PT_iss'] = df_clin['D_PT_iss'].astype(pd.CategoricalDtype())
             df_cph_template = df_surv.merge(df_clin, on='PUBLIC_ID')
-            df_cph_template.to_csv(f'result/cox_dataset_template_{endpoint}.csv', index=False)
+            df_cph_template.to_csv(f'result/cox_ph_covariates_{endpoint}.csv', index=False)
 
     # Already pre-generated to save
-    return f'Saved template dataset containing PUBLIC ID, {endpoint}, age, ISS, gender columns to result/cox_dataset_template_{endpoint}.csv'
+    return f'Saved template dataset containing PUBLIC ID, {endpoint}, age, ISS, gender columns to result/cox_ph_covariates_{endpoint}.csv'
 
 cox_regression_base_data_tool = StructuredTool.from_function(
     func=get_cox_regression_base_data,
@@ -241,6 +241,60 @@ cox_regression_base_data_tool = StructuredTool.from_function(
     description="""
     Retrieve a template dataset for Cox PH regression analysis for a given endpoint ('os' or 'pfs'). Returns the path to a csv file containing PUBLIC ID, survival time, censoring status, age, ISS, and gender columns. 
     Example input: os
-    Example output: result/cox_dataset_template_os.csv
+    Example output: result/cox_ph_covariates_os.csv
     Use scenario: When the user requests for survival regression of their feature of interest alongside common covariates like age, sex, and ISS, call this function to obtain the table for age, sex, ISS, and the right-censored survival data. You can then merge their feature(s) of interest with this table."""
+)
+
+def uni_cox_expr_log2tpm(endpoint:str) -> None:
+    # input: endpoint: 'os' or 'pfs' 
+    # output: None except printed statement
+    # behavior: returns the path to the pre-computed Cox PH regression results
+    endpoint = endpoint.lower()
+    if endpoint not in ['os','pfs']:
+        raise ValueError('endpoint must be either \"os\" or \"pfs\"')
+    result_file = 'result/cox_ph_os_56294_genes.csv' if endpoint == 'os' else 'result/cox_ph_pfs_56317_genes.csv'
+    if not os.path.exists(result_file):
+        raise FileNotFoundError(f'Gene-wise Cox PH regression results for endpoint {endpoint} not found.')
+    print(f'Path to gene-wise CoxPH summary statistics for {endpoint} endpoint: {result_file}')
+
+coxph_stats_log2tpm_expr_tool = StructuredTool.from_function(
+    func=uni_cox_expr_log2tpm,
+    name="gene_expr_coxph_statistics",
+    description="""
+    Retrieve the path to pre-computed Cox PH regression results for a given endpoint ('os' or 'pfs'). 
+    Returns the path to a csv file containing columns gene, coef, exp(coef), se(coef), z, p, lower95, upper95, n, q, neglog10q
+    The analysis performed is Cox PH regression based on z-score of log2 (tpm+1) expression values of all genes.
+    Age, sex, and ISS are used as covariates, besides the gene of interest.
+    Samples are first-visit, bone marrow plasma cell in nature (visit ID = 1, tissue type BM, CD138pos).
+    Example input: os
+    Example output: Path to gene-wise CoxPH summary statistics for os endpoint: __path__to_result__file__
+    Note: some genes do not have regression values, CoxPH only around 56,000 out of 60,000 genes in GRCh38.
+    Suitable for: User wants to filter a long list of genes down to those relevant to survival outcomes.
+    Suitable for: User wants to measure whether upregulation or downregulation of a gene is associated with better or worse survival outcomes -> look at whether hazard ratio is >1 or <1.
+    Not suitable for: User wants to measure the effect of their gene of interest on survival while adjusting for other covariates apart from age, sex, and ISS -> Suggest using cox_regression_base_data_tool to get the base dataset and then merge their feature(s) of interest for CoxPH regression.
+    Not suitable for: analysis on certain subpopulations, as summary statistics are based on the entire cohort.
+    """
+)
+
+def mad_expr_log2tpm():
+    # input: none
+    # output: None except printed statement
+    # behavior: returns the path to the pre-computed median and MAD of log2(tpm+1) expression values
+    result_file = 'result/gene_log2tpm_mad.csv'
+    if not os.path.exists(result_file):
+        raise FileNotFoundError('Pre-computed gene MAD results not found.')
+    print(f'Path to gene-wise median and MAD of log2(tpm+1) expression values: {result_file}')
+
+mad_log2tpm_expr_tool = StructuredTool.from_function(
+    func=mad_expr_log2tpm,
+    name="gene_expr_mad_values",
+    description="""
+    Retrieve the path to pre-computed median and median absolute deviation (MAD) of log2(tpm+1)-transformed gene expression.
+    Returns the path to a csv file containing columns Ensembl gene ID, median log2(tpm+1), and MAD log2(tpm+1).
+    This contains all GrCh38 genes with expression data.
+    Suitable for: User wants to filter or order genes based on expression variability across the cohort.
+    Suitable for: User wants to check if a subpopulation has higher or lower expression compared to the cohort median.
+    Not suitable for: evaluating differential expression between conditions. This is cohort-wide summary statistics.
+    Not suitable for: retrieving median or MAD of certain subpopulations. Values here are based on the entire cohort.
+    """
 )

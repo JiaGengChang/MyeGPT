@@ -9,7 +9,7 @@ import psycopg
 matplotlib.use('Agg') # non-interactive backend
 import logging
 
-from tools import document_search_tool, convert_gene_tool, gene_metadata_tool, gene_level_copy_number_tool, cox_regression_base_data_tool, langchain_query_sql_tool, python_repl_tool, python_execute_sql_query_tool, display_plot_tool, generate_graph_filepath_tool
+from tools import document_search_tool, gene_level_copy_number_tool, cox_regression_base_data_tool, langchain_query_sql_tool, python_repl_tool, python_execute_sql_query_tool, coxph_stats_log2tpm_expr_tool, mad_log2tpm_expr_tool, display_plot_tool, generate_graph_filepath_tool
 from llm_utils import universal_chat_model
 from utils import parse_step
 
@@ -44,6 +44,8 @@ async def send_init_prompt(app:FastAPI) -> None:
         tools=[document_search_tool, 
                gene_level_copy_number_tool, 
                cox_regression_base_data_tool, 
+               coxph_stats_log2tpm_expr_tool, 
+               mad_log2tpm_expr_tool,
                langchain_query_sql_tool, 
                python_repl_tool, 
                python_execute_sql_query_tool,
