@@ -63,6 +63,9 @@ def authenticate_user(username: str, password: str) -> UserInDB:
     if not is_password_correct:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect username or password")
     
+    if not user.is_verified:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User email is not verified")
+
     return user
 
 
@@ -71,7 +74,7 @@ def create_bearer_token(data: dict, expires_delta: timedelta | None = None) -> T
     if expires_delta:
         expire = datetime.now(timezone.utc) + expires_delta
     else:
-        expire = datetime.now(timezone.utc) + timedelta(minutes=15)
+        expire = datetime.now(timezone.utc) + timedelta(hours=24)
     to_encode.update({"exp": expire})
     try:
         encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
