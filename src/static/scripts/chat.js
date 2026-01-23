@@ -1,5 +1,5 @@
 import { getCookie } from './utils.js';
-import { createAIMessage } from './messages.js';
+import { createAIMessage, createSystemMessage } from './messages.js';
 import { create_spinner, loading_spinner_html, intervalId } from './spinner.js';
 
 const sendButton = document.querySelector('button#send-button');
@@ -102,6 +102,7 @@ async function sendMessage() {
         });
 
         if (!response.ok) {
+            createSystemMessage(`Session expired. Please log in again. Error ${response.status}: ${response.statusText}`);
             throw new Error(`Failed to send message. ${response.status} ${response.statusText}`);
         }
         
