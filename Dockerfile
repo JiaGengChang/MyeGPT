@@ -20,7 +20,9 @@ COPY src/llm_utils.py .
 COPY src/static static
 COPY src/templates templates
 COPY refdata /refdata
-COPY src/result/cox_dataset_template_*s.csv ./result/
+COPY src/result/cox_ph_*_genes.csv ./result/
+COPY src/result/gene_log2tpm_mad.csv ./result/
+COPY src/result/cox_ph_covariates_*s.csv ./result/
 
 EXPOSE 8080
 
