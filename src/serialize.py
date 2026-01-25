@@ -25,3 +25,8 @@ def confirm_verification_token(token: Annotated[TokenData, Depends(oauth2_scheme
         raise HTTPException(status_code=status.HTTP_408_REQUEST_TIMEOUT, detail="Invalid or expired token")
     
     return email
+
+__all__ = [
+    "generate_verification_token", 
+    "confirm_verification_token"
+]

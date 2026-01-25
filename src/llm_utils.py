@@ -36,3 +36,5 @@ def universal_chat_model(MODEL_ID: str) -> BaseChatModel:
             raise ValueError(f"Failed to initialize chat model with MODEL_ID {MODEL_ID}: {e}")
     
     return llm
+
+__all__ = ["universal_chat_model"]
