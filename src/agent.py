@@ -8,7 +8,7 @@ matplotlib.use('Agg') # non-interactive backend
 import logging
 
 # import user modules
-from chat_agent_executor import create_react_agent
+from executor import create_react_agent
 from langchain_community.utilities import SQLDatabase
 from langchain_community.tools import QuerySQLDatabaseTool
 from langchain_experimental.tools import PythonAstREPLTool

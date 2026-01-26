@@ -14,6 +14,7 @@ COPY src/models.py .
 COPY src/mail.py .
 COPY src/security.py .
 COPY src/serialize.py .
+COPY src/executor.py .
 COPY src/prompt.txt .
 COPY src/prompts.py .
 COPY src/llm_utils.py .
