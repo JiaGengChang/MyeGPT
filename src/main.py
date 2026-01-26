@@ -10,7 +10,7 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi.responses import FileResponse, StreamingResponse, JSONResponse, HTMLResponse
 
 # src modules
-from agent import send_init_prompt, query_agent
+from agent import handle_invalid_chat_history, send_init_prompt, query_agent
 from mail import send_verification_email
 from models import Token, TokenData, Query, UserCreate, UserInDB
 from security import get_password_hash, authenticate_user, create_bearer_token, validate_token_str, validate_headers
@@ -371,6 +371,14 @@ async def ready(token_str: Annotated[str, Depends(oauth2_scheme)], request: Requ
 
     return JSONResponse({"status": "ok"})
 
+@app.post("/api/fix_history")
+async def fix_history(token_str: Annotated[str, Depends(oauth2_scheme)], request: Request) -> JSONResponse:
+    dummy_exception = Exception("bypass")
+
+    response_code = await handle_invalid_chat_history(app, dummy_exception)
+
+    return JSONResponse({"response": response_code, "status": "ok"})
+    
 
 if __name__ == "__main__":
     import uvicorn
