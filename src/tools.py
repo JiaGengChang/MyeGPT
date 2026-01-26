@@ -20,6 +20,8 @@ class ConvertGeneTool(BaseTool):
         "aka Ensembl Gene stable ID (e.g. from NSD2 to ENSG00000109685)."
         "Returns an error message if the gene name is not found"
         "or if it is not a gene name." 
+        "This tool is not suitable for handling multiple genes at once" 
+        "Run SQL query on the `gene_annotation` table instead for converting multiple genes."
     )
     gene_annot: pd.DataFrame = gene_annot
 
@@ -46,7 +48,10 @@ class GeneMetadataTool(BaseTool):
     description: str = (
         "Retrieve the metadata for a given GENCODE accession aka Ensembl Gene stable ID (e.g. ENSG00000109685). "
         "Returns an error message if the gene ID is not found or invalid. "
-        "The fields returned are: Chromosome/scaffold name, Gene start (bp), Gene end (bp), Strand, Gene description, Gene name, Gene type"
+        "The fields returned are: "
+        "Chromosome/scaffold name, Gene start (bp), Gene end (bp), Strand, Gene description, Gene name, Gene type"
+        "This tool is not suitable for handling multiple genes at once" 
+        "Use SQL query tool on the `hgnc_nomenclature` table instead for converting multiple genes."        
     )
     gene_annot: pd.DataFrame = gene_annot
 
@@ -371,6 +376,7 @@ class MADLog2TPMExprTool(BaseTool):
 
 __all__ = [
     "ConvertGeneTool", 
+    "GeneMetadataTool", 
     "MADLog2TPMExprTool", 
     "PythonSQLTool", 
     "DocumentSearchTool", 

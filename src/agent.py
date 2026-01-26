@@ -12,7 +12,7 @@ from chat_agent_executor import create_react_agent
 from langchain_community.utilities import SQLDatabase
 from langchain_community.tools import QuerySQLDatabaseTool
 from langchain_experimental.tools import PythonAstREPLTool
-from tools import ConvertGeneTool, CoxPHStatsLog2TPMExprTool, CoxRegressionBaseDataTool, DisplayPlotTool, DocumentSearchTool, GeneCopyNumberTool, GenerateGraphFilepathTool, MADLog2TPMExprTool, PythonSQLTool
+from tools import ConvertGeneTool, CoxPHStatsLog2TPMExprTool, CoxRegressionBaseDataTool, DisplayPlotTool, DocumentSearchTool, GeneCopyNumberTool, GeneMetadataTool, GenerateGraphFilepathTool, MADLog2TPMExprTool, PythonSQLTool
 from llm_utils import universal_chat_model
 from utils import parse_step
 
@@ -41,12 +41,15 @@ async def send_init_prompt(app:FastAPI) -> None:
 
     #  initialize the chat model
     llm = universal_chat_model(os.environ.get("MODEL_ID"))
-    
+
+    commpass_db = SQLDatabase.from_uri(os.environ.get("COMMPASS_DB_URI"))
+
     graph = create_react_agent(
         model=llm,
         tools = [ConvertGeneTool(),
+                 GeneMetadataTool(),
                  PythonAstREPLTool(),
-                 QuerySQLDatabaseTool(db=SQLDatabase.from_uri(os.environ.get("COMMPASS_DB_URI"))),
+                 QuerySQLDatabaseTool(db=commpass_db),
                  PythonSQLTool(),
                  DocumentSearchTool(),
                  GenerateGraphFilepathTool(),
@@ -56,17 +59,6 @@ async def send_init_prompt(app:FastAPI) -> None:
                  CoxPHStatsLog2TPMExprTool(),
                  MADLog2TPMExprTool()
                  ],
-        # tools=[document_search_tool, 
-        #        gene_level_copy_number_tool, 
-        #        cox_regression_base_data_tool, 
-        #        coxph_stats_log2tpm_expr_tool, 
-        #        mad_log2tpm_expr_tool,
-        #        langchain_query_sql_tool, 
-        #        python_repl_tool, 
-        #        python_execute_sql_query_tool,
-        #        display_plot_tool, 
-        #        generate_graph_filepath_tool
-        #        ],
         checkpointer=app.state.checkpointer,
     )
 
