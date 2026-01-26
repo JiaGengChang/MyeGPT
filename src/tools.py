@@ -83,7 +83,7 @@ class PythonSQLTool(BaseTool):
         "Useful for extracting full results, compared to QuerySQLDatabaseTool which is just a trial run."
     )
 
-    def _execute_sql_query_with_python(query: str):
+    def _execute_sql_query_with_python(self, query: str):
         conn = psycopg.connect(os.environ.get("COMMPASS_DSN"))
         with conn.cursor() as curs:
             curs.execute(re.sub(r'LIMIT \d+', '', query, flags=re.IGNORECASE))
@@ -194,7 +194,7 @@ class GeneCopyNumberTool(BaseTool):
         "Example output: public_id=MMRF_1016, sample=MMRF_1016_1_BM_CD138pos, chromosome=chr1, start_pos=149053976, end_pos=155975058, num_probes=700, segment_mean=0.499688, visit=1, segment_copy_number_status=1, overlap_len=46319."
     )
 
-    def _max_overlapping_segment(gene_stable_id: str):
+    def _max_overlapping_segment(self, gene_stable_id: str):
         import os
         import psycopg
         import pandas as pd
@@ -282,7 +282,7 @@ class CoxRegressionBaseDataTool(BaseTool):
         "You can then merge their feature(s) of interest with this table."
     )
 
-    def _get_cox_regression_base_data(endpoint='os'):
+    def _get_cox_regression_base_data(self, endpoint='os'):
         # input: endpoint: 'os' or 'pfs' 
         # output: None except printed statement
         # behavior: 
