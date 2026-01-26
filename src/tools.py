@@ -273,6 +273,8 @@ class CoxRegressionBaseDataTool(BaseTool):
     description: str = (
         "Retrieve a template dataset for Cox PH regression analysis for a given endpoint ('os' or 'pfs'). "
         "Returns the path to a csv file containing PUBLIC ID, survival time, censoring status, age, ISS, and gender columns. "
+        "Column names for endpoint os are PUBLIC_ID,oscdy,censos,D_PT_age,D_PT_gender_Male,D_PT_iss_II,D_PT_iss_III"
+        "Column names for endpoint pfs are PUBLIC_ID,pfscdy,censpfs,D_PT_age,D_PT_gender_Male,D_PT_iss_II,D_PT_iss_III"
         "Example input: os "
         "Example output: result/cox_ph_covariates_os.csv "
         "Use scenario: When the user requests for survival regression of their feature of interest alongside common covariates like age, sex, and ISS, "
@@ -325,6 +327,7 @@ class CoxPHStatsLog2TPMExprTool(BaseTool):
     description: str = (
         "Retrieve the path to pre-computed Cox PH regression results for a given endpoint ('os' or 'pfs'). "
         "Returns the path to a csv file containing columns gene, coef, exp(coef), se(coef), z, p, lower95, upper95, n, q, neglog10q. "
+        "Column names are `Gene`,`coef`,`exp(coef)`,`se(coef)`,`coef lower 95%`,`coef upper 95%`,`exp(coef) lower 95%`,`exp(coef) upper 95%`,`cmp to`,`z`,`p`,`-log2(p)` respectively. "
         "The analysis performed is Cox PH regression based on z-score of log2 (tpm+1) expression values of all genes. "
         "Age, sex, and ISS are used as covariates, besides the gene of interest. "
         "Samples are first-visit, bone marrow plasma cell in nature (visit ID = 1, tissue type BM, CD138pos). "
@@ -356,6 +359,7 @@ class MADLog2TPMExprTool(BaseTool):
     description: str = (
         "Retrieve the path to pre-computed median and median absolute deviation (MAD) of log2(tpm+1)-transformed gene expression. "
         "Returns the path to a csv file containing columns Ensembl gene ID, median log2(tpm+1), and MAD log2(tpm+1). "
+        "Column names are gene, median_log2, mad_log2 respectively. "
         "This contains all GrCh38 genes with expression data. "
         "Suitable for: User wants to filter or order genes based on expression variability across the cohort. "
         "Suitable for: User wants to check if a subpopulation has higher or lower expression compared to the cohort median. "
