@@ -50,13 +50,13 @@ body {
 
   .command-buttons {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     margin-left: auto;
   }
 
   .command-buttons > button {
     text-align: center;
-    /* height: 2em; */
+    height: 2em;
   }
 
   button {

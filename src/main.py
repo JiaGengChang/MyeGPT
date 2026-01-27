@@ -326,7 +326,7 @@ async def ask(query: Query, token_str: Annotated[str, Depends(oauth2_scheme)], r
     await app.state.init_prompt_done.wait()
 
     def generate_response():
-        yield from query_agent(query.user_input)
+        yield from query_agent(app, query.user_input)
         
     return StreamingResponse(generate_response(), media_type="text/plain")
 
@@ -379,6 +379,17 @@ async def fix_history(token_str: Annotated[str, Depends(oauth2_scheme)], request
 
     return JSONResponse({"response": response_code, "status": "ok"})
     
+
+@app.get("/api/usage_metadata")
+async def usage_metadata(token_str: Annotated[str, Depends(oauth2_scheme)], request: Request) -> JSONResponse:
+    print(request.headers)
+
+    validate_headers(request)
+
+    # validate token to allow usage metadata access
+    _ = validate_token_str(token_str)
+
+    return JSONResponse({"usage_metadata": app.state.usage_metadata, "status": "ok"})
 
 if __name__ == "__main__":
     import uvicorn

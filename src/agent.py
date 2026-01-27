@@ -68,20 +68,24 @@ async def send_init_prompt(app:FastAPI) -> None:
         init_response = await graph.ainvoke({"messages" : system_message}, config_init)
         # Store the init response for injection into HTML
         app.state.init_response = init_response["messages"][-1].content
+        # dictionary with token usage info
+        # for updating in parse_step
+        # {'input_tokens': 16172, 'output_tokens': 289, 'total_tokens': 16461, 'input_token_details': {'audio': 0, 'cache_read': 13952}, 'output_token_details': {'audio': 0, 'reasoning': 128}}
+        app.state.usage_metadata = init_response["messages"][-1].usage_metadata
     except Exception as e1:
         try:
             await handle_invalid_chat_history(app, e1)
             app.state.init_response = "Crash recovery succeeded."            
         except Exception as e2:
             # likely input length exceeded
-            app.state.init_response = f"Crash recovery unsuccessful. Consider erasing memory. Error: {e2}"
+            app.state.init_response = f"Initialization error: {e2}"
     finally:
         # release /api/init from waiting
         app.state.init_prompt_done.set()
     
     return
 
-def query_agent(user_input: str):
+def query_agent(app: FastAPI, user_input: str):
     global graph
     global config_ask
     user_message = HumanMessage(content=user_input)
@@ -92,7 +96,7 @@ def query_agent(user_input: str):
         # for frontend
         # the following parsing is based on GPT-5-Mini. 
         # It may not work for other LLMS.
-        yield parse_step(step)
+        yield parse_step(step, app.state.usage_metadata)
 
 async def handle_invalid_chat_history(app: FastAPI, e: Exception):
     global graph

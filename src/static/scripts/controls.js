@@ -125,4 +125,62 @@ async function fixHistory(){
     }
 }
 
-export {isResponding, switchMode, eraseMemory, clearChat, logOut, deleteAccount, fixHistory};
+function parse_usage_metadata(usage_metadata) {
+    let msg;
+    if (!usage_metadata) {
+        msg = 'No usage metadata available.';
+    } else {
+        // example usage_metadata
+        // {"input_tokens":21188,"output_tokens":341,"total_tokens":21529,"input_token_details":{"audio":0,"cache_read":18048},"output_token_details":{"audio":0,"reasoning":128}}
+        const cachedT = usage_metadata.input_token_details.cache_read || -1;
+        const inputT = usage_metadata.input_tokens - cachedT || -1;
+        const reasonT = usage_metadata.output_token_details.reasoning || -1;
+        const outputT = usage_metadata.output_tokens - reasonT || -1;
+        const totalT = usage_metadata.total_tokens || -1;
+        // based on GPT-5-mini pricing
+        const inputCost = inputT * 2.5e-7 + cachedT * 2.5e-8;
+        const outputCost = outputT * 2e-6;
+        const totalCost = inputCost + outputCost;
+        // Create two-column layout
+        msg = `<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div>
+                <strong>💸💸 Running cost</strong><br>
+                Input: $${inputCost.toFixed(3)}<br>
+                Output: $${outputCost.toFixed(3)}<br>
+                Total: $${totalCost.toFixed(3)} USD
+            </div>
+            <div>
+                <strong>💬💬 Running token usage</strong><br>
+                Input: ${inputT}&#9Cached: ${cachedT}<br>
+                Output: ${outputT}&#9Reasoning: ${reasonT}<br>
+                Total: ${totalT}
+            </div>
+        </div>`
+    }
+    return msg;
+}
+
+async function checkUsage(){
+    switchMode();
+    const header = {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${getCookie('access_token')}`,
+    };
+    try {
+        const response = await fetch('/api/usage_metadata', {
+            method: 'GET',
+            headers: header
+        });
+        if (!response.ok) throw new Error('Failed to fetch usage metadata');
+        const data = await response.json();
+        const usage_metadata_msg = parse_usage_metadata(data.usage_metadata)
+        createSystemMessage(usage_metadata_msg);
+    } catch (error) {
+        createSystemMessage('Error fetching usage metadata. See console for details.');
+        console.error('Error:', error);
+    } finally {
+        switchMode();
+    };
+};
+
+export {isResponding, switchMode, eraseMemory, clearChat, logOut, deleteAccount, fixHistory, checkUsage};

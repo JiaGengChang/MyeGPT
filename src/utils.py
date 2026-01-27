@@ -15,9 +15,20 @@ def format_step_tool(step:dict):
         formatted_msg = f'🛠️ Tool result: {str(step)}'
     return formatted_msg
 
+def _recursive_update(target, source):
+    for k, v in source.items():
+        if k in target and isinstance(target[k], dict) and isinstance(v, dict):
+            _recursive_update(target[k], v)
+        elif k in target:
+            target[k] += v
+        else:
+            target[k] = v
+    
 # present structured AI response or unstructured tool response in html
-def format_step_agent(step:dict):
+def format_step_agent(step:dict, session_state:dict):
     msg = step['agent']['messages'][0].text
+    metadata = step['agent']['messages'][0].usage_metadata
+    _recursive_update(session_state, metadata)
     if len(msg.strip()) > 0: 
         # the AI answer
         formatted_msg = f"🤖 Agent: {msg}"
@@ -38,9 +49,9 @@ def format_step_agent(step:dict):
         formatted_msg = f"🤖 {msg}"
     return formatted_msg
 
-def parse_step(step):
+def parse_step(step:dict, session_state: dict):
     if 'agent' in step:
-        formatted_msg = format_step_agent(step)
+        formatted_msg = format_step_agent(step, session_state)
     elif 'tools' in step:
         formatted_msg = format_step_tool(step)
     else:

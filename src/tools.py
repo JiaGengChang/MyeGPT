@@ -28,11 +28,17 @@ class ConvertGeneTool(BaseTool):
     def _convert_gene(self, gene_name: str):
         if gene_name.startswith("ENSG"):
             return f"Error: '{gene_name}' appears to be a Gene stable ID."
-        gene_id = self.gene_annot[self.gene_annot['Gene name'] == gene_name]['Gene stable ID'].values[0]
-        if not pd.isna(gene_id):
-            return gene_id
+        gene_row = self.gene_annot['Gene name'] == gene_name
+        if gene_row.sum() == 0:
+            return f"Error: '{gene_name}' not a valid Gene name in the database. Try running SQL query on the `hgnc_nomenclature` table to convert to formal gene name."
+        elif gene_row.sum() > 1:
+            return f"Error: '{gene_name}' is ambiguous and maps to multiple Gene stable IDs in the database."
         else:
-            return f"Error: '{gene_name}' not a valid Gene name in the database. Try again with uppercase or without spaces or hyphens."
+            gene_id = self.gene_annot[gene_row]['Gene stable ID'].values[0]
+            if not pd.isna(gene_id):
+                return gene_id
+            else:
+                return f"Error: '{gene_name}' not a valid Gene name in the database. Try again with uppercase or without spaces or hyphens."
 
     def _run(
             self,
@@ -115,6 +121,7 @@ class DocumentSearchTool(BaseTool):
         "or copy number data - do not mix multiple concepts at once."
         "Each term should have 3 words at maximum"
         "If there are multiple terms to search, call this tool multiple times, one for each term"
+        "Always start with the minimum k of 1. Only if the 1st table does not contain required fields should k be increased to 2, then 3. Maximum k is 3."
     )
     
     def _run(
