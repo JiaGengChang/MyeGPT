@@ -4,7 +4,7 @@ import json
 # present structured tool message in html
 def format_step_tool(step:dict):
     # Tool result
-    msg = step['tools']['messages'][0].text()
+    msg = step['tools']['messages'][0].text
     if len(msg.strip()) > 0:
         if "<div class=image-container>" in msg:
             formatted_msg = f"🛠️ Tool result: {msg}"
@@ -17,7 +17,7 @@ def format_step_tool(step:dict):
 
 # present structured AI response or unstructured tool response in html
 def format_step_agent(step:dict):
-    msg = step['agent']['messages'][0].text()
+    msg = step['agent']['messages'][0].text
     if len(msg.strip()) > 0: 
         # the AI answer
         formatted_msg = f"🤖 Agent: {msg}"

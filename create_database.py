@@ -182,7 +182,7 @@ def upload_table_genome_gatk_cna():
 
     df['Segment_Copy_Number_Status'] = df['Segment_Mean'].apply(segment_copy_number)
     # rename End to End_bp to avoid conflict with SQL reserved word
-    df = df.rename(columns={'Start': 'Start_bp', 'End': 'End_bp'})
+    df = df.rename(columns={'Start': 'Start_pos', 'End': 'End_pos'})
 
     print(df.head())
     # Upload to the database
@@ -313,12 +313,12 @@ def upload_table_baf():
     df = pd.read_csv(f'{PROJECTDIR}/omicdata/Loss of Heterozygosity Files_MMRF_CoMMpass_IA22_exome_gatk_baf.seg', sep='\t')
     df['PUBLIC_ID'] = df['SAMPLE'].str.extract(r'(MMRF_\d+)')  # Extract the numeric part of the sample name
     df['VISIT'] = df['SAMPLE'].str.extract(r'MMRF_\d+_(\d+)_.*$')  # Extract the visit number
-    df = df.set_index('SAMPLE')
+    df = df.set_index(['PUBLIC_ID','SAMPLE'])
     print(df.head())
 
     # Upload to the database
     with engine.connect() as conn:
-        df.to_sql('gatk_baf', con=conn, if_exists='replace', index=True, index_label='SAMPLE')
+        df.to_sql('gatk_baf', con=conn, if_exists='replace', index=True, index_label=['PUBLIC_ID','SAMPLE'])
         print("Data uploaded successfully.")
 
 def upload_table_hgnc():
@@ -378,9 +378,7 @@ if __name__ == "__main__":
         # upload_table_stand_alone_survival()
         # upload_table_stand_alone_treatment_regimen()
         # upload_table_stand_alone_trtresp()
-        # upload_table_salmon_gene_unstranded_counts()
-        # upload_table_salmon_gene_unstranded_tpm()
-        # upload_table_genome_gatk_cna()
+        upload_table_genome_gatk_cna()
         # upload_table_gene_annotation()
         # upload_table_exome_NS_variants()
         # upload_table_canonical_ig()
@@ -391,7 +389,7 @@ if __name__ == "__main__":
         # upload_table_baf()
         # upload_table_hgnc()
         # upload_table_expr()
-        upload_table_expr_metadata()
+        # upload_table_expr_metadata()
         # rename all fields to lowercase
         change_lowercase_column_names()
         grant_select_privileges_to_client()

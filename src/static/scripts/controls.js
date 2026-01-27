@@ -1,10 +1,28 @@
 import { getCookie } from './utils.js';
 import { createSystemMessage } from './messages.js';
+import { loading_spinner_html } from './spinner.js';
 
-const chatHistory = document.querySelector('div#chat-history');
+const sendButton = document.querySelector('button#send-button');
+const sendButtonIcon = sendButton.querySelector('span#send-icon');
+
+let isResponding = false;
+
+function switchMode() {
+    if (isResponding) {
+        sendButtonIcon.textContent = '↑';
+        sendButton.disabled = false;
+        isResponding = false;
+    } 
+    else {
+        sendButtonIcon.innerHTML = loading_spinner_html;
+        sendButton.disabled = true;
+        isResponding = true;
+    }
+}
 
 async function eraseMemory() {
     if(confirm('Erase memory of previous conversations associated with this account?')) { 
+        switchMode();
         try {
             const response = await fetch('/api/erase_memory', {
                 method: 'DELETE',
@@ -15,8 +33,8 @@ async function eraseMemory() {
             });
             
             if (!response.ok) throw new Error('Failed to erase memory');
-            return await response.json();
-
+            await response.json();
+            switchMode();            
         } catch (error) {
             console.error('Error:', error);
         } finally {
@@ -75,8 +93,36 @@ async function deleteAccount() {
     }
 }
 
-function exportChat(){
-    alert('Coming soon!');
+async function fixHistory(){
+    if(confirm('Fix history?')) {
+        switchMode();
+        const header = {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${getCookie('access_token')}`,
+        };
+        try {
+            const response = await fetch('/api/fix_history', {
+                method: 'POST',
+                headers: header,
+            });
+            if (!response.ok) throw new Error('Failed to fix history');
+            const data = await response.json();
+            console.log(data);
+            if (data.response == 0) {
+                createSystemMessage('✅ Conversation history is empty. Start a new conversation.');
+            } else if (data.response == 1) {
+                createSystemMessage('✅ Conversation history seems fine. No changes were made.');
+            } else if (data.response == 2) {
+                createSystemMessage('🚧 Error-causing parts of the conversation history deleted. Try simplifying the question or asking it in another way.');
+            } else {
+                createSystemMessage('🚧 Unknown response code');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        } finally {
+            switchMode();
+        }
+    }
 }
 
-export {eraseMemory, clearChat, logOut, deleteAccount, exportChat};
+export {isResponding, switchMode, eraseMemory, clearChat, logOut, deleteAccount, fixHistory};

@@ -1,31 +1,17 @@
 import { getCookie } from './utils.js';
 import { createAIMessage, createSystemMessage } from './messages.js';
-import { create_spinner, loading_spinner_html, intervalId } from './spinner.js';
+import { create_spinner, intervalId } from './spinner.js';
+import { isResponding, switchMode } from './controls.js';
 
 const sendButton = document.querySelector('button#send-button');
 const chatInput = document.querySelector('textarea#chat-input');
 const chatHistory = document.querySelector('div#chat-history');
-const sendButtonIcon = sendButton.querySelector('span#send-icon');
-
-let isResponding = false;
-
-function switchMode() {
-    if (isResponding) {
-        sendButtonIcon.textContent = '↑';
-        sendButton.disabled = false;
-        isResponding = false;
-    } 
-    else {
-        sendButtonIcon.innerHTML = loading_spinner_html;
-        sendButton.disabled = true;
-        isResponding = true;
-    }
-}
 
 
 async function initializeChat() {    
     try {
         create_spinner()
+        switchMode();
         const initResponse = await fetch('/api/init', {
             method: 'POST',
             headers: {
@@ -49,6 +35,7 @@ async function initializeChat() {
         embeddingsModelIdDisplay.textContent = `🤖𝐄 ${response.embeddings_model_id}`;
         createAIMessage(response.message);
         togglePageTitle(document.title, '🔔 New Message', 2000);
+        switchMode();
     } catch (error) {
         console.error('Error initializing chat:', error);
     }

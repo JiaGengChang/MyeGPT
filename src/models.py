@@ -30,5 +30,6 @@ class Query(BaseModel):
     user_input: str
 
 
-class Question(BaseModel):
-    question: str
+__all__ = [
+    "Token", "TokenData", "Query", "UserCreate", "UserInDB"
+]
