@@ -182,7 +182,7 @@ def upload_table_genome_gatk_cna():
 
     df['Segment_Copy_Number_Status'] = df['Segment_Mean'].apply(segment_copy_number)
     # rename End to End_bp to avoid conflict with SQL reserved word
-    df = df.rename(columns={'Start': 'Start_bp', 'End': 'End_bp'})
+    df = df.rename(columns={'Start': 'Start_pos', 'End': 'End_pos'})
 
     print(df.head())
     # Upload to the database
