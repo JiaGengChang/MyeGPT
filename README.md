@@ -9,17 +9,18 @@ Designed towards smartphone browsers, it aims to accelerate hypothesis generatio
 
 # Demo
 
-1. Text-based query
+1. Clustering of genes
 
-https://github.com/user-attachments/assets/288c50f7-5bc7-4172-a06d-d8d0ae4d6dbb
+https://github.com/user-attachments/assets/505c548c-2537-49a7-b0bf-9a90729bac8f
 
-2. Analysis (1) - multi-variable visualizations
+2. Heatmap of genes
 
-https://github.com/user-attachments/assets/7a5aca54-c233-4831-8ace-6de29e6df061
+https://github.com/user-attachments/assets/befa90a9-2669-460a-858d-fff7420ee0e3
 
-3. Analysis (2) - survival analysis
+3. Survival analysis
 
-https://github.com/user-attachments/assets/fa7cb2aa-dbcc-454f-9492-5d4df8242db9
+https://github.com/user-attachments/assets/3a74c211-d806-4a3e-842a-4453ad5c76d2
+
 
 # Setup
 ## Pre-requisite 1. Database
@@ -123,7 +124,7 @@ The following terminal commands have only been tested on MacOS Sequioa 15.5
 # Acknowledgements
 - Multiple Myeloma Research Foundation (MMRF) 
 - Participants of the CoMMpass trial (NCT01454297)
-- Members of the Chng Wee Joo lab
+- Prof Chng Wee Joo, CSI, NUS for research funding
 
 # License
 - This project is open source under [Dual Licensing](LICENSE.md)
