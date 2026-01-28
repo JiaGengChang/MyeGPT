@@ -389,7 +389,11 @@ async def usage_metadata(token_str: Annotated[str, Depends(oauth2_scheme)], requ
     # validate token to allow usage metadata access
     _ = validate_token_str(token_str)
 
-    return JSONResponse({"usage_metadata": app.state.usage_metadata, "status": "ok"})
+    try:
+        return JSONResponse({"usage_metadata": app.state.usage_metadata, "status": "ok"})
+    
+    except AttributeError:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No usage metadata found.")
 
 if __name__ == "__main__":
     import uvicorn
