@@ -13,17 +13,21 @@
 <body>
   <div class="command-tray">
     <div class="client-info">
-      <div id="username-display">👤 [username]</div>
-      <div id="email-display" hidden="true">📤 [email]</div>
-      <div id="model-id-display" hidden="true">🤖 [model_id]</div>
-      <div id="embeddings-model-id-display" hidden="true">🤖𝐄 [embedding_model_id]</div>
+      <div class="default-visible">
+        <div id="username-display"><img id="user-icon" src="/static/favicon-32x32.png"><span>[username]</span></div>
+        <div id="model-id-display"><img id="llm-icon" src="/static/llm-icon.png"><span>[chat_model]</span></div>
+      </div>
+      <div class="default-hidden">
+        <div id="embeddings-model-id-display" hidden="true">[embedding_model]</div>
+        <div id="email-display" hidden="true">[email]</div>
+      </div>
     </div>
     <div class="command-buttons">
-      <button id="delete-account-button" onclick="window.appControls.deleteAccount();">🔐 Delete account</button>
-      <button id="erase-memory-button" onclick="window.appControls.eraseMemory();">🧠 Erase memory</button>
-      <button id="fix-history-button" onclick="window.appControls.fixHistory();">🚧 Repair AI</button>
-      <button id="check-usage" onclick="window.appControls.checkUsage();">💸 Usage cost</button>
-      <button id="logout-button" onclick="window.appControls.logOut();">🚪 Log Out</button>
+      <button id="delete-account-button" onclick="window.appControls.deleteAccount();">Delete account</button>
+      <button id="erase-memory-button" onclick="window.appControls.eraseMemory();">Erase memory</button>
+      <button id="fix-history-button" onclick="window.appControls.fixHistory();">Repair AI</button>
+      <button id="check-usage" onclick="window.appControls.checkUsage();">Usage cost</button>
+      <button id="logout-button" onclick="window.appControls.logOut();">Log Out</button>
     </div>
   </div>
   <div id="trace-container">

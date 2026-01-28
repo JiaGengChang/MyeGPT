@@ -40,12 +40,44 @@ body {
   }
 
   .command-tray {
-    display: grid;
-    grid-template-columns: 2fr 5fr;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     margin-top: 10px;
     margin-bottom: 5px;
     width: 80dvw;
     max-width: var(--max-width);
+  }
+
+  #mobile-hamburger {
+    font-size: 24px; 
+    cursor: pointer; 
+    width: 6dvw; 
+    margin-left: auto;
+  }
+
+  .default-visible, .default-hidden {
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+  }
+
+  #username-display, #model-id-display {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  #username-display > span:hover {
+    transform: translateY(-2px);
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  #username-display > img#user-icon, #model-id-display > img#llm-icon {
+    height: 1.5em;
+    width: auto;
+    margin-right: 0.2em;
   }
 
   .command-buttons {
@@ -53,10 +85,11 @@ body {
     grid-template-columns: repeat(5, 1fr);
     margin-left: auto;
   }
-
+  
   .command-buttons > button {
     text-align: center;
-    height: 2em;
+    height: auto;
+    background-color: white;
   }
 
   button {

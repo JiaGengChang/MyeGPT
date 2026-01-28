@@ -7,17 +7,18 @@ const sendButton = document.querySelector('button#send-button');
 const chatInput = document.querySelector('textarea#chat-input');
 const chatHistory = document.querySelector('div#chat-history');
 
+const headers = {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${getCookie('access_token')}`,
+}
 
 async function initializeChat() {    
+    switchMode();
     try {
-        create_spinner()
-        switchMode();
+        create_spinner();
         const initResponse = await fetch('/api/init', {
             method: 'POST',
-            headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${getCookie('access_token')}`,
-            },
+            headers: headers,
         });
         if (!initResponse.ok) {
             throw new Error(`Failed to initialize chat. ${initResponse.status} ${initResponse.statusText}`);
@@ -26,22 +27,23 @@ async function initializeChat() {
         clearInterval(intervalId); // remove the countdown till refresh
         window.spinner.remove(); // remove the loading icon
         const usernameDisplay = document.getElementById('username-display');
-        usernameDisplay.textContent = `👤 ${response.username}`;
+        usernameDisplay.innerHTML = `<img id="user-icon" src="/static/favicon-32x32.png"><span>${response.username}</span>`;
         const emailDisplay = document.getElementById('email-display');
-        emailDisplay.textContent = `📤 ${response.email}`;
+        emailDisplay.innerHTML = `<span>📧 ${response.email}</span>`;
         const modelIdDisplay = document.getElementById('model-id-display');
-        modelIdDisplay.textContent = `🤖 ${response.model_id}`;
+        modelIdDisplay.innerHTML = `<img id="llm-icon" src="/static/llm-icon.png"><span>${response.model_id}</span>`;
         const embeddingsModelIdDisplay = document.getElementById('embeddings-model-id-display');
-        embeddingsModelIdDisplay.textContent = `🤖𝐄 ${response.embeddings_model_id}`;
+        embeddingsModelIdDisplay.innerHTML = `<span>💬 ${response.embeddings_model_id}</span>`;
         createAIMessage(response.message);
-        togglePageTitle(document.title, '🔔 New Message', 2000);
-        switchMode();
+        togglePageTitle(document.title, '🔔 New Message', 1000);
     } catch (error) {
         console.error('Error initializing chat:', error);
+    } finally {
+        switchMode();
     }
 }
 
-function togglePageTitle(oldTitle, newTitle, timeOutMs=10000) {
+function togglePageTitle(oldTitle, newTitle, timeOutMs=5000) {
     document.title = newTitle;
     if (document.hasFocus()) {
         setTimeout(() => {
@@ -81,10 +83,7 @@ async function sendMessage() {
     try {
         const response = await fetch('/api/ask', {
             method: 'POST',
-            headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${getCookie('access_token')}`,
-            },
+            headers: headers,
             body: JSON.stringify({ user_input: message }),  
         });
 
