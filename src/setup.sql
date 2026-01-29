@@ -1,2 +1,0 @@
--- user database creation command
-CREATE TABLE auth.users (username VARCHAR(12) UNIQUE NOT NULL, email VARCHAR(255) UNIQUE NOT NULL, hashed_password VARCHAR(255) NOT NULL, is_verified BOOLEAN DEFAULT FALSE);

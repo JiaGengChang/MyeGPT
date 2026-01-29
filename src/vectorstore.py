@@ -19,7 +19,7 @@ def create_embedding_service(model_provider):
         raise ValueError(f"Unsupported model provider: {model_provider}")
     return embedding_service
 
-# do not change, set in create_vectorstore.py
+# do not change
 SCHEMA_NAME = "document_embeddings"
 TABLE_NAME = os.environ.get("EMBEDDINGS_MODEL_PROVIDER") + os.environ.get("EMBEDDINGS_TABLE_SUFFIX","")
 
