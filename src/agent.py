@@ -15,18 +15,18 @@ from langchain_experimental.tools import PythonAstREPLTool
 from tools import ConvertGeneTool, CoxPHStatsLog2TPMExprTool, CoxRegressionBaseDataTool, DisplayPlotTool, DocumentSearchTool, GeneCopyNumberTool, GeneMetadataTool, GenerateGraphFilepathTool, MADLog2TPMExprTool, PythonSQLTool
 from llm_utils import universal_chat_model
 from utils import parse_step
+from variables import COMMPASS_DB_URI, COMMPASS_AUTH_DSN, MODEL_ID
 
 # Create a system message for the agent
 # dynamic variables will be filled in at the start of each session
 # removed db description
 def create_system_message() -> str:
-    db_uri = os.environ.get("COMMPASS_DB_URI")
-    db = SQLDatabase.from_uri(db_uri)
+    db = SQLDatabase.from_uri(COMMPASS_DB_URI)
     with open(f'{os.path.dirname(__file__)}/prompt.txt', 'r') as f:
         latent_system_message = f.read()
     system_message = latent_system_message.format(
         dialect=db.dialect,
-        commpass_db_uri=db_uri
+        commpass_db_uri=COMMPASS_DB_URI
     )
     return [HumanMessage(content='Hello, MyeGPT!'),
             SystemMessage(content=system_message)]
@@ -40,9 +40,9 @@ async def send_init_prompt(app:FastAPI) -> None:
     config_ask = {"configurable":{"thread_id": app.state.username, "recursion_limit": 50}} # ask configuration
 
     #  initialize the chat model
-    llm = universal_chat_model(os.environ.get("MODEL_ID"))
+    llm = universal_chat_model(MODEL_ID)
 
-    commpass_db = SQLDatabase.from_uri(os.environ.get("COMMPASS_DB_URI"))
+    commpass_db = SQLDatabase.from_uri(COMMPASS_DB_URI)
 
     graph = create_react_agent(
         model=llm,
@@ -120,11 +120,11 @@ async def handle_invalid_chat_history(app: FastAPI, e: Exception):
                     break
 
             # delete all checkpoints after offending message to attempt to reload
-            auth_db_conn = psycopg.connect(os.environ.get("COMMPASS_AUTH_DSN"))
+            auth_db_conn = psycopg.connect(COMMPASS_AUTH_DSN)
             with auth_db_conn.cursor() as cur:
                 cur.execute(
                     """
-                    DELETE FROM commpass_schema.checkpoints
+                    DELETE FROM checkpoints.checkpoints
                     WHERE thread_id = %s
                         AND (metadata->>'step') IS NOT NULL
                         AND (metadata->>'step')::int >= %s
@@ -135,6 +135,7 @@ async def handle_invalid_chat_history(app: FastAPI, e: Exception):
             
             state[0]["messages"] = state[0]["messages"][:step]
             await graph.aupdate_state(config_ask, state, as_node='tools')
+            await graph.ainvoke({"messages": create_system_message()}, config_ask)  # empty messages to trigger reload
             return response_code
         else:
             # conversation history is empty
@@ -144,6 +145,7 @@ async def handle_invalid_chat_history(app: FastAPI, e: Exception):
         raise e
 
 __all__ = [
+    "handle_invalid_chat_history",
     "send_init_prompt",
     "query_agent"
 ]

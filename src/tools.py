@@ -7,6 +7,7 @@ from typing import Optional
 from langchain.tools import BaseTool
 from langchain_core.callbacks import CallbackManagerForToolRun
 
+from variables import COMMPASS_DSN
 from vectorstore import connect_store
 
 filedir = os.path.dirname(os.path.abspath(__file__))
@@ -90,7 +91,7 @@ class PythonSQLTool(BaseTool):
     )
 
     def _execute_sql_query_with_python(self, query: str):
-        conn = psycopg.connect(os.environ.get("COMMPASS_DSN"))
+        conn = psycopg.connect(COMMPASS_DSN)
         with conn.cursor() as curs:
             curs.execute(re.sub(r'LIMIT \d+', '', query, flags=re.IGNORECASE))
             result = curs.fetchall()
@@ -219,7 +220,7 @@ class GeneCopyNumberTool(BaseTool):
         # sort by overlap length between probe and gene
         #  PROBE =====1    |     =====2 |  =====3         |           ====4  |     ===5       |  ==========6
         #  GENES   =====1  |  =====2    |          ====3  |  =====4          |  ===========5. |.    ====6
-        conn = psycopg.connect(os.environ.get("COMMPASS_DSN"))
+        conn = psycopg.connect(COMMPASS_DSN)
         with conn.cursor() as curs:
             curs.execute('SELECT * FROM genome_gatk_cna WHERE chromosome = %s', (gc,))
             result = curs.fetchall()
@@ -298,7 +299,7 @@ class CoxRegressionBaseDataTool(BaseTool):
         # ... which are the common covariates used in Cox PH regression with variable of interest
         # create the datase only if not already exists
         if not os.path.exists(f'result/cox_dataset_template_{endpoint}.csv'):
-            conn = psycopg.connect(os.environ.get("COMMPASS_DSN"))
+            conn = psycopg.connect(COMMPASS_DSN)
             with conn.cursor() as curs:
                 if endpoint == 'os':
                     curs.execute(f'SELECT PUBLIC_ID, oscdy, censos FROM stand_alone_survival WHERE censos is not null')

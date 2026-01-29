@@ -1,15 +1,15 @@
 import jwt
 import os
-from fastapi import FastAPI, HTTPException, status, Request
+from fastapi import HTTPException, status, Request
 import psycopg
 from psycopg import sql
 from models import Token, UserInDB
 from pwdlib import PasswordHash
 from datetime import datetime, timedelta, timezone
 
+# local modules
+from variables import API_BYPASS_TOKEN, COMMPASS_AUTH_DSN, JWT_SECRET_KEY
 
-SECRET_KEY = os.environ.get("SECRET_KEY")
-ALGORITHM = os.environ.get("ALGORITHM")
 ACCESS_TOKEN_EXPIRE_MINUTES = 120
 
 password_hash = PasswordHash.recommended()
@@ -34,7 +34,7 @@ def _get_user(username: str) -> UserInDB:
     if username=="":
         raise HTTPException(status_code=400, detail="Username is empty")
     
-    with psycopg.connect(os.environ.get("COMMPASS_AUTH_DSN")) as conn:
+    with psycopg.connect(COMMPASS_AUTH_DSN) as conn:
         with conn.cursor() as cur:
             try:
                 query = sql.Composed([sql.SQL("SELECT username, email, hashed_password, is_verified FROM auth.users WHERE username = "), sql.Literal(username)])
@@ -77,7 +77,7 @@ def create_bearer_token(data: dict, expires_delta: timedelta | None = None) -> T
         expire = datetime.now(timezone.utc) + timedelta(hours=24)
     to_encode.update({"exp": expire})
     try:
-        encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+        encoded_jwt = jwt.encode(to_encode, JWT_SECRET_KEY, algorithm='HS256')
     except Exception as e:
         raise HTTPException(status_code=500, detail="Token generation failed. Error: " + str(e))
     
@@ -87,12 +87,12 @@ def create_bearer_token(data: dict, expires_delta: timedelta | None = None) -> T
 
 
 def validate_token_str(token_str: str) -> UserInDB:
-    if token_str == os.environ.get("API_BYPASS_TOKEN"):
+    if token_str == API_BYPASS_TOKEN:
         # assumes the existence of username called "admin"
         return _get_user("admin")
     
     try:
-        data = jwt.decode(token_str, SECRET_KEY, algorithms=[ALGORITHM])
+        data = jwt.decode(token_str, JWT_SECRET_KEY, algorithms=['HS256'])
     except jwt.PyJWTError as e:
         raise HTTPException(status_code=401, detail="Invalid token. Wrong format. Error: " + str(e))
     except Exception as e:

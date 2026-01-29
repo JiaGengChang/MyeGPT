@@ -1,6 +1,9 @@
 import os 
 from langchain_postgres import PGEngine, PGVectorStore
 
+# load user modules
+from variables import COMMPASS_DB_URI,EMBEDDINGS_MODEL_PROVIDER,EMBEDDINGS_TABLE_SUFFIX
+
 def create_embedding_service(model_provider):
     # create embedding service
     if model_provider=='mistral':
@@ -19,17 +22,12 @@ def create_embedding_service(model_provider):
         raise ValueError(f"Unsupported model provider: {model_provider}")
     return embedding_service
 
-# do not change
-SCHEMA_NAME = "document_embeddings"
-TABLE_NAME = os.environ.get("EMBEDDINGS_MODEL_PROVIDER") + os.environ.get("EMBEDDINGS_TABLE_SUFFIX","")
-
 # create pgengine connection pool manager
-pg_engine = PGEngine.from_connection_string(os.environ.get("COMMPASS_DB_URI"))
+pg_engine = PGEngine.from_connection_string(COMMPASS_DB_URI)
 
 # embeddings provider
 # embeddings = MistralAIEmbeddings(model="mistral-embed")
-embeddings = create_embedding_service(os.environ.get("EMBEDDINGS_MODEL_PROVIDER"))
-
+embeddings = create_embedding_service(EMBEDDINGS_MODEL_PROVIDER)
 # set env var for embedding model id (prefer 'model', fallback to 'model_id')
 try:
     os.environ["EMBEDDINGS_MODEL_ID"] = embeddings.model
@@ -40,8 +38,8 @@ except AttributeError:
 def connect_store():
     store = PGVectorStore.create_sync(
         engine=pg_engine,
-        table_name=TABLE_NAME,
-        schema_name=SCHEMA_NAME,
+        table_name=EMBEDDINGS_MODEL_PROVIDER+EMBEDDINGS_TABLE_SUFFIX,
+        schema_name="document_embeddings",
         embedding_service=embeddings,
     )
     return store

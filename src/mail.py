@@ -1,26 +1,26 @@
 import os
-from dotenv import load_dotenv
-load_dotenv(os.path.join(os.path.dirname(__file__),'.env'))
 from typing import Annotated
 from fastapi import HTTPException, status, Depends
 from fastapi_mail import FastMail, MessageSchema, ConnectionConfig, MessageType
 
+# user modules
 from models import TokenData
 from serialize import generate_verification_token
+from variables import MAIL_USERNAME, MAIL_PASSWORD, MAIL_SERVER, SERVER_BASE_URL
 
 conf = ConnectionConfig(
-    MAIL_USERNAME=os.getenv("MAIL_USERNAME"),
-    MAIL_PASSWORD=os.getenv("MAIL_PASSWORD"),
-    MAIL_FROM=os.getenv("MAIL_FROM"),
-    MAIL_PORT=os.getenv("MAIL_PORT"),
-    MAIL_SERVER=os.getenv("MAIL_SERVER"),
+    MAIL_USERNAME=MAIL_USERNAME,
+    MAIL_PASSWORD=MAIL_PASSWORD,
+    MAIL_FROM=MAIL_USERNAME,
+    MAIL_PORT=587,
+    MAIL_SERVER=MAIL_SERVER,
     MAIL_STARTTLS=True,
     MAIL_SSL_TLS=False,
     USE_CREDENTIALS=True,
 )
 
-async def send_verification_email(email: str, token: Annotated[TokenData, Depends(generate_verification_token)], app_url) -> None:
-    link = os.path.join(app_url, f"verify?token={str(token.payload)}")
+async def send_verification_email(email: str, token: Annotated[TokenData, Depends(generate_verification_token)]) -> None:
+    link = os.path.join(SERVER_BASE_URL, f"verify?token={str(token.payload)}")
     message = MessageSchema(
         subject="Verify your email",
         recipients=[email],
