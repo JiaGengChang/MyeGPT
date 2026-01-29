@@ -5,7 +5,7 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 
-COPY src/main.py .
+COPY src/*.py .
 COPY src/agent.py .
 COPY src/tools.py .
 COPY src/vectorstore.py .
@@ -14,6 +14,7 @@ COPY src/models.py .
 COPY src/mail.py .
 COPY src/security.py .
 COPY src/serialize.py .
+COPY src/variables.py .
 COPY src/executor.py .
 COPY src/prompt.txt .
 COPY src/prompts.py .
