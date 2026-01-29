@@ -94,7 +94,7 @@ async function deleteAccount() {
 }
 
 async function fixHistory(){
-    if(confirm('Fix history?')) {
+    if(confirm('This will delete tool calls that do not have corresponding results. The conversation history will be truncated up to the deleted tool call. Proceed?')) {
         switchMode();
         const header = {
             'Content-Type': 'application/json',
