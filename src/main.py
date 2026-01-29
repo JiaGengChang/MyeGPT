@@ -15,11 +15,11 @@ from mail import send_verification_email
 from models import Token, TokenData, Query, UserCreate, UserInDB
 from security import get_password_hash, authenticate_user, create_bearer_token, validate_token_str, validate_headers
 from serialize import generate_verification_token, confirm_verification_token
-
+from variables import COMMPASS_AUTH_DSN, COMMPASS_DSN, COMMPASS_MEMORY_DB_URI, MODEL_ID
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    async with AsyncPostgresSaver.from_conn_string(os.environ.get("COMMPASS_MEMORY_DB_URI")) as checkpointer:
+    async with AsyncPostgresSaver.from_conn_string(COMMPASS_MEMORY_DB_URI) as checkpointer:
         await checkpointer.setup()
         app.state.checkpointer = checkpointer
         yield
@@ -32,7 +32,7 @@ def update_app_state(user: UserInDB) -> None:
     # user must be verified to exist by now
     app.state.username = user.username
     app.state.email = user.email
-    app.state.model_id = os.environ.get("MODEL_ID")
+    app.state.model_id = MODEL_ID
     app.state.embeddings_model_id = os.environ.get("EMBEDDINGS_MODEL_ID")
 
 
@@ -118,9 +118,8 @@ async def register_with_form(request: Request) -> HTMLResponse:
 # for use within swagger UI
 @app.post("/api/register")
 async def register_user(user: Annotated[UserCreate, Depends()], request: Request) -> HTMLResponse:
-    assert os.environ.get("SERVER_BASE_URL"), "Env. variable SERVER_BASE_URL is missing"
     hashed_password = get_password_hash(user.password)
-    auth_db_conn = psycopg.connect(os.environ.get("COMMPASS_AUTH_DSN"))
+    auth_db_conn = psycopg.connect(COMMPASS_AUTH_DSN)
     with auth_db_conn.cursor() as cur:
         user_email = user.email if user.email.strip().__len__() > 0 else None
         try:
@@ -136,7 +135,7 @@ async def register_user(user: Annotated[UserCreate, Depends()], request: Request
 
     token = TokenData(payload=generate_verification_token(user_email))
 
-    await send_verification_email(user_email, token, os.environ.get("SERVER_BASE_URL"))
+    await send_verification_email(user_email, token)
 
     # redirect user to pending verification page
     with open(f"{app_dir}/templates/redirect.html") as html_file, open(f"{app_dir}/templates/pending.html") as f:
@@ -155,7 +154,7 @@ def verify_email(token: str) -> HTMLResponse:
     # raises 408 if token is invalid or expired
     email = confirm_verification_token(TokenData(payload=token), expiration=300)
     
-    with psycopg.connect(os.environ.get("COMMPASS_AUTH_DSN")) as conn:
+    with psycopg.connect(COMMPASS_AUTH_DSN) as conn:
 
         # verify user with given email exists
         with conn.cursor() as cur:
@@ -203,7 +202,7 @@ async def delete_account(token_str: Annotated[str, Depends(oauth2_scheme)], requ
     _ = await erase_memory(token_str, request)
 
     # delete user from db
-    with psycopg.connect(os.environ.get("COMMPASS_AUTH_DSN")) as conn:
+    with psycopg.connect(COMMPASS_AUTH_DSN) as conn:
         with conn.cursor() as cur:
             try:
                 cur.execute("DELETE FROM auth.users WHERE username = %s", (user.username,))
@@ -233,12 +232,12 @@ async def erase_memory(token_str: Annotated[str, Depends(oauth2_scheme)], reques
     
     user = validate_token_str(token_str)
 
-    with psycopg.connect(os.environ.get("COMMPASS_MEMORY_DB_URI")) as conn:
+    with psycopg.connect(COMMPASS_MEMORY_DB_URI) as conn:
         with conn.cursor() as cur:
             try:
-                cur.execute("DELETE FROM commpass_schema.checkpoints WHERE thread_id = %s", (user.username,))
-                cur.execute("DELETE FROM commpass_schema.checkpoint_writes WHERE thread_id = %s", (user.username,))
-                cur.execute("DELETE FROM commpass_schema.checkpoint_blobs WHERE thread_id = %s", (user.username,))
+                cur.execute("DELETE FROM checkpoints.checkpoints WHERE thread_id = %s", (user.username,))
+                cur.execute("DELETE FROM checkpoints.checkpoint_writes WHERE thread_id = %s", (user.username,))
+                cur.execute("DELETE FROM checkpoints.checkpoint_blobs WHERE thread_id = %s", (user.username,))
                 conn.commit()
             except Exception as e_memorydb:
                 conn.rollback()
@@ -346,7 +345,7 @@ async def ready(token_str: Annotated[str, Depends(oauth2_scheme)], request: Requ
     _ = validate_token_str(token_str)
 
     # test commpass db connection
-    with psycopg.connect(os.environ.get("COMMPASS_DSN")) as conn:
+    with psycopg.connect(COMMPASS_DSN) as conn:
         with conn.cursor() as cur:
             cur.execute("SELECT * FROM pg_tables WHERE schemaname = 'public' LIMIT 1")
             result = cur.fetchone()
@@ -354,7 +353,7 @@ async def ready(token_str: Annotated[str, Depends(oauth2_scheme)], request: Requ
                 raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Commpass database connection failed")
     
     # test auth db connection
-    with psycopg.connect(os.environ.get("COMMPASS_AUTH_DSN")) as conn:
+    with psycopg.connect(COMMPASS_AUTH_DSN) as conn:
         with conn.cursor() as cur:
             cur.execute("SELECT * FROM auth.users LIMIT 1;")
             result = cur.fetchone()
@@ -362,9 +361,9 @@ async def ready(token_str: Annotated[str, Depends(oauth2_scheme)], request: Requ
                 raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="User database connection failed")
 
     # test memory db connection
-    with psycopg.connect(os.environ.get("COMMPASS_MEMORY_DB_URI")) as conn:
+    with psycopg.connect(COMMPASS_MEMORY_DB_URI) as conn:
         with conn.cursor() as cur:
-            cur.execute("SELECT * FROM pg_tables WHERE schemaname = 'commpass_schema' LIMIT 1")
+            cur.execute("SELECT * FROM pg_tables WHERE schemaname = 'checkpoints' LIMIT 1")
             result = cur.fetchone()
             if not result:
                 raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Memory database connection failed")
