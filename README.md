@@ -29,7 +29,7 @@ https://github.com/user-attachments/assets/97444fee-7873-46c9-b781-b1641bcfdd17
 # Setup
 ## Pre-requisite 1. Database
 
-1. Server with PostgreSQL 17.5, with firewall disabled for port `5432`
+1. Server with PostgreSQL 8, open to TCP on 5432
 
 2. A publicly accessible IPv4 address or domain name
 
@@ -63,11 +63,9 @@ Instructions
 
 2. Provide the following variables in the `.env` file
     ```
-    MAIL_USERNAME=[admin@your-domain-or-ip-address.com]
+    MAIL_USERNAME=[admin@your-domain.com]
     MAIL_PASSWORD=[your-mail-server-password]
-    MAIL_FROM=[admin@your-domain-or-ip-address.com]
-    MAIL_PORT=587
-    MAIL_SERVER=[your.mail.server.provider.com]
+    MAIL_SERVER=[smtp.your-mail-service-provider.com]
     ```
 
 ## Pre-requisite 3. LLM/Embedding provider
