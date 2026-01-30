@@ -7,19 +7,23 @@ Designed towards smartphone browsers, it aims to accelerate hypothesis generatio
 <img height="800" width="536" alt="Phone site demonstration screenshot" src="https://github.com/user-attachments/assets/8ecc60f5-4d9d-4f6e-8685-0f9b557500be" />
 
 
-# Demo
+# Use cases
 
-1. Clustering of genes
+1. Gene expression clustering
 
-https://github.com/user-attachments/assets/505c548c-2537-49a7-b0bf-9a90729bac8f
+https://github.com/user-attachments/assets/dd7e1d1e-6ef0-4d8e-89e7-4b2fe5948437
 
-2. Heatmap of genes
+2. Gene expression heatmap
 
-https://github.com/user-attachments/assets/befa90a9-2669-460a-858d-fff7420ee0e3
+https://github.com/user-attachments/assets/9d4fe841-4e9c-4a08-bfd0-cd8828802f90
 
-3. Survival analysis
+3. CoxPH survival regression
 
-https://github.com/user-attachments/assets/3a74c211-d806-4a3e-842a-4453ad5c76d2
+https://github.com/user-attachments/assets/e24218f9-fc98-43c7-bd72-a54626944fd5
+
+# Example from login page
+
+https://github.com/user-attachments/assets/97444fee-7873-46c9-b781-b1641bcfdd17
 
 
 # Setup
