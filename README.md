@@ -29,7 +29,7 @@ https://github.com/user-attachments/assets/97444fee-7873-46c9-b781-b1641bcfdd17
 # Setup
 ## Pre-requisite 1. Database
 
-1. Server with PostgreSQL 8, open to TCP on 5432
+1. Server with PostgreSQL 18, open to TCP on 5432
 
 2. A publicly accessible IPv4 address or domain name
 
@@ -41,17 +41,21 @@ Instructions
 
 1. Install requirements.txt e.g., `pip install -r requirements.txt`
 
-1. Populate `.env` file with the `COMMPASS_DB_URI` variable and place it in the `src` folder
+1. Populate `.env` file with the `DBHOSTNAME`, `DBUSERNAME`, and `DBPASSWORD` variables and place it in the `src` folder
 
-2. Run database creation utility
+2. Create a database named `commpass` with schemas `public`, `auth`, `document_embeddings`, and `checkpoints`.
+
+3. Populate the `commpass` database with:
 
     `cd [MYEGPT-HOME-DIRECTORY]`
 
     `python create_database.py`
 
-    This script takes ~2 hours due to the large number of entries for gene expression matrix.
+    This script takes roughly 20 minutes
 
-3. This will create a database named `commpass`.
+4. Initialize the vectorstore with:
+
+    `python create_vectorstore.py`
 
 ## Pre-requisite 2. Mail server
 
