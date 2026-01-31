@@ -90,13 +90,17 @@ def query_agent(app: FastAPI, user_input: str):
     global config_ask
     user_message = HumanMessage(content=user_input)
     
-    for step in graph.stream({"messages": [user_message]}, config_ask, stream_mode="updates"):
-        # for python tty
-        print(step)
-        # for frontend
-        # the following parsing is based on GPT-5-Mini. 
-        # It may not work for other LLMS.
-        yield parse_step(step, app.state.usage_metadata)
+    try:
+        for step in graph.stream({"messages": [user_message]}, config_ask, stream_mode="updates"):
+            # for python tty
+            print(step)
+            # for frontend
+            # the following parsing is based on GPT-5-Mini. 
+            # It may not work for other LLMS.
+            yield parse_step(step, app.state.usage_metadata)
+    except Exception as e:
+        # handle openai.BadRequestError: Error code: 400 - {'error': {'message': 'Input tokens exceed the configured limit of 272000 tokens. Your messages resulted in 287850 tokens. Please reduce the length of the messages.', 'type': 'invalid_request_error', 'param': 'messages', 'code': 'context_length_exceeded'}}
+        yield f"⁉️ Unexpected message: {str(e)}"
 
 async def handle_invalid_chat_history(app: FastAPI, e: Exception):
     global graph
