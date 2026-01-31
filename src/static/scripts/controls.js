@@ -132,11 +132,11 @@ function parse_usage_metadata(usage_metadata) {
     } else {
         // example usage_metadata
         // {"input_tokens":21188,"output_tokens":341,"total_tokens":21529,"input_token_details":{"audio":0,"cache_read":18048},"output_token_details":{"audio":0,"reasoning":128}}
-        const cachedT = usage_metadata.input_token_details.cache_read || -1;
-        const inputT = usage_metadata.input_tokens - cachedT || -1;
-        const reasonT = usage_metadata.output_token_details.reasoning || -1;
-        const outputT = usage_metadata.output_tokens - reasonT || -1;
-        const totalT = usage_metadata.total_tokens || -1;
+        const cachedT = usage_metadata.input_token_details.cache_read || 0;
+        const inputT = usage_metadata.input_tokens - cachedT || 0;
+        const reasonT = usage_metadata.output_token_details.reasoning || 0;
+        const outputT = usage_metadata.output_tokens - reasonT || 0;
+        const totalT = usage_metadata.total_tokens || 0;
         // based on GPT-5-mini pricing
         const inputCost = inputT * 2.5e-7 + cachedT * 2.5e-8;
         const outputCost = outputT * 2e-6;
