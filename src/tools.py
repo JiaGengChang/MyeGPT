@@ -294,11 +294,11 @@ class CoxRegressionBaseDataTool(BaseTool):
         # input: endpoint: 'os' or 'pfs' 
         # output: None except printed statement
         # behavior: 
-        # saves a template dataset for Cox PH regression analysis to result/cox_dataset_template_{endpoint}.csv
+        # saves a template dataset for Cox PH regression analysis to result/cox_ph_covariates_{endpoint}.csv
         # this csv file contains PUBLIC ID, survival time, censoring status, age, ISS (I, II, III), and gender (Male, Female)
         # ... which are the common covariates used in Cox PH regression with variable of interest
         # create the datase only if not already exists
-        if not os.path.exists(f'result/cox_dataset_template_{endpoint}.csv'):
+        if not os.path.exists(f'result/cox_ph_covariates_{endpoint}.csv'):
             conn = psycopg.connect(COMMPASS_DSN)
             with conn.cursor() as curs:
                 if endpoint == 'os':
