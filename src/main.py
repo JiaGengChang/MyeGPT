@@ -59,8 +59,6 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
 @app.get("/")
 async def root(request: Request) -> FileResponse:
     
-    print(request.headers)
-
     response = FileResponse(f"{app_dir}/templates/index.html")
 
     return response
@@ -71,8 +69,6 @@ async def root(request: Request) -> FileResponse:
 async def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()], request: Request
 ) -> Token:
-    print(request.headers)
-
     validate_headers(request)
 
     try:
@@ -190,8 +186,6 @@ def verify_email(token: str) -> HTMLResponse:
 # this will remove user from auth.users and the conversation history
 @app.delete("/api/delete_account")
 async def delete_account(token_str: Annotated[str, Depends(oauth2_scheme)], request: Request) -> HTMLResponse:
-    print(request.headers)
-
     # ensure same origin request
     validate_headers(request)
     
@@ -226,8 +220,6 @@ async def delete_account(token_str: Annotated[str, Depends(oauth2_scheme)], requ
 # this will remove conversation history
 @app.delete("/api/erase_memory")
 async def erase_memory(token_str: Annotated[str, Depends(oauth2_scheme)], request: Request) -> JSONResponse:
-    print(request.headers)
-    
     validate_headers(request)
     
     user = validate_token_str(token_str)
@@ -249,8 +241,6 @@ async def erase_memory(token_str: Annotated[str, Depends(oauth2_scheme)], reques
 # triggered by login form submission
 @app.post("/app")
 async def serve_homepage(token: Annotated[Token, Depends(login_for_access_token)], request: Request) -> FileResponse:
-    print(request.headers)
-    
     validate_headers(request)
     
     app.state.init_prompt_done = asyncio.Event()
@@ -277,8 +267,6 @@ async def serve_homepage(token: Annotated[Token, Depends(login_for_access_token)
 # triggered by /app
 @app.post("/api/init")
 async def get_init_response(token_str: Annotated[str, Depends(oauth2_scheme)], request: Request) -> JSONResponse:
-    print(request.headers)
-
     validate_headers(request)
 
     user = validate_token_str(token_str)
@@ -310,8 +298,6 @@ async def get_init_response(token_str: Annotated[str, Depends(oauth2_scheme)], r
 # triggered by submission of query
 @app.post("/api/ask")
 async def ask(query: Query, token_str: Annotated[str, Depends(oauth2_scheme)], request: Request) -> StreamingResponse:
-    print(request.headers)
-
     validate_headers(request)
     
     # ensure token is valid and user exists in DB
@@ -335,8 +321,6 @@ async def ask(query: Query, token_str: Annotated[str, Depends(oauth2_scheme)], r
 # otherwise returns 500
 @app.post("/ready")
 async def ready(token_str: Annotated[str, Depends(oauth2_scheme)], request: Request) -> JSONResponse:
-
-    print(request.headers)
 
     validate_headers(request)
 
@@ -381,8 +365,6 @@ async def fix_history(token_str: Annotated[str, Depends(oauth2_scheme)], request
 
 @app.get("/api/usage_metadata")
 async def usage_metadata(token_str: Annotated[str, Depends(oauth2_scheme)], request: Request) -> JSONResponse:
-    print(request.headers)
-
     validate_headers(request)
 
     # validate token to allow usage metadata access
