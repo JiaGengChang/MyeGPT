@@ -384,7 +384,27 @@ class MADLog2TPMExprTool(BaseTool):
         if not os.path.exists(result_file):
             return 'Error: Pre-computed gene MAD results not found.'
         return f'Path to gene-wise median and MAD of log2(tpm+1) expression values: {result_file}'
+
+class HousekeepingGeneListTool(BaseTool):
+    name: str = "retrieve_housekeeping_gene_list"
+    description: str = (
+        "Returns a csv file containing a list of 394 housekeeping genes with column names: ensg, symbol"
+        "Based on publication Pubmed 11773596 Authors: Hsiao LL,Dangond F,Yoshida T,Hong R,Jensen RV,Misra J,Dillon W,Lee KF,Clark KE,Haverty P,Weng Z,Mutter GL,Frosch MP,MacDonald ME,Milford EL,Crum CP,Bueno R,Pratt RE,Mahadevappa M,Warrington JA,Stephanopoulos G,Stephanopoulos G,Gullans SR"
+        "Suitable for: User wants to check if gene of interest is in a curated list of housekeeping genes."
+        "Not suitable for: User has a gene symbol that does not map to a valid Ensembl gene ID."
+    )
     
+    def _run(
+        self,
+        run_manager: Optional[CallbackManagerForToolRun] = None,
+    ) -> str:
+        """Use the tool."""
+        result_file = 'result/housekeeping_genes.csv'
+        if not os.path.exists(result_file):
+            return 'Error: Housekeeping gene list not found.'
+        return f'Path to housekeeping genes: {result_file}'
+    
+
 
 __all__ = [
     "ConvertGeneTool", 
@@ -396,5 +416,6 @@ __all__ = [
     "DisplayPlotTool", 
     "GeneCopyNumberTool", 
     "CoxRegressionBaseDataTool", 
-    "CoxPHStatsLog2TPMExprTool"
+    "CoxPHStatsLog2TPMExprTool",
+    "HousekeepingGeneListTool"
     ]
