@@ -1,10 +1,10 @@
 Table name: `stand_alone_survival`
-Description: Right-censored survival information of each patient (overall survival; OS, progression free survival; PFS) as well as various treatment lines and treatment responses (disease progression). PFS by treatment line is also available.
+Description: Right-censored survival information of each patient (overall survival; OS, progression free survival; PFS) as well as various treatment lines and treatment responses (disease progression). PFS by treatment line is also available. Censor flags are to be interpreted as 1 for an event and 0 as censored.
 Format: column_number | field_name | description
 # Identifier columns
 1|public_id|Index column. Patient public identifier. MMRF_ followed by 4 unique digits. e.g. MMRF_1234
 # Data columns related to right-censored progression-free survival (PFS) or overall survival (OS). Preferred columns for PFS are (pfscdy, censpfs), for OS are (oscdy, censos). When PFS date is null, it is possible to impute using OS since death can be considered a progression event.
-93|censpfs|Censor flag: progression-free survival
+93|censpfs|Censor flag: progression-free survival.
 94|pfscdy|PFS censored date
 100|censpfs1|Censor flag: progression-free survival line 1
 101|pfs1cdy|PFS censored date line 1
