@@ -5,7 +5,6 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 
-COPY src/*.py .
 COPY src/agent.py .
 COPY src/tools.py .
 COPY src/vectorstore.py .
@@ -22,10 +21,6 @@ COPY src/llm_utils.py .
 COPY src/static static
 COPY src/templates templates
 COPY refdata /refdata
-COPY src/result/cox_ph_*_genes.csv ./result/
-COPY src/result/gene_log2tpm_mad.csv ./result/
-COPY src/result/housekeeping_genes.csv ./result/
-COPY src/result/cox_ph_covariates_*s.csv ./result/
 
 EXPOSE 8080
 

@@ -357,10 +357,10 @@ class CoxPHStatsLog2TPMExprTool(BaseTool):
         endpoint = query.lower()
         if endpoint not in ['os', 'pfs']:
             return "Error: endpoint must be either 'os' or 'pfs'"
-        result_file = 'result/cox_ph_os_56294_genes.csv' if endpoint == 'os' else 'result/cox_ph_pfs_56317_genes.csv'
-        if not os.path.exists(result_file):
+        refdata_file = 'refdata/cox_ph_os_56294_genes.csv' if endpoint == 'os' else 'refdata/cox_ph_pfs_56317_genes.csv'
+        if not os.path.exists(refdata_file):
             return f'Error: Gene-wise Cox PH regression results for endpoint {endpoint} not found.'
-        return f'Path to gene-wise CoxPH summary statistics for {endpoint} endpoint: {result_file}'
+        return f'Path to gene-wise CoxPH summary statistics for {endpoint} endpoint: {refdata_file}'
 
 class MADLog2TPMExprTool(BaseTool):
     name: str = "gene_expr_mad_values"
@@ -380,31 +380,45 @@ class MADLog2TPMExprTool(BaseTool):
         run_manager: Optional[CallbackManagerForToolRun] = None,
     ) -> str:
         """Use the tool."""
-        result_file = 'result/gene_log2tpm_mad.csv'
-        if not os.path.exists(result_file):
+        refdata_file = 'refdata/gene_log2tpm_mad.csv'
+        if not os.path.exists(refdata_file):
             return 'Error: Pre-computed gene MAD results not found.'
-        return f'Path to gene-wise median and MAD of log2(tpm+1) expression values: {result_file}'
+        return f'Path to gene-wise median and MAD of log2(tpm+1) expression values: {refdata_file}'
 
-class HousekeepingGeneListTool(BaseTool):
-    name: str = "retrieve_housekeeping_gene_list"
+class RetrieveGeneListTool(BaseTool):
+    name: str = "retrieve_gene_list"
     description: str = (
-        "Returns a csv file containing a list of 394 housekeeping genes with column names: ensg, symbol"
-        "Based on publication Pubmed 11773596 Authors: Hsiao LL,Dangond F,Yoshida T,Hong R,Jensen RV,Misra J,Dillon W,Lee KF,Clark KE,Haverty P,Weng Z,Mutter GL,Frosch MP,MacDonald ME,Milford EL,Crum CP,Bueno R,Pratt RE,Mahadevappa M,Warrington JA,Stephanopoulos G,Stephanopoulos G,Gullans SR"
-        "Suitable for: User wants to check if gene of interest is in a curated list of housekeeping genes."
-        "Not suitable for: User has a gene symbol that does not map to a valid Ensembl gene ID."
+        "Retrieve a predefined list of genes with specific characteristics based on the query. "
+        "If query is \'housekeeping\', returns a csv file containing a list of 394 housekeeping genes with column names: ensg, symbol"
+        "Housekeeping genes based on publication Pubmed 11773596"
+        "If query is \'immunoglobulin\', Returns a csv file containing a list of 486 immunoglobulin genes with column names: ensg, symbol, name"
+        "If query is \'proteincoding\', Returns a csv file containing a list of 20084 protein-coding genes with column names: ensg, symbol"
+        "Suitable for: User wants to filter their gene list by housekeeping, immunoglobulin, or protein-coding genes."
+        "Not suitable for: User has a symbol of a gene loci that does not map to a valid Ensembl gene ID."
+        "Not suitable for: User has a non-official gene symbol. Use \'ConvertGeneTool\' to convert to approved gene symbol first."
     )
     
     def _run(
         self,
+        query:str,        
         run_manager: Optional[CallbackManagerForToolRun] = None,
     ) -> str:
         """Use the tool."""
-        result_file = 'result/housekeeping_genes.csv'
-        if not os.path.exists(result_file):
-            return 'Error: Housekeeping gene list not found.'
-        return f'Path to housekeeping genes: {result_file}'
+        if query not in ['housekeeping', 'immunoglobulin', 'proteincoding']:
+                    return "Error: query must be one of 'housekeeping', 'immunoglobulin', or 'proteincoding'"
+        
+        if query == 'housekeeping':
+            refdata_file = 'refdata/housekeeping_genes.csv'
+        elif query == 'immunoglobulin':
+            refdata_file = 'refdata/immunoglobulin_genes.csv'
+        elif query == 'proteincoding':
+            refdata_file = 'refdata/proteincoding_genes.csv'
+        
+        if not os.path.exists(refdata_file):
+            return f'Error: {query} gene list not found.'
+        
+        return f'Path to {query} genes: {refdata_file}'
     
-
 
 __all__ = [
     "ConvertGeneTool", 
@@ -417,5 +431,5 @@ __all__ = [
     "GeneCopyNumberTool", 
     "CoxRegressionBaseDataTool", 
     "CoxPHStatsLog2TPMExprTool",
-    "HousekeepingGeneListTool"
+    "RetrieveGeneListTool"
     ]

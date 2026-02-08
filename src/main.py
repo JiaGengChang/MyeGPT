@@ -44,12 +44,14 @@ scripts_dir = os.path.join(app_dir, 'static', 'scripts')
 templates_dir = os.path.join(app_dir, 'templates')
 result_folder = os.path.join(app_dir, 'result')
 os.makedirs(result_folder, exist_ok=True)
+refdata_dir = os.path.join(app_dir, '..', 'refdata')
 
 app.mount("/result", StaticFiles(directory=result_folder), name="result") # serve csv files
 app.mount("/graph", StaticFiles(directory=graph_folder), name="graph") # serve plotted graphs
-app.mount("/static", StaticFiles(directory=static_dir), name="static") # serve css/js files
-app.mount("/scripts", StaticFiles(directory=scripts_dir), name="scripts") # serve css/js files
+app.mount("/static", StaticFiles(directory=static_dir), name="static") # serve css/image files
+app.mount("/scripts", StaticFiles(directory=scripts_dir), name="scripts") # serve js files
 app.mount("/templates", StaticFiles(directory=templates_dir), name="templates") # serve html files
+app.mount("/refdata", StaticFiles(directory=refdata_dir), name="refdata") # serve reference data files
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
 
