@@ -12,7 +12,7 @@ from executor import create_react_agent
 from langchain_community.utilities import SQLDatabase
 from langchain_community.tools import QuerySQLDatabaseTool
 from langchain_experimental.tools import PythonAstREPLTool
-from tools import ConvertGeneTool, CoxPHStatsLog2TPMExprTool, CoxRegressionBaseDataTool, DisplayPlotTool, DocumentSearchTool, GeneCopyNumberTool, GeneMetadataTool, GenerateGraphFilepathTool, MADLog2TPMExprTool, RetrieveGeneListTool, PythonSQLTool
+from tools import ConvertGeneTool, CoxPHStatsLog2TPMExprTool, CoxRegressionBaseDataTool, DisplayPlotTool, DocumentSearchTool, GeneCopyNumberTool, GeneMetadataTool, GenerateGraphFilepathTool, MADLog2TPMExprTool, PythonSQLTool, RetrieveGeneListTool, SurvivalDataTool
 from llm_utils import universal_chat_model
 from utils import parse_step
 from variables import COMMPASS_DB_URI, COMMPASS_AUTH_DSN, MODEL_ID
@@ -58,7 +58,8 @@ async def send_init_prompt(app:FastAPI) -> None:
                  CoxRegressionBaseDataTool(),
                  CoxPHStatsLog2TPMExprTool(),
                  MADLog2TPMExprTool(),
-                 RetrieveGeneListTool()
+                 RetrieveGeneListTool(),
+                 SurvivalDataTool()
                  ],
         checkpointer=app.state.checkpointer,
     )

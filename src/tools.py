@@ -418,7 +418,30 @@ class RetrieveGeneListTool(BaseTool):
             return f'Error: {query} gene list not found.'
         
         return f'Path to {query} genes: {refdata_file}'
-    
+
+class SurvivalDataTool(BaseTool):
+    name: str = "get_survival_data"
+    description: str = (
+        "Retrieve the right-censored survival data for all patients."
+        "Input argument: query (str), either 'os' for overall survival data or 'pfs' for progression-free survival data."
+        "Returns the path to a csv file containing columns public_id, oscdy, censos if query is 'os', or columns public_id, pfscdy, censpfs if query is 'pfs'."
+        "oscdy and pfscdy are time-to-event in days"
+        "censos and censpfs are censoring status (1=event occurred, 0=censored)."
+        "Use scenario: To perform survival analysis or Cox regression, merge your features with this data."
+    )
+    def _run(
+        self,
+        query: str,
+        run_manager: Optional[CallbackManagerForToolRun] = None,
+    ) -> str:
+        """Use the tool."""
+        query = query.lower()
+        if query not in ['os', 'pfs']:
+            return "Error: endpoint must be either 'os' or 'pfs'"
+        csv_path = f'refdata/{query}.csv'
+        if not os.path.exists(csv_path):
+            return f'Error: Survival data for {query} endpoint not found.'
+        return f"Path to {query} data file for all patients: {csv_path}"
 
 __all__ = [
     "ConvertGeneTool", 
@@ -431,5 +454,6 @@ __all__ = [
     "GeneCopyNumberTool", 
     "CoxRegressionBaseDataTool", 
     "CoxPHStatsLog2TPMExprTool",
-    "RetrieveGeneListTool"
+    "RetrieveGeneListTool",
+    "SurvivalDataTool"
     ]
