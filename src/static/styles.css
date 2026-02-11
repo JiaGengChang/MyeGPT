@@ -144,10 +144,10 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin: auto;
   }
   .footer > .footnote {
     text-align: center;
-    margin-bottom: 5%;
   }
   
   @media (max-width: 767.98px) {
