@@ -15,6 +15,7 @@
         <div class="logo-and-title">
             <img src="/static/android-chrome-192x192.png" alt="favicon">
             <h1>MyeGPT</h1>
+            <p>The bioinformatics agent for multiple myeloma</p>
         </div>
     </header>
     <div class="index">
@@ -32,21 +33,24 @@
             <div class="register-container">
                 <h2>🔰 Register</h2>
                 <form id="registerForm" action="/register" method="post">
-                    <label for="username">Username:</label>
+                    <label for="username">New username:</label>
                     <input type="text" id="username" name="username" required><br><br>
-                    <label for="password">Password:</label>
+                    <label for="password">New password:</label>
                     <input type="password" id="password" name="password" required><br><br>
-                    <label for="confirm-password">Re-enter password:</label>
+                    <label for="confirm-password">Confirm  password:</label>
                     <input type="password" id="confirm-password" name="confirm-password" required><br><br>
                     <label for="email">Your Email:</label>
                     <input type="email" id="email" name="email" required><br>
-                    <small>Email verification required</small><br><br>
+                    <small>*Email verification required</small><br><br>
                     <button type="submit" id="register-button">Register</button>
                 </form>
             </div>
         </div>
-        <div class="contact-info-container">
-            <p>📤<a href="mailto:admin@myegpt.com">Email us</a></p>
+        <div class="footer">
+            <div class="footnote">MyeGPT is an agentic bioinformatician built on the MMRF CoMMpass dataset (NCT01454297)</div>
+            <div class="footnote">Source code is available at <a href="https://github.com/JiaGengChang/MyeGPT">https://github.com/JiaGengChang/MyeGPT</a> and is free for academic research use</div>
+            <div class="footnote">Co-developed by Jia Geng Chang & Wee Joo Chng, CSI, National University of Singapore</div>
+            <div class="footnote">📤Email us at <a href="mailto:changjiageng@u.nus.edu">changjiageng@u.nus.edu</a></div>
         </div>
     </div>
 </body>

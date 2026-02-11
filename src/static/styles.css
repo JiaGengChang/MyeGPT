@@ -37,6 +37,8 @@ body {
     position: relative;
     margin-left: auto;
     margin-right: auto;
+    text-align: center;
+    max-width: 60dvw;
   }
 
   .command-tray {
@@ -109,7 +111,7 @@ body {
   }
 
   .index {
-    width: 50dvw;
+    width: 80dvw;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -136,6 +138,16 @@ body {
   }
   .register-container > h2 {
     text-align: center;
+  }
+
+  .footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .footer > .footnote {
+    text-align: center;
+    margin-bottom: 5%;
   }
   
   @media (max-width: 767.98px) {
