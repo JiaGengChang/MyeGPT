@@ -12,7 +12,7 @@ Format: column_number | column_name | column_description
 294|d_lab_chem_calcium|Calcium (mmol/L)
 295|d_lab_chem_creatinine|Serum Creatinine (umol/L)
 296|d_lab_chem_glucose|Glucose (mmol/L)
-297|d_lab_cbc_hemoglobin|Hemogobin (mmol/L
+297|d_lab_cbc_hemoglobin|Hemogobin (mmol/L)
 298|d_lab_serum_kappa|Serum Kappa (mg/dL)
 299|d_lab_chem_ldh|LDH (ukat/L)
 300|d_lab_serum_m_protein|Serum M Protein (g/dL)
