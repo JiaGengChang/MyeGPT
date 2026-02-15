@@ -26,26 +26,24 @@ https://github.com/user-attachments/assets/e24218f9-fc98-43c7-bd72-a54626944fd5
 https://github.com/user-attachments/assets/97444fee-7873-46c9-b781-b1641bcfdd17
 
 
-# Setup
-## Pre-requisite 1. Database
+# Pre-requisites
+1. Docker desktop
 
-1. Server with PostgreSQL 18, open to TCP on 5432
+1. Create a python 3.13 virtual environment
 
-2. A publicly accessible IPv4 address or domain name
+2. Install requirements.txt e.g., `pip install -r requirements.txt`
 
-3. Python 3.13 installed on local machine
+## Step 1. Database
 
-4. Email repo maintainer for the data folders, namely `refdata`, `omicdata` and `clindata`. These contain flatfiles that will be used to build the database.
+1. Create a PostgreSQL 18 instance with the PgVector extension installed. Suggested docker image: `pgvector/pgvector:pg18-trixie`
 
-Instructions
+2. Download CoMMpass files and place them into `omicdata` and `clindata`. These flatfiles will be used to build the database.
 
-1. Install requirements.txt e.g., `pip install -r requirements.txt`
+3. Set the `DBHOSTNAME`, `DBUSERNAME`, and `DBPASSWORD` environment variables
 
-1. Populate `.env` file with the `DBHOSTNAME`, `DBUSERNAME`, and `DBPASSWORD` variables and place it in the `src` folder
+4. Inside pgsql, create a database named `commpass` and 3 schemas: `auth`, `document_embeddings`, and `checkpoints`.
 
-2. Create a database named `commpass` with schemas `public`, `auth`, `document_embeddings`, and `checkpoints`.
-
-3. Populate the `commpass` database with:
+3. Populate the `commpass.public` schema. This will upload CoMMpass data from the flatfiles:
 
     `cd [MYEGPT-HOME-DIRECTORY]`
 
@@ -53,26 +51,24 @@ Instructions
 
     This script takes roughly 20 minutes
 
-4. Initialize the vectorstore with:
+4. Populate the `commpass.document_embeddings` schema. This will upload the usage guides in `/docs` folder:
 
     `python create_vectorstore.py`
 
-## Pre-requisite 2. Mail server
+## Step 2. Acquire Mail server
 
 1. Create an email server which the application can use to send emails with. 
 
     This is needed for email verification as part of account registration. 
 
-    I use Ionos mail because my domain is registered with them. 
-
-2. Provide the following variables in the `.env` file
+2. Set the following environment variables
     ```
     MAIL_USERNAME=[admin@your-domain.com]
     MAIL_PASSWORD=[your-mail-server-password]
     MAIL_SERVER=[smtp.your-mail-service-provider.com]
     ```
 
-## Pre-requisite 3. LLM/Embedding provider
+## Step 3. API keys
 
 1. Create and fund a developer account with the following supported LLM providers
 
@@ -84,7 +80,7 @@ Instructions
 
     4. AWS (need to enable the Bedrock service)
 
-2. Create a developer account with following embedding service providers
+2. Create a developer account with following text embedding service providers
 
     1. OpenAI
 
@@ -94,31 +90,29 @@ Instructions
 
     4. Google Gemini AI
 
-3. For path of least resistance, opt for OpenAI for both LLM and text embedding
+3. For path of least resistance, opt for OpenAI for both LLM and text embedding.
 
-## Build and deploy
+4. Set the environment variables. e.g., OPENAI_API_KEY, MISTRAL_API_KEY, etc
 
-The following terminal commands have only been tested on MacOS Sequioa 15.5
+## Step 4. Build and deploy
 
-1. Install docker desktop (https://docs.docker.com/desktop/)
-
-2. Build the application
+1. Build the application
 
     `docker build -t [your-container-name]:[your-tag-name]` 
 
     Example `docker build -t myegpt:latest`.
 
-3. Populate `.env` file with your API keys/secrets and place it in the `src` folder
+2. Populate `.env` file with your API keys/secrets. Refer to `src/example.env`.
 
-5. Launch the application
+3. Launch the application
 
     `cd [MYEGPT-HOME-DIRECTORY]`
     
-    `docker run --env-file src/.env -p 8080:8080 [your-container-name]:[your-tag-name]`
+    `docker run --env-file [path-to-dotenv-file] -p 8080:8080 [your-container-name]:[your-tag-name]`
 
-6. Navigate browser to application address
+4. Navigate browser to
     
-    Either http://localhost:8000 or http://127.0.0.1:8080
+    http://localhost:8080 or http://127.0.0.1:8080
 
 
 # Publicity
