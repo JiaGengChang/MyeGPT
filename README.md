@@ -25,8 +25,9 @@ MyeGPT is designed to work on smartphones as well i.e. devices with viewport wid
 
 # Publicity
 
-1. Best oral presentation in the Youth Forum for ICBBS 2025 at Xiamen, 18 October.
-[![Presentation](src/static/thumbnail.png)](https://youtu.be/pcfDr0uDm3o)
+Best oral presentation in the Youth Forum for ICBBS 2025 at Xiamen, 18 October.
+
+<img width="768" alt="Link to presentation video" src="src/static/thumbnail.png" href=https://youtu.be/pcfDr0uDm3o />
 
 
 # Acknowledgements
