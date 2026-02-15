@@ -1,6 +1,8 @@
 # Setup instructions
 
-This is a guide for deploying your own copy of MyeGPT, or adapting it to your own dataset. There is already a ready-to-use version mentioned in this repo.
+This is a guide for deploying your own copy of MyeGPT, or adapting it to your own dataset. 
+
+There is already a ready-to-use version mentioned in this repo.
 
 # Pre-requisites
 1. Install docker with privileged access
