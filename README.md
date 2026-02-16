@@ -10,12 +10,11 @@ It aims to accelerate hypothesis generation among wet-lab researchers by giving 
 
 1. Gene expression heatmap
 
-https://github.com/user-attachments/assets/9d4fe841-4e9c-4a08-bfd0-cd8828802f90
+https://github.com/user-attachments/assets/900501d4-bd6b-4141-9ab6-42817acabeaf
 
-2. CoxPH survival regression
+2. Survival regression
 
-https://github.com/user-attachments/assets/e24218f9-fc98-43c7-bd72-a54626944fd5
-
+https://github.com/user-attachments/assets/e8aaf750-44ea-4f4d-8774-a7ce8f1f8039
 
 # Compatibility
 
