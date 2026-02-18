@@ -18,9 +18,13 @@ https://github.com/user-attachments/assets/e8aaf750-44ea-4f4d-8774-a7ce8f1f8039
 
 # Compatibility
 
-We are compatible on Chrome, Firefox and Safari. 
+MyeGPT is intended for desktop use but also works on smartphones i.e. devices with viewport width < 768px
 
-MyeGPT is designed to work on smartphones as well i.e. devices with viewport width < 768px
+Supported browsers: Chrome, Firefox, Safari
+
+| Browser | Brave | Chrome | Edge | Firefox | Opera | Safari |
+|---|---|---|---|---|---|---|
+| Compatibility | ❌ | ✅️ | ❌ | ✅️ | ❌ | ✅️ |
 
 # Publicity
 
