@@ -25,6 +25,10 @@ Format: column_number | field_name | description
 122|ttcos|Ignore #Time to OS event (censored) (days)
 123|ttosw|Ignore #Time to OS (wk)
 124|ttcosw|Ignore #Time to OS event (censored) (wk) 
+214|mmstatus|MM status (derived)
+215|mmstatus1|Line 1 MM status (derived)
+216|mmstatus2|Line 2 MM status (derived)
+217|mmstatus3|Line 3 MM status (derived)
 220|pfsendy|Ignore #PFS Event or Censor Date
 221|osendy|Ignore #OS Event or Censor Date
 226|enr|Ignore #Enrolled Population

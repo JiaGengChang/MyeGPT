@@ -11,7 +11,3 @@ Format: column_number | field_name | description
 51|vis12mo|Has at least 12 mo of visit data
 52|comp1|Completed at least one assessment
 80|lastdy|Last date on study
-214|mmstatus|MM status (derived)
-215|mmstatus1|Line 1 MM status (derived)
-216|mmstatus2|Line 2 MM status (derived)
-217|mmstatus3|Line 3 MM status (derived)
