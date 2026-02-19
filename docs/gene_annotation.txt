@@ -2,9 +2,9 @@ Table name: `gene_annotation`
 Description: A reference of genomic coordinates (chromosome, start, and end) for genes
 Format: column_number|field_name|description
 # Identifier column
-1|gene stable id|Index column. GENCODE accession/ENSEMBL Stable ID of the gene. string. example: ENSG00000227830.
-2|gene symbol|Index column. HGNC-approved symbol of the gene. string. example: TRIM60P3Y
+1|gene_stable_id|Index column. GENCODE accession/ENSEMBL Stable ID of the gene. string. example: ENSG00000227830.
+2|gene_symbol|Index column. HGNC-approved symbol of the gene. string. example: TRIM60P3Y
 # Gene coordinates fields
-3|chromosome/scaffold name|Chromosome name, without the 'chr' prefix. string. It can only be one of 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, X or Y.
-4|gene start (bp)|Genomic coordinate of gene start. integer. example: 8413037
-5|gene end (bp)|Genomic coordinate of gene end. integer. example: 8414054
+3|chromosome|Chromosome name, without the 'chr' prefix. string. It can only be one of 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, X or Y.
+4|start_pos|Genomic coordinate of gene start. integer. example: 8413037
+5|end_pos|Genomic coordinate of gene end. integer. example: 8414054
