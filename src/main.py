@@ -236,7 +236,7 @@ async def erase_memory(token_str: Annotated[str, Depends(oauth2_scheme)], reques
             except Exception as e_memorydb:
                 conn.rollback()
                 raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to erase memory. Error: " + str(e_memorydb))
-    return JSONResponse({"message": "Memory erased successfully."})
+    return JSONResponse({"message": "🗑️ Memory of previous conversations erased. Refresh page for changes to take effect."})
 
 
 
