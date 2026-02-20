@@ -31,24 +31,18 @@ async function eraseMemory() {
                     'Authorization': `Bearer ${getCookie('access_token')}`,
                 },
             });
-            
             if (!response.ok) throw new Error('Failed to erase memory');
-            await response.json();
-            switchMode();            
+            const message = await response.json();
+            // insert a message into chat indicating memory has been erased
+            createSystemMessage(message.message);
         } catch (error) {
             console.error('Error:', error);
+            createSystemMessage(error);
         } finally {
-            // insert a message into chat indicating memory has been erased
-            createSystemMessage('🗑️ Memory of previous conversations has been erased.');
+            // createSystemMessage('🗑️ Memory of previous conversations has been erased. Refresh page for changes to take effect.');
+            switchMode();            
         }
     }
-}
-
-function clearChat() {
-    if(confirm('Clear current conversation? This will not erase memory of these conversations.')){
-        document.getElementById('chat-history').innerHTML = '';
-    }
-    createSystemMessage('🧹 Conversation has been cleared.');
 }
 
 function logOut() {
@@ -183,4 +177,4 @@ async function checkUsage(){
     };
 };
 
-export {isResponding, switchMode, eraseMemory, clearChat, logOut, deleteAccount, fixHistory, checkUsage};
+export {isResponding, switchMode, eraseMemory, logOut, deleteAccount, fixHistory, checkUsage};
