@@ -33,13 +33,11 @@ async function eraseMemory() {
             });
             if (!response.ok) throw new Error('Failed to erase memory');
             const message = await response.json();
-            // insert a message into chat indicating memory has been erased
             createSystemMessage(message.message);
         } catch (error) {
             console.error('Error:', error);
             createSystemMessage(error);
         } finally {
-            // createSystemMessage('🗑️ Memory of previous conversations has been erased. Refresh page for changes to take effect.');
             switchMode();            
         }
     }
