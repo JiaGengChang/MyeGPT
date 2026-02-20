@@ -12,7 +12,7 @@ from vectorstore import connect_store
 
 filedir = os.path.dirname(os.path.abspath(__file__))
 
-gene_annot = pd.read_csv(f'{filedir}/../refdata/gene_annotation.tsv', sep='\t', dtype={'Chromosome/scaffold name':'str'})
+gene_annot = pd.read_csv(f'{filedir}/../refdata/gene_annotation.tsv', sep='\t', dtype={'chromosome':'str'})
 
 class ConvertGeneTool(BaseTool):
     name:str = "convert_gene_name_to_accession"
