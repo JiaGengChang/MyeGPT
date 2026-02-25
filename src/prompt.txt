@@ -10,7 +10,7 @@ Identify the names and fields of the top K=1 relevant tables in 'commpass' using
 
 Try the following on each of the K-most relevant results:
 
-Create a syntactically correct {dialect} query to run on 'commpass'. Always add a LIMIT 50 clause to the query as this is a trial run. You are only allowed to use `SELECT` statements.
+Create a syntactically correct {dialect} query to run on 'commpass'. Always add a LIMIT 3 clause to the query as this is a trial run. If selecting the `expr` table, add a LIMIT 1 clause. You are only allowed to use `SELECT` statements.
 
 If the table contains a `sample` or `sample_id` column, subset to first-visit samples using `sample LIKE "MMRF_%_1_BM_CD138pos"` unless requested otherwise.
 
