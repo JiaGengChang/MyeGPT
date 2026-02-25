@@ -29,13 +29,13 @@ class ConvertGeneTool(BaseTool):
     def _convert_gene(self, gene_name: str):
         if gene_name.startswith("ENSG"):
             return f"Error: '{gene_name}' appears to be a Gene stable ID."
-        gene_row = self.gene_annot['Gene name'] == gene_name
+        gene_row = self.gene_annot['gene_symbol'] == gene_name
         if gene_row.sum() == 0:
             return f"Error: '{gene_name}' not a valid Gene name in the database. Try running SQL query on the `hgnc_nomenclature` table to convert to formal gene name."
         elif gene_row.sum() > 1:
             return f"Error: '{gene_name}' is ambiguous and maps to multiple Gene stable IDs in the database."
         else:
-            gene_id = self.gene_annot[gene_row]['Gene stable ID'].values[0]
+            gene_id = self.gene_annot[gene_row]['gene_stable_id'].values[0]
             if not pd.isna(gene_id):
                 return gene_id
             else:
@@ -65,7 +65,7 @@ class GeneMetadataTool(BaseTool):
     def _get_metadata(self, gene_id: str):
         if not gene_id.startswith("ENSG"):
             return f"Error: '{gene_id}' does not appear to be a valid Gene stable ID."
-        gene_info = self.gene_annot[self.gene_annot['Gene stable ID'] == gene_id]
+        gene_info = self.gene_annot[self.gene_annot['gene_stable_id'] == gene_id]
         if not gene_info.empty:
             info_dict = gene_info.iloc[0].to_dict()
             return f"Gene Metadata for {gene_id}:\n" + "\n".join([f"{key}: {value}" for key, value in info_dict.items()])
