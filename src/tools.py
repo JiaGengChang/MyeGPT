@@ -412,7 +412,7 @@ class RetrieveGeneListTool(BaseTool):
         elif query == 'immunoglobulin':
             refdata_file = 'refdata/immunoglobulin_genes.csv'
         elif query == 'proteincoding':
-            refdata_file = 'refdata/proteincoding_genes.csv'
+            refdata_file = 'refdata/protein_coding_genes.csv'
         
         if not os.path.exists(refdata_file):
             return f'Error: {query} gene list not found.'
