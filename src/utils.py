@@ -58,3 +58,45 @@ def parse_step(step:dict, session_state: dict):
         msg = json.dumps(step, indent=2, ensure_ascii=False, default=str)
         formatted_msg = f'⁉️ Unparsed message: {msg}'
     return formatted_msg
+
+
+# Order the samples using the oncoplot algorithm
+def oncoplot_ordering(data,extra_covariates=[],prioritize_covariates=False):
+    import pandas as pd
+    # Define a recursive function to order the data
+    def recursive_ordering(data, depth=0):
+        if depth >= data.shape[1]:
+            return data.index.tolist()
+        
+        # Order columns by column-wise sum
+        primary_col = ordered_columns[depth]
+                
+        # The remaining are IGH partner columns
+        # Divide observations into groups based on the primary column
+        
+        ordered_indices = []
+        
+        for value in sorted(data[primary_col].unique())[::-1]:
+            # subset to observations with the same value
+            group_v = data[data[primary_col] == value]
+            # Recursively order within each group
+            ordered_indices_v = recursive_ordering(group_v, depth + 1)
+            # Combine the ordered indices
+            ordered_indices.extend(ordered_indices_v)
+        
+        return ordered_indices
+    
+    # Start the recursive ordering
+    # Order by number of carriers
+    # ordered_columns = (data==1).sum(axis=0).sort_values(ascending=False).index
+    heatmap_data = data.drop(columns=extra_covariates)
+    ordered_heatmap_columns = (heatmap_data==1).sum(axis=0).sort_values(ascending=False).index
+    
+    # Order additional columns appear last
+    if prioritize_covariates:    
+        ordered_columns = pd.Index(extra_covariates).append(ordered_heatmap_columns)
+    else:
+        ordered_columns = ordered_heatmap_columns.append(pd.Index(extra_covariates))
+    
+    ordered_indices = recursive_ordering(data.loc[:, ordered_columns])
+    return data.loc[ordered_indices, ordered_columns]

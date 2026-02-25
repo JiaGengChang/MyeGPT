@@ -9,6 +9,7 @@ from langchain_core.callbacks import CallbackManagerForToolRun
 
 from variables import COMMPASS_DSN
 from vectorstore import connect_store
+from utils import oncoplot_ordering
 
 filedir = os.path.dirname(os.path.abspath(__file__))
 
@@ -443,6 +444,29 @@ class SurvivalDataTool(BaseTool):
             return f'Error: Survival data for {query} endpoint not found.'
         return f"Path to {query} data file for all patients: {csv_path}"
 
+class OncoplotMatrixTool(BaseTool):
+    name: str = "sort_matrix_with_oncoplot_ordering"
+    description: str = (
+        "Generate an oncoplot matrix given an input csv plots it as a heatmap"
+        "The input csv is a binary matrix. The first column of this matrix is interpreted as the id_column, followed by N feature columns with binary values (0 or 1)."
+        "The output csv is matrix with same dimensions, the feature columns sorted by descending order of feature prevalence (i.e. number of non-zero values across all samples), and index re-ordered recursively by feature values descending order in of the columns."
+        "Use case: user wants to generate an oncoplot-style heatmap of mutations."
+    )
+    
+    def _run(
+        self,
+        query: str,
+        run_manager: Optional[CallbackManagerForToolRun] = None,
+    ) -> str:
+        """Use the tool."""
+        if not os.path.exists(query):
+            return f"Error: Input file {query} does not exist."
+        df = pd.read_csv(query,index_col=0)
+        df_ordered = oncoplot_ordering(df)
+        output_file = query.replace(".csv", "_oncoplot.csv")
+        df_ordered.to_csv(output_file, index=False)
+        return f"Ordered matrix saved to {output_file}"
+
 __all__ = [
     "ConvertGeneTool", 
     "GeneMetadataTool", 
@@ -455,5 +479,6 @@ __all__ = [
     "CoxRegressionBaseDataTool", 
     "CoxPHStatsLog2TPMExprTool",
     "RetrieveGeneListTool",
-    "SurvivalDataTool"
+    "SurvivalDataTool",
+    "OncoplotMatrixTool"
     ]
