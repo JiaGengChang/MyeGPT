@@ -122,29 +122,35 @@ function parse_usage_metadata(usage_metadata) {
     if (!usage_metadata) {
         msg = 'No usage metadata available.';
     } else {
-        // example usage_metadata
-        // {"input_tokens":21188,"output_tokens":341,"total_tokens":21529,"input_token_details":{"audio":0,"cache_read":18048},"output_token_details":{"audio":0,"reasoning":128}}
-        const cachedT = usage_metadata.input_token_details.cache_read || 0;
-        const inputT = usage_metadata.input_tokens - cachedT || 0;
-        const reasonT = usage_metadata.output_token_details.reasoning || 0;
-        const outputT = usage_metadata.output_tokens - reasonT || 0;
+        // example usage_metadata for Claude 4.5 Opus
+        // usage_metadata={'input_tokens': 65853, 'output_tokens': 121, 'total_tokens': 65974, 'input_token_details': {'cache_read': 0, 'cache_creation': 0, 'ephemeral_5m_input_tokens': 0, 'ephemeral_1h_input_tokens': 0}}        
+        const inputT = usage_metadata.input_tokens || 0;
+        const cacheHitsT = usage_metadata.input_token_details.cache_read || 0;
+        const outputT = usage_metadata.output_tokens || 0;
         const totalT = usage_metadata.total_tokens || 0;
-        // based on GPT-5-mini pricing
-        const inputCost = inputT * 2.5e-7 + cachedT * 2.5e-8;
-        const outputCost = outputT * 2e-6;
-        const totalCost = inputCost + outputCost;
+        
+        // based on Claude 4.5 opus pricing
+        const inputCost = inputT * 5e-6 + cacheHitsT * .5e-6;
+        const outputCost = outputT * 2.5e-5;
+        const cachedWrites5mCost = usage_metadata.input_token_details.ephemeral_5m_input_tokens * 6.25e-6;
+        const cachedWrites1hCost = usage_metadata.input_token_details.ephemeral_1h_input_tokens * 1e-5;
+        const totalCost = inputCost + outputCost + cachedWrites5mCost + cachedWrites1hCost;
         // Create two-column layout
         msg = `<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
             <div>
                 <strong>💸💸 Running cost</strong><br>
                 Input: $${inputCost.toFixed(3)}<br>
                 Output: $${outputCost.toFixed(3)}<br>
+                Cache writes (5m): $${cachedWrites5mCost.toFixed(3)}<br>
+                Cache writes (1h): $${cachedWrites1hCost.toFixed(3)}<br>
                 Total: $${totalCost.toFixed(3)} USD
             </div>
             <div>
                 <strong>💬💬 Running token usage</strong><br>
-                Input: ${inputT}&#9Cached: ${cachedT}<br>
-                Output: ${outputT}&#9Reasoning: ${reasonT}<br>
+                Input: ${inputT}&#9Cached: ${cacheHitsT}<br>
+                Cache writes (5m): ${usage_metadata.input_token_details.ephemeral_5m_input_tokens}<br>
+                Cache writes (1h): ${usage_metadata.input_token_details.ephemeral_1h_input_tokens}<br>
+                Output: ${outputT}<br>
                 Total: ${totalT}
             </div>
         </div>`
