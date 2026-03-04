@@ -28,7 +28,7 @@ Supported browsers: Chrome, Firefox, Safari
 
 # Publicity
 
-Best oral presentation in the Youth Forum for ICBBS 2025 at Xiamen, 18 October.
+Best oral presentation in the Youth Forum for ICBBS 2025 at Xiamen, 18 October ([link to press release](https://www.icbbs.org/best.html)).
 
 [![Presentation](src/static/thumbnail.png)](https://youtu.be/pcfDr0uDm3o)
 
