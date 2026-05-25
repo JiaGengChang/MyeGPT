@@ -4,6 +4,7 @@ src/result/*
 src/*.ipynb
 src/*.png
 src/responses.json
+src/refdata
 responses
 tuning
 embed_*.py
