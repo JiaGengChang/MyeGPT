@@ -1,12 +1,17 @@
 dotenv
 fastapi[standard-no-fastapi-cloud-cli]
+fastapi-mail
 itsdangerous
 langchain
 langchain-community
 langchain-core
 langchain-experimental
+langchain-aws
+langchain-anthropic
+langchain-mistralai
 langchain-openai
 langchain-postgres
+langchain-google-genai
 langgraph
 langgraph-checkpoint-postgres
 lifelines
