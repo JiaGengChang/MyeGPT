@@ -34,6 +34,7 @@ async function initializeChat() {
         modelIdDisplay.innerHTML = `<img id="llm-icon" src="/static/llm-icon.png"><span>${response.model_id}</span>`;
         const embeddingsModelIdDisplay = document.getElementById('embeddings-model-id-display');
         embeddingsModelIdDisplay.innerHTML = `<span>💬 ${response.embeddings_model_id}</span>`;
+        createSystemMessage("Usage guide: <a href='https://github.com/JiaGengChang/MyeGPT/wiki' target='_blank'><u>https://github.com/JiaGengChang/MyeGPT/wiki</u><img src='/static/target-blank.png' style='height:1rem;position:absolute;translate: 0 0.2rem;' alt=\"opens-in new tab\"/></a>");
         createAIMessage(response.message);
         togglePageTitle(document.title, '🔔 New Message', 1000);
     } catch (error) {
